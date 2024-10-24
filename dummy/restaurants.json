@@ -1,0 +1,113 @@
+[
+    {
+      "id": "1",
+      "name": "The Gourmet Kitchen",
+      "address": "123 Main St",
+      "city": "Los Angeles",
+      "state": "CA",
+      "zipCode": "90001",
+      "cuisine": "Italian",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "location": {
+        "lat": 34.052235,
+        "lng": -118.243683
+      },
+      "contactNumber": "555-123-4567",
+      "website": "http://www.thegourmetkitchen.com",
+      "imageCover": "https://picsum.photos/id/100/200",
+      "images": [
+        "https://picsum.photos/id/101/200",
+        "https://picsum.photos/id/102/200"
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Sushi Palace",
+      "address": "456 Sushi Ave",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipCode": "94102",
+      "cuisine": "Japanese",
+      "rating": 4.8,
+      "priceRange": "$$$",
+      "location": {
+        "lat": 37.774929,
+        "lng": -122.419418
+      },
+      "contactNumber": "555-987-6543",
+      "website": "http://www.sushipalace.com",
+      "imageCover": "https://picsum.photos/id/110/200",
+      "images": [
+        "https://picsum.photos/id/111/200",
+        "https://picsum.photos/id/112/200"
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Burger Town",
+      "address": "789 Burger Blvd",
+      "city": "New York",
+      "state": "NY",
+      "zipCode": "10001",
+      "cuisine": "American",
+      "rating": 4.2,
+      "priceRange": "$",
+      "location": {
+        "lat": 40.712776,
+        "lng": -74.005974
+      },
+      "contactNumber": "555-456-7890",
+      "website": "http://www.burgertown.com",
+      "imageCover": "https://picsum.photos/id/120/200",
+      "images": [
+        "https://picsum.photos/id/121/200",
+        "https://picsum.photos/id/122/200"
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Spice Symphony",
+      "address": "321 Spice Rd",
+      "city": "Austin",
+      "state": "TX",
+      "zipCode": "73301",
+      "cuisine": "Chinese",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "location": {
+        "lat": 30.267153,
+        "lng": -97.743057
+      },
+      "contactNumber": "555-654-3210",
+      "website": "http://www.spicesymphony.com",
+      "imageCover": "https://picsum.photos/id/130/200",
+      "images": [
+        "https://picsum.photos/id/131/200",
+        "https://picsum.photos/id/132/200"
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Casa Mexicana",
+      "address": "654 Fiesta Ln",
+      "city": "San Diego",
+      "state": "CA",
+      "zipCode": "92101",
+      "cuisine": "Mexican",
+      "rating": 4.3,
+      "priceRange": "$$",
+      "location": {
+        "lat": 32.715736,
+        "lng": -117.161087
+      },
+      "contactNumber": "555-321-9876",
+      "website": "http://www.casa-mexicana.com",
+      "imageCover": "https://picsum.photos/id/140/200",
+      "images": [
+        "https://picsum.photos/id/141/200",
+        "https://picsum.photos/id/142/200"
+      ]
+    }
+  ]
+  
