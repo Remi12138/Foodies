@@ -2,13 +2,16 @@ import { useState } from "react";
 import { StyleSheet, FlatList, RefreshControl } from "react-native";
 import { Restaurant, useRestaurantStore } from "@/zustand/restaurant";
 import RestaurantCard from "./RestaurantCard";
+import React from "react";
 
 function Restaurants({ data }: { data: Restaurant[] }) {
   const [refreshing, setRefreshing] = useState(false);
-  const fetchRestaurants = useRestaurantStore(
-    (state) => state.fetchFakeRestaurants
+  const fetchFakeRestaurants = useRestaurantStore(
+    (state) => state.fetchFakeRestaurants//update
   );
-
+ const fetchRestaurants = useRestaurantStore(
+    (state) => state.fetchRestaurants
+  );
   const renderRestaurantCard = ({ item }: { item: Restaurant }) => (
     <RestaurantCard item={item} />
   );
@@ -16,6 +19,7 @@ function Restaurants({ data }: { data: Restaurant[] }) {
   const onRefresh = async () => {
     setRefreshing(true);
     await fetchRestaurants();
+    await fetchFakeRestaurants();
     setRefreshing(false);
   };
 

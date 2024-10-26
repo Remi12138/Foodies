@@ -20,7 +20,7 @@ export default function ExploreScreen() {
   const [isMapView, setIsMapView] = useState(false);
   const [loading, setLoading] = useState(true);
   const fetchRestaurants = useRestaurantStore(
-    (state) => state.fetchFakeRestaurants
+    (state) => state.fetchRestaurants
   );
 
   const toggleMapView = () => {
