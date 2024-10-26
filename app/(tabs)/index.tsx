@@ -15,6 +15,7 @@ import CommunityBar from "@/components/community/CommunityBar";
 import Blogs from "@/components/community/BlogsView";
 import { useBlogStore } from "@/zustand/blog";
 import BlogCollectionView from "@/components/community/BlogCollectionView";
+import React from "react";
 
 export default function CommunityScreen() {
   const [isFavView, setIsFavView] = useState(false);
