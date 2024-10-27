@@ -41,8 +41,7 @@ const foodiePosts = [
   },
 ];
 
-// BlogCollectionView component
-const BlogCollectionView = () => {
+function BlogCollectionView() {
   const renderItem = ({
     item,
   }: {
@@ -63,7 +62,7 @@ const BlogCollectionView = () => {
       contentContainerStyle={styles.container}
     />
   );
-};
+}
 
 // Styles
 const styles = StyleSheet.create({
