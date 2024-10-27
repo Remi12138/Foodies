@@ -14,16 +14,11 @@ import { ThemedText } from "@/components/ThemedText";
 import CommunityBar from "@/components/community/CommunityBar";
 import Blogs from "@/components/community/BlogsView";
 import { useBlogStore } from "@/zustand/blog";
-import BlogCollectionView from "@/components/community/BlogCollectionView";
+import { router } from "expo-router";
 
 export default function CommunityScreen() {
-  const [isFavView, setIsFavView] = useState(false);
   const [loading, setLoading] = useState(true);
   const fetchBlogs = useBlogStore((state) => state.fetchFakeBlogs);
-
-  const toggleFavView = () => {
-    setIsFavView((prev) => !prev);
-  };
 
   useEffect(() => {
     handleGetBlogs();
@@ -46,12 +41,14 @@ export default function CommunityScreen() {
           <ThemedText type="title">Community</ThemedText>
           <HelloWave emoji="💡" />
         </ThemedView>
-        <TouchableOpacity style={styles.mapToggle} onPress={toggleFavView}>
+        <TouchableOpacity
+          style={styles.mapToggle}
+          onPress={() => {
+            router.push("/community/collections");
+          }}
+        >
           <ThemedText>
-            <Ionicons
-              name={isFavView ? "ice-cream-outline" : "bookmarks-outline"}
-              size={24}
-            />
+            <Ionicons name="bookmarks-outline" size={24} />
           </ThemedText>
         </TouchableOpacity>
       </ThemedView>
@@ -63,8 +60,6 @@ export default function CommunityScreen() {
             color="#000000"
             style={styles.loadingIndicator}
           />
-        ) : isFavView ? (
-          <BlogCollectionView />
         ) : (
           <Blogs data={blogs} />
         )}
