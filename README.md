@@ -3,6 +3,7 @@
 Intro here.
 
 ## Functionality
+
 ### Community
 
 A blog sharing place.
@@ -16,15 +17,22 @@ Explore food places around the world via list and map.
 Add/View followers
 
 ### Profile
+
 1. Manage receipts
 2. Find out food details e.g. calories
 3. Settings
+4. User authentication
 
 ## API
+
 - Restaurant Explore [Yelp Fusion](https://fusion.yelp.com)
-- Food Info [Foodvisor](https://www.foodvisor.io/en/vision/) 
+- Food Info [Foodvisor](https://www.foodvisor.io/en/vision/)
 - AI [OpenAI](https://platform.openai.com/docs/overview)
 - IP Geolocation [IPInfo.io](https://ipinfo.io)
+
+## Firebase
+
+- https://console.firebase.google.com/project/tapteam-foodies
 
 ## Get started
 
@@ -56,13 +64,14 @@ In the output, you'll find options to open the app in a
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
 3. Development
-- File-based routing: This app has two screens: app/(tabs)/ index.tsx and app/(tabs)/explore.tsx. The layout file in app/(tabs)/_layout.tsx sets up the tab navigator.
+
+- File-based routing: This app has two screens: app/(tabs)/ index.tsx and app/(tabs)/explore.tsx. The layout file in app/(tabs)/\_layout.tsx sets up the tab navigator.
 
 - Android, iOS, and web support: You can open this project on Android, iOS, and the web. To open the web version, press w in the terminal running this project.
 
 - Images: For static images, you can use the @2x and @3x suffixes to provide files for different screen densities
 
-- Custom fonts: Open app/_layout.tsx to see how to load custom fonts such as this one.
+- Custom fonts: Open app/\_layout.tsx to see how to load custom fonts such as this one.
 
 - Light and dark mode components: This app has light and dark mode support. The useColorScheme) hook lets you inspect what the user's current color scheme is, and so you can adjust Ul colors accordingly.
 
