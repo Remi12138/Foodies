@@ -1,57 +1,62 @@
 [
-    {
-      "id": "1",
-      "title": "Blog Post 1",
-      "author": "Author 1",
-      "restaurantId": "1",
-      "location": {
-        "lat": 36.0032351,
-        "lng": -78.9429055
-      },
-      "stars": "4.5",
-      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt tincidunt. Nullam nec purus nec nunc tincidunt tincidunt. Nullam nec purus nec nunc",
-      "imageCover": "https://picsum.photos/id/0/200",
-      "images": [
-        "https://picsum.photos/id/1/200",
-        "https://picsum.photos/id/2/200",
-        "https://picsum.photos/id/3/200"
-      ]
+  {
+    "id": "1",
+    "title": "Blog Post 1",
+    "author": "Author 1",
+    "restaurant": "1",
+    "location": {
+      "Latitude": 36.0032351,
+      "Longitude": -78.9429055
     },
-    {
-        "id": "2",
-        "title": "Blog Post 2",
-        "author": "Author 2",
-        "restaurantId": "1",
-        "location": {
-          "lat": 36.0032351,
-          "lng": -78.9449055
-        },
-        "stars": "5.0",
-        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt tincidunt. Nullam nec purus nec nunc tincidunt tincidunt. Nullam nec purus nec nunc",
-        "imageCover": "https://picsum.photos/id/10/200",
-        "images": [
-          "https://picsum.photos/id/11/200",
-          "https://picsum.photos/id/12/200",
-          "https://picsum.photos/id/13/200"
-        ]
-      },
-      {
-        "id": "3",
-        "title": "Blog Post 3",
-        "author": "Author 3",
-        "restaurantId": "1",
-        "location": {
-          "lat": 36.0032351,
-          "lng": -78.9469055
-        },
-        "stars": "5.0",
-        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt tincidunt. Nullam nec purus nec nunc tincidunt tincidunt. Nullam nec purus nec nunc",
-        "imageCover": "https://picsum.photos/id/20/200",
-        "images": [
-          "https://picsum.photos/id/21/200",
-          "https://picsum.photos/id/22/200",
-          "https://picsum.photos/id/23/200"
-        ]
-      }
-  ]
-  
+    "rate": "4.5",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt tincidunt. Nullam nec purus nec nunc tincidunt tincidunt. Nullam nec purus nec nunc",
+    "image_cover": "https://picsum.photos/id/0/200",
+    "images": [
+      "https://picsum.photos/id/1/200",
+      "https://picsum.photos/id/2/200",
+      "https://picsum.photos/id/3/200"
+    ],
+    "created_at": "2021-01-01T00:00:00.000Z",
+    "updated_at": "2021-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "2",
+    "title": "Blog Post 2",
+    "author": "Author 2",
+    "restaurant": "2",
+    "location": {
+      "Latitude": 36.0032351,
+      "Longitude": -78.9429055
+    },
+    "rate": "4.5",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt tincidunt. Nullam nec purus nec nunc tincidunt tincidunt. Nullam nec purus nec nunc",
+    "image_cover": "https://picsum.photos/id/4/200",
+    "images": [
+      "https://picsum.photos/id/5/200",
+      "https://picsum.photos/id/6/200",
+      "https://picsum.photos/id/7/200"
+    ],
+    "created_at": "2021-01-01T00:00:00.000Z",
+    "updated_at": "2021-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "3",
+    "title": "Blog Post 3",
+    "author": "Author 3",
+    "restaurant": "3",
+    "location": {
+      "Latitude": 36.0032351,
+      "Longitude": -78.9429055
+    },
+    "rate": "4.5",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt tincidunt. Nullam nec purus nec nunc tincidunt tincidunt. Nullam nec purus nec nunc",
+    "image_cover": "https://picsum.photos/id/8/200",
+    "images": [
+      "https://picsum.photos/id/9/200",
+      "https://picsum.photos/id/10/200",
+      "https://picsum.photos/id/11/200"
+    ],
+    "created_at": "2021-01-01T00:00:00.000Z",
+    "updated_at": "2021-01-01T00:00:00.000Z"
+  }
+]

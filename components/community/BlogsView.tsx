@@ -11,12 +11,12 @@ import { Blog, useBlogStore } from "@/zustand/blog";
 
 function Blogs({ data }: { data: Blog[] }) {
   const [refreshing, setRefreshing] = useState(false);
-  const fetchBlogs = useBlogStore((state) => state.fetchFakeBlogs);
+  const fetchBlogs = useBlogStore((state) => state.fetchBlogs);
 
   const renderBlogCard = ({ item }: { item: Blog }) => (
     <View style={styles.cardContainer}>
       <BlogCard
-        imageUrl={item.imageCover}
+        imageUrl={item.image_cover}
         title={item.title}
         author={item.author}
       />

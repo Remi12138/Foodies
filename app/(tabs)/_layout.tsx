@@ -16,9 +16,9 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="community"
         options={{
-          title: "Community",
+          title: "Home",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "home" : "home-outline"}
@@ -47,7 +47,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="message"
+        name="people"
         options={{
           title: "People",
           tabBarIcon: ({ color, focused }) => (
@@ -62,6 +62,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "Me",
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "person" : "person-outline"}

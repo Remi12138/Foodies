@@ -1,19 +1,23 @@
 import { create } from "zustand";
+import { FIREBASE_DB } from "@/firebaseConfig";
 import dummyBlogs from "@/dummy/blogs.json";
+import { collection, getDocs, limit, query } from "firebase/firestore";
 
 export type Blog = {
   id: string;
-  title: string;
   author: string;
-  restaurantId: string;
-  location: {
-    lat: number;
-    lng: number;
-  };
-  stars: string;
   content: string;
-  imageCover: string;
+  title: string;
+  restaurant: string;
+  location: {
+    Latitude: number;
+    Longitude: number;
+  };
+  rate: string;
+  image_cover: string;
   images: string[];
+  created_at: string;
+  updated_at: string;
 };
 
 type BlogStore = {
@@ -25,6 +29,27 @@ type BlogStore = {
   fetchFakeBlogs: () => Promise<void>;
 };
 
+const fetchBlogs = async () => {
+  try {
+    const blogPostsCollection = collection(FIREBASE_DB, "blogs");
+    // Create a query to fetch the first 10 documents
+    const blogsQuery = query(blogPostsCollection, limit(10));
+    const querySnapshot = await getDocs(blogsQuery);
+    const blogs = querySnapshot.docs.map(
+      (doc) =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as Blog)
+    );
+
+    console.log("Fetched blogs from Firestore:", blogs);
+    return blogs;
+  } catch (error) {
+    console.error("Error fetching blogs from Firestore:", error);
+  }
+};
+
 export const useBlogStore = create<BlogStore>()((set) => ({
   blogs: [],
   setBlogs: (blogs) => set(() => ({ blogs })),
@@ -32,8 +57,7 @@ export const useBlogStore = create<BlogStore>()((set) => ({
   removeBlog: (id) =>
     set((state) => ({ blogs: state.blogs.filter((blog) => blog.id !== id) })),
   fetchBlogs: async () => {
-    const response = await fetch("https://api.example.com/blogs");
-    const blogs = await response.json();
+    const blogs = await fetchBlogs();
     set(() => ({ blogs }));
   },
   fetchFakeBlogs: async () => {

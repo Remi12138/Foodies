@@ -1,12 +1,12 @@
 import { Image, StyleSheet, TouchableOpacity } from "react-native";
 
-import { HelloWave } from "@/components/common/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Ionicons } from "@expo/vector-icons";
 import ThemeSetting from "@/components/profile/ThemeSetting";
-import React from "react";
+import { router } from "expo-router";
+import WelcomeBar from "@/components/profile/WelcomeBar";
 
 export default function ProfileScreen() {
   return (
@@ -19,10 +19,7 @@ export default function ProfileScreen() {
         />
       }
     >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Hola, Smith</ThemedText>
-        <HelloWave />
-      </ThemedView>
+      <WelcomeBar />
       <ThemedView>
         <TouchableOpacity style={styles.row}>
           <ThemedText style={styles.rowText}>Diet</ThemedText>
@@ -42,23 +39,22 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </ThemedView>
       <ThemedView>
-        <TouchableOpacity style={styles.row}>
-          <ThemedText style={styles.rowText}>My Profile and UUID</ThemedText>
+        <TouchableOpacity
+          style={styles.row}
+          onPress={() => {
+            router.navigate("/profile/account");
+          }}
+        >
+          <ThemedText style={styles.rowText}>Account</ThemedText>
           <Ionicons name="chevron-forward" size={24} color="gray" />
         </TouchableOpacity>
       </ThemedView>
-
-      <ThemeSetting />
+      {/* <ThemeSetting /> */}
     </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
   headerImage: {
     height: 150,
     width: "100%",

@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { BlurView } from "expo-blur";
 import { ThemedView } from "@/components/ThemedView";
+import { router } from "expo-router";
 
 export default function CreateModal() {
   const [expanded, setExpanded] = useState(false);
@@ -100,6 +101,11 @@ export default function CreateModal() {
               <TouchableOpacity
                 style={styles.optionButtonContainer}
                 onPress={() => {
+                  if (index === 0) {
+                    // Navigate to the blog creation screen
+                    toggleMenu();
+                    router.push("/community/creation");
+                  }
                   console.log("hander for", buttonLabels[index]);
                 }}
               >
