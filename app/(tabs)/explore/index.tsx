@@ -31,6 +31,7 @@ export default function ExploreScreen() {
   useEffect(() => {
     console.log("Fetching restaurants...");
     handleGetRestaurants();
+   // handleGetLocation();
   }, []);
 
   useEffect(() => {
