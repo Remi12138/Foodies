@@ -15,20 +15,22 @@ import ExploreBar from "@/components/explore/ExploreBar";
 import RestaurantsView from "@/components/explore/RestaurantsView";
 import { useRestaurantStore } from "@/zustand/restaurant";
 import RestaurantsMapView from "@/components/explore/RestaurantsMapView";
+import { useLocation } from "@/zustand/location";
 
 export default function ExploreScreen() {
   const [isMapView, setIsMapView] = useState(false);
   const [loading, setLoading] = useState(true);
   const fetchRestaurants = useRestaurantStore(
-    (state) => state.fetchFakeRestaurants
+    (state) => state.fetchRestaurants
   );
-
+  const { userLocation, fetchLocation } = useLocation();
   const toggleMapView = () => {
     setIsMapView((prev) => !prev);
   };
 
   useEffect(() => {
     handleGetRestaurants();
+   // handleGetLocation();
   }, []);
 
   // Retrieve restaurants from Zustand store
@@ -37,9 +39,11 @@ export default function ExploreScreen() {
   async function handleGetRestaurants() {
     // Show loading indicator
     setLoading(true);
-    await fetchRestaurants();
+    await fetchLocation();
+    await fetchRestaurants(userLocation);
     setLoading(false);
   }
+
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
@@ -65,7 +69,7 @@ export default function ExploreScreen() {
         ) : isMapView ? (
           <RestaurantsMapView data={restaurants} />
         ) : (
-          <RestaurantsView data={restaurants} />
+          <RestaurantsView data={restaurants}  />
         )}
       </ThemedView>
     </SafeAreaView>

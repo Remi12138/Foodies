@@ -12,6 +12,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { Ionicons } from "@expo/vector-icons";
 import FollowingList from "@/components/message/FollowingView";
 import ChatView from "@/components/message/ChatView";
+import React from "react";
 
 export default function FriendScreen() {
   const [isMapView, setIsMapView] = useState(false);

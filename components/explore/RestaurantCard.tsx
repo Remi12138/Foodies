@@ -2,21 +2,22 @@ import { StyleSheet, Image } from "react-native";
 import { Restaurant } from "@/zustand/restaurant";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
+import React from "react";
 
 function RestaurantCard({ item }: { item: Restaurant }) {
   return (
     <ThemedView style={styles.cardContainer}>
-      <Image source={{ uri: item.imageCover }} style={styles.image} />
+      <Image source={{ uri: item.imageUrl }} style={styles.image} />
       <ThemedView style={styles.textContainer}>
         <ThemedText style={styles.name}>{item.name}</ThemedText>
         <ThemedText style={styles.location}>
-          {item.city}, {item.state}
+          {item.location.city}, {item.location.state}
         </ThemedText>
-        <ThemedText style={styles.priceRange}>{item.priceRange}</ThemedText>
+        <ThemedText style={styles.priceRange}>{item.price}</ThemedText> 
       </ThemedView>
       <ThemedView>
         <ThemedText style={styles.cuisineRating}>
-          {item.cuisine} • {item.rating} ⭐
+          {item.categories[0].alias} • {item.rating} ⭐
         </ThemedText>
       </ThemedView>
     </ThemedView>
