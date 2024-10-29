@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, FlatList, RefreshControl } from "react-native";
 import { Restaurant, useRestaurantStore } from "@/zustand/restaurant";
 import RestaurantCard from "./RestaurantCard";
@@ -10,9 +10,7 @@ function Restaurants({ data}: { data: Restaurant[] }) {
   const [refreshing, setRefreshing] = useState(false);
   const { userLocation, fetchLocation } = useLocation();
   
-  const fetchFakeRestaurants = useRestaurantStore(
-    (state) => state.fetchFakeRestaurants//update
-  );
+
  const fetchRestaurants = useRestaurantStore(
     (state) => state.fetchRestaurants
   );
@@ -27,6 +25,7 @@ function Restaurants({ data}: { data: Restaurant[] }) {
     await fetchRestaurants(userLocation);
     setRefreshing(false);
   };
+
 
   return (
     <FlatList
