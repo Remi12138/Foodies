@@ -1,4 +1,6 @@
-import { StyleSheet, View, Text, Modal, Pressable } from "react-native";
+import { StyleSheet, View, Text, Modal, Pressable, ActivityIndicator } from "react-native";
+import * as Location from "expo-location";
+import React, { useState, useEffect } from "react";
 
 function LocatorDialog({
   modalVisible,
@@ -80,6 +82,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+  },
+  paragraph: {
+    fontSize: 18,
+    textAlign: "center",
+  },
 });
-
 export default LocatorDialog;

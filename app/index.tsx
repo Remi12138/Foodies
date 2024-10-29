@@ -28,8 +28,9 @@ export default function HomeScreen() {
   }
 
   return user ? (
-    <Redirect href="/(tabs)/community" />
+    <Redirect href="/(tabs)/explore" />
   ) : (
     <Redirect href="/(auth)/signin" />
   );
+  <Redirect href="/(tabs)/explore" />
 }
