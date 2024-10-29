@@ -72,12 +72,12 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
     
   fetchRestaurants: async (userLocation: { latitude: number; longitude: number }) => {
 
-    console.log(userLocation);
+   // console.log(userLocation);
     const apiKey = 'JHaahtXtTaeO2EqFch4v7BWI4Xy1fxjmBzC2-z2WO32RrUiqti6jRQupiMS6npdYfFfjN9QGOxu_o_Q6cbB-_oMNhVguCu5QLegsrBgfr0PxIriLvsnJ95F-CDEdZ3Yx';
     if (!apiKey) {
       throw new Error("YELP_API_KEY is not defined in the environment variables");
     }
-    const radius = 300; 
+    const radius = 500; 
     const limit = 10; 
 
     const transformToRestaurant = (place: any): Restaurant => {
@@ -136,6 +136,8 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
     
     async function searchNearbyRestaurants(userLocation: { latitude: number; longitude: number }) {
       try {
+        // console.log(userLocation.latitude);
+        // console.log(userLocation.longitude);
         const url = `https://api.yelp.com/v3/businesses/search?term=restaurant&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}&radius=${radius}&limit=${limit}`;
         const response = await fetch(url, {
         method: 'GET',
@@ -148,7 +150,6 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
           throw new Error('Network response was not ok');
         }
         const data = await response.json(); 
-       
         const restaurants: Restaurant[] = data.businesses.map(transformToRestaurant);
         set(() => ({ restaurants }));
       } catch (error) {
