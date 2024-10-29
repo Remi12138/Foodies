@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import {View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity, Platform, ScrollView} from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    Button,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    Platform,
+    ScrollView,
+    ActivityIndicator
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useDietStore } from '@/zustand/diet';
@@ -16,11 +27,11 @@ const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024; // 2MB in bytes
 const UploadDietScreen: React.FC = () => {
     const [imgUri, setImgUri] = useState<string | null>(null);
     const [title, setTitle] = useState<string>('');
-    // const [amount, setAmount] = useState<string>('');
     const [date, setDate] = useState<Date>(new Date());
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
     const { addDiet } = useDietStore();
     const [loading, setLoading] = useState(false);
+    const [analyzeLoading, setAnalyzeLoading] = useState(false);
     let analysis: string;
     const navigation = useNavigation();
 
@@ -77,13 +88,6 @@ const UploadDietScreen: React.FC = () => {
                     topNutrients.forEach(([key, value]) => {
                         console.log(`      ${key}: ${value}`);
                     });
-                    // item.food.forEach((foodOption, foodIndex) => {
-                    //     console.log(`  Option ${foodIndex + 1}:`);
-                    //     console.log(`    Name: ${foodOption.food_info.display_name}`);
-                    //     console.log(`    Confidence: ${foodOption.confidence}`);
-                    //     console.log(`    Quantity: ${foodOption.food_info.quantity}`);
-                    //     console.log(`    Nutritional Info:`, foodOption.food_info.nutrition);
-                    // });
                 });
 
                 return response.data;
@@ -185,11 +189,13 @@ const UploadDietScreen: React.FC = () => {
         }
 
         try {
+            setAnalyzeLoading(true);
             const analysisData = await analyzeImage(imgUri); // Call analyzeImage with the image URI
+            setAnalyzeLoading(false);
             navigation.reset({
                 index: 1,
                 routes: [
-                    { name: "index" },  // Assuming `index` is your main Me screen
+                    { name: "index" },
                     { name: "detaildiet", params: { analysisData } }
                 ],
             });
@@ -296,12 +302,25 @@ const UploadDietScreen: React.FC = () => {
                     <Image source={{ uri: imgUri }} style={styles.image} />
                 ) : (
                     <View style={styles.placeholderImage}>
-                        <Text>Select Image</Text>
+                        {loading ? (
+                            <>
+                                <ActivityIndicator size="large" color="#0000ff" />
+                                <Text>Compressing Image...</Text>
+                            </>
+                        ) : (
+                            <Text>Select Image</Text>
+                        )}
                     </View>
                 )}
             </TouchableOpacity>
 
             <Button title="Start Analyze" onPress={handleAnalyze} />
+            {analyzeLoading && (
+                <>
+                    <ActivityIndicator size="small" color="#0000ff" />
+                    <Text>Analyzing...</Text>
+                </>
+            )}
         </View>
     );
 };
