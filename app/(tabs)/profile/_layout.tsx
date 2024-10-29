@@ -23,6 +23,7 @@ export default function ProfileLayout() {
       <Stack.Screen name="addreceipt" options={{ title: "Add Receipt" }} />
       <Stack.Screen name="mydiets" options={{ title: "My Diets" }} />
       <Stack.Screen name="adddiet" options={{ title: "Add Diet" }} />
+      <Stack.Screen name="detaildiet" options={{ title: "Diet Detail" }} />
       <Stack.Screen name="account" />
     </Stack>
   );
