@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View, Button } from "react-native";
 import MapView, { Marker, MapType } from "react-native-maps";
 import { Restaurant } from "@/zustand/restaurant";
+import { useLocation } from "@/zustand/location";
 
 type Marker = {
   key: string;
@@ -14,18 +15,30 @@ type Marker = {
 function extractLocations(restaurants: Restaurant[]): Marker[] {
   return restaurants.map((restaurant, index) => ({
     key: index.toString(),
-    latitude: restaurant.location.lat,
-    longitude: restaurant.location.lng,
+    latitude: restaurant.coordinates.latitude,
+    longitude: restaurant.coordinates.longitude,
     title: restaurant.name,
-    description: `${restaurant.cuisine} • ${restaurant.rating} ⭐`,
+    description: `${restaurant.categories[0].alias} • ${restaurant.rating} ⭐`,
   }));
 }
 
 function RestaurantsMapView({ data }: { data: Restaurant[] }) {
   const [mapType, setMapType] = useState<MapType>("standard");
-  const center = { latitude: 39.8283, longitude: -98.5795 }; // Central United States
-  const markers = extractLocations(data);
+  const [markers, setMarkers] = useState<Marker[]>([]);
+  const { userLocation, fetchLocation } = useLocation();
+ 
+  console.log(data); 
+  useEffect(() => {
+    fetchLocation(); 
+  }, [fetchLocation]);
 
+  useEffect(() => {
+    setMarkers(extractLocations(data));
+  }, [data]); 
+  // setMarkers(extractLocations(data));
+  const center = { latitude: userLocation.latitude, longitude: userLocation.longitude }; // Central United States
+  //const markers = extractLocations(data);
+  //console.log(data);
   const toggleMapType = () => {
     setMapType((prevMapType) =>
       prevMapType === "standard" ? "satellite" : "standard"

@@ -29,9 +29,20 @@ export default function ExploreScreen() {
   };
 
   useEffect(() => {
+    console.log("Fetching restaurants...");
     handleGetRestaurants();
    // handleGetLocation();
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log("Updated userLocation in component:", userLocation);
+      if (userLocation.latitude && userLocation.longitude) { 
+        await fetchRestaurants(userLocation); 
+      }
+    };
+    fetchData();
+  }, [userLocation]);
 
   // Retrieve restaurants from Zustand store
   const restaurants = useRestaurantStore((state) => state.restaurants);
@@ -40,7 +51,11 @@ export default function ExploreScreen() {
     // Show loading indicator
     setLoading(true);
     await fetchLocation();
-    await fetchRestaurants(userLocation);
+    if (userLocation.latitude && userLocation.longitude) { 
+      await fetchRestaurants(userLocation); 
+    }
+    console.log("userLocation", userLocation);
+    console.log(restaurants);
     setLoading(false);
   }
 
