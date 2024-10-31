@@ -11,8 +11,8 @@ function Restaurants({ data}: { data: Restaurant[] }) {
   const { userLocation, fetchLocation } = useLocation();
   
 
- const fetchRestaurants = useRestaurantStore(
-    (state) => state.fetchRestaurants
+ const fetchFakeRestaurants = useRestaurantStore(
+    (state) => state.fetchFakeRestaurants
   );
   const renderRestaurantCard = ({ item }: { item: Restaurant }) => (
     <RestaurantCard item={item} />
@@ -22,7 +22,8 @@ function Restaurants({ data}: { data: Restaurant[] }) {
     setRefreshing(true);
     await fetchLocation();
     console.log("userLocation", userLocation);
-    await fetchRestaurants(userLocation);
+    //await fetchRestaurants(userLocation);
+    await fetchFakeRestaurants();
     setRefreshing(false);
   };
 

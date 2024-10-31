@@ -1,24 +1,22 @@
-import React from "react";
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; 
 
-function FilterBar() {
+const FilterBar = () => {
   return (
-    <View style={styles.filterContainer}>
-      <TouchableOpacity style={styles.filterButton}>
-        <Text style={styles.filterText}>Style</Text>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ paddingHorizontal: 10 }}>
+      <TouchableOpacity style={{ alignItems: 'center', marginRight: 20 }}>
+        <Icon name="pizza" size={24} />
+        <Text>Pizza</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.filterButton}>
-        <Text style={styles.filterText}>Type</Text>
+      <TouchableOpacity style={{ alignItems: 'center', marginRight: 20 }}>
+        <Icon name="rice" size={24} />
+        <Text>Chinese</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.filterButton}>
-        <Text style={styles.filterText}>Price</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.filterButton}>
-        <Text style={styles.filterText}>Blog Only</Text>
-      </TouchableOpacity>
-    </View>
+      {/* Add more filter options similarly */}
+    </ScrollView>
   );
-}
+};
+
 
 const styles = StyleSheet.create({
   filterContainer: {
