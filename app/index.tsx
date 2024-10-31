@@ -32,5 +32,4 @@ export default function HomeScreen() {
   ) : (
     <Redirect href="/(auth)/signin" />
   );
-  <Redirect href="/(tabs)/explore" />
 }
