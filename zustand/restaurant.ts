@@ -69,7 +69,7 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
         (restaurant) => restaurant.id !== id
       ),
     })),
-    
+  
   fetchRestaurants: async (userLocation: { latitude: number; longitude: number }) => {
 
    // console.log(userLocation);
@@ -78,7 +78,7 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
       throw new Error("YELP_API_KEY is not defined in the environment variables");
     }
     const radius = 500; 
-    const limit = 10; 
+    const limit = 30; 
 
     const transformToRestaurant = (place: any): Restaurant => {
       return {
@@ -135,6 +135,7 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
     };
     
     async function searchNearbyRestaurants(userLocation: { latitude: number; longitude: number }) {
+
       try {
         // console.log(userLocation.latitude);
         // console.log(userLocation.longitude);
@@ -160,9 +161,63 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
 
   },
   fetchFakeRestaurants: async () => {
+    const transformToRestaurant = (place: any): Restaurant => {
+      return {
+        id: place.id,
+        alias: place.alias,
+        name: place.name,
+        imageUrl: place.image_url,
+        isClosed: place.is_closed,
+        url: place.url,
+        price:place.price,
+        reviewCount: place.review_count,
+        categories: place.categories.map((category: any) => ({
+          alias: category.alias,
+          title: category.title,
+        })),
+        rating: place.rating,
+        coordinates: {
+          latitude: place.coordinates.latitude,
+          longitude: place.coordinates.longitude,
+        },
+        transactions: place.transactions || [],
+        location: {
+          address1: place.location.address1,
+          address2: place.location.address2 || null,
+          address3: place.location.address3 || "",
+          city: place.location.city,
+          zipCode: place.location.zip_code,
+          country: place.location.country,
+          state: place.location.state,
+          displayAddress: place.location.display_address,
+        },
+        phone: place.phone,
+        displayPhone: place.display_phone,
+        distance: place.distance,
+        businessHours: place.hours
+          ? place.hours.map((hours: any) => ({
+              open: hours.open.map((timeSlot: any) => ({
+                isOvernight: timeSlot.is_overnight,
+                start: timeSlot.start,
+                end: timeSlot.end,
+                day: timeSlot.day,
+              })),
+              hoursType: hours.hours_type,
+              isOpenNow: hours.is_open_now,
+            }))
+          : [],
+        attributes: {
+          businessTempClosed: place.attributes?.business_temp_closed || null,
+          menuUrl: place.attributes?.menu_url || "Menu URL not available",
+          open24Hours: place.attributes?.open24_hours || null,
+          waitlistReservation: place.attributes?.waitlist_reservation || null,
+        },
+      };
+    };
     return new Promise((resolve) => {
       setTimeout(() => {
-        const restaurants = dummyRestaurants;
+       
+        const restaurants: Restaurant[] = dummyRestaurants.businesses.map(transformToRestaurant);
         set(() => ({ restaurants }));
         console.log("Fetched fake restaurants");
         resolve();

@@ -1,113 +1,1227 @@
-[
-    {
-      "id": "1",
-      "name": "The Gourmet Kitchen",
-      "address": "123 Main St",
-      "city": "Los Angeles",
-      "state": "CA",
-      "zipCode": "90001",
-      "cuisine": "Italian",
-      "rating": 4.5,
-      "priceRange": "$$",
-      "location": {
-        "lat": 34.052235,
-        "lng": -118.243683
+{
+  "businesses": [
+      {
+          "id": "y1qcBS3IW6As9jMpHFX_TQ",
+          "alias": "il-forno-italian-kitchen-durham",
+          "name": "IL Forno Italian Kitchen",
+          "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/PCOY3kSm6HxTU-26rv5Axw/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/il-forno-italian-kitchen-durham?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 1,
+          "categories": [
+              {
+                  "alias": "italian",
+                  "title": "Italian"
+              },
+              {
+                  "alias": "pizza",
+                  "title": "Pizza"
+              }
+          ],
+          "rating": 5.0,
+          "coordinates": {
+              "latitude": 36.0011937,
+              "longitude": -78.9399648
+          },
+          "transactions": [],
+          "location": {
+              "address1": "402 Chapel Dr",
+              "address2": "",
+              "address3": null,
+              "city": "Durham",
+              "zip_code": "27710",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "402 Chapel Dr",
+                  "Durham, NC 27710"
+              ]
+          },
+          "phone": "+19196603900",
+          "display_phone": "(919) 660-3900",
+          "distance": 400.6480296543496,
+          "business_hours": [
+              {
+                  "open": [
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 0
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 1
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 2
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 3
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 4
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 5
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 6
+                      }
+                  ],
+                  "hours_type": "REGULAR",
+                  "is_open_now": true
+              }
+          ],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": null,
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
       },
-      "contactNumber": "555-123-4567",
-      "website": "http://www.thegourmetkitchen.com",
-      "imageCover": "https://picsum.photos/id/100/200",
-      "images": [
-        "https://picsum.photos/id/101/200",
-        "https://picsum.photos/id/102/200"
-      ]
-    },
-    {
-      "id": "2",
-      "name": "Sushi Palace",
-      "address": "456 Sushi Ave",
-      "city": "San Francisco",
-      "state": "CA",
-      "zipCode": "94102",
-      "cuisine": "Japanese",
-      "rating": 4.8,
-      "priceRange": "$$$",
-      "location": {
-        "lat": 37.774929,
-        "lng": -122.419418
+      {
+          "id": "swyXwpOhEpNifltvsGmAMA",
+          "alias": "sazon-durham",
+          "name": "Sazon",
+          "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/0XBqDUbWUYTUNV8RFgu9TA/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/sazon-durham?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 3,
+          "categories": [
+              {
+                  "alias": "latin",
+                  "title": "Latin American"
+              }
+          ],
+          "rating": 4.0,
+          "coordinates": {
+              "latitude": 36.000953506811,
+              "longitude": -78.9392774552107
+          },
+          "transactions": [],
+          "location": {
+              "address1": "416 Chapel Dr",
+              "address2": "018 Brodhead Ctr",
+              "address3": null,
+              "city": "Durham",
+              "zip_code": "27710",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "416 Chapel Dr",
+                  "018 Brodhead Ctr",
+                  "Durham, NC 27710"
+              ]
+          },
+          "phone": "+19196603900",
+          "display_phone": "(919) 660-3900",
+          "distance": 454.24207384484373,
+          "business_hours": [
+              {
+                  "open": [
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 0
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 1
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 2
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 3
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 4
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 5
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2000",
+                          "day": 6
+                      }
+                  ],
+                  "hours_type": "REGULAR",
+                  "is_open_now": true
+              }
+          ],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": null,
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
       },
-      "contactNumber": "555-987-6543",
-      "website": "http://www.sushipalace.com",
-      "imageCover": "https://picsum.photos/id/110/200",
-      "images": [
-        "https://picsum.photos/id/111/200",
-        "https://picsum.photos/id/112/200"
-      ]
-    },
-    {
-      "id": "3",
-      "name": "Burger Town",
-      "address": "789 Burger Blvd",
-      "city": "New York",
-      "state": "NY",
-      "zipCode": "10001",
-      "cuisine": "American",
-      "rating": 4.2,
-      "priceRange": "$",
-      "location": {
-        "lat": 40.712776,
-        "lng": -74.005974
+      {
+          "id": "l8sheeHa3Xw7qF7NnOJvHA",
+          "alias": "west-union-durham",
+          "name": "West Union",
+          "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/SUM4crLtAJVxSSDxtZYvrg/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/west-union-durham?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 6,
+          "categories": [
+              {
+                  "alias": "food_court",
+                  "title": "Food Court"
+              },
+              {
+                  "alias": "food",
+                  "title": "Food"
+              }
+          ],
+          "rating": 3.8,
+          "coordinates": {
+              "latitude": 36.0007734,
+              "longitude": -78.9386556
+          },
+          "transactions": [],
+          "price": "$",
+          "location": {
+              "address1": "416 Chapel Dr",
+              "address2": "",
+              "address3": null,
+              "city": "Durham",
+              "zip_code": "27710",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "416 Chapel Dr",
+                  "Durham, NC 27710"
+              ]
+          },
+          "phone": "",
+          "display_phone": "",
+          "distance": 464.78903158780963,
+          "business_hours": [],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": null,
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
       },
-      "contactNumber": "555-456-7890",
-      "website": "http://www.burgertown.com",
-      "imageCover": "https://picsum.photos/id/120/200",
-      "images": [
-        "https://picsum.photos/id/121/200",
-        "https://picsum.photos/id/122/200"
-      ]
-    },
-    {
-      "id": "4",
-      "name": "Spice Symphony",
-      "address": "321 Spice Rd",
-      "city": "Austin",
-      "state": "TX",
-      "zipCode": "73301",
-      "cuisine": "Chinese",
-      "rating": 4.7,
-      "priceRange": "$$",
-      "location": {
-        "lat": 30.267153,
-        "lng": -97.743057
+      {
+          "id": "bAQVsW_8viKN0lIddxbn7w",
+          "alias": "devils-krafthouse-durham",
+          "name": "Devil's Krafthouse",
+          "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/AK-_7iHCzWyvFtwvoRIc1w/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/devils-krafthouse-durham?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 13,
+          "categories": [
+              {
+                  "alias": "tradamerican",
+                  "title": "American"
+              },
+              {
+                  "alias": "beerbar",
+                  "title": "Beer Bar"
+              }
+          ],
+          "rating": 2.9,
+          "coordinates": {
+              "latitude": 36.00070774510058,
+              "longitude": -78.93939942331377
+          },
+          "transactions": [],
+          "price": "$",
+          "location": {
+              "address1": "W Campus Union Bldg",
+              "address2": "",
+              "address3": "",
+              "city": "Durham",
+              "zip_code": "27710",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "W Campus Union Bldg",
+                  "Durham, NC 27710"
+              ]
+          },
+          "phone": "",
+          "display_phone": "",
+          "distance": 438.8384040342003,
+          "business_hours": [],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": null,
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
       },
-      "contactNumber": "555-654-3210",
-      "website": "http://www.spicesymphony.com",
-      "imageCover": "https://picsum.photos/id/130/200",
-      "images": [
-        "https://picsum.photos/id/131/200",
-        "https://picsum.photos/id/132/200"
-      ]
-    },
-    {
-      "id": "5",
-      "name": "Casa Mexicana",
-      "address": "654 Fiesta Ln",
-      "city": "San Diego",
-      "state": "CA",
-      "zipCode": "92101",
-      "cuisine": "Mexican",
-      "rating": 4.3,
-      "priceRange": "$$",
-      "location": {
-        "lat": 32.715736,
-        "lng": -117.161087
+      {
+          "id": "150WuOBV3zaDLcv4FuryYg",
+          "alias": "cafe-de-novo-durham",
+          "name": "Cafe De Novo",
+          "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/BXKksXDjFhlnOGvYenY92w/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/cafe-de-novo-durham?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 2,
+          "categories": [
+              {
+                  "alias": "cafes",
+                  "title": "Cafes"
+              }
+          ],
+          "rating": 3.5,
+          "coordinates": {
+              "latitude": 35.9998999536037,
+              "longitude": -78.9442475885153
+          },
+          "transactions": [
+              "delivery"
+          ],
+          "location": {
+              "address1": "210 Science Dr",
+              "address2": "",
+              "address3": "",
+              "city": "Durham",
+              "zip_code": "27708",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "210 Science Dr",
+                  "Durham, NC 27708"
+              ]
+          },
+          "phone": "+19196138552",
+          "display_phone": "(919) 613-8552",
+          "distance": 91.25864797860122,
+          "business_hours": [
+              {
+                  "open": [
+                      {
+                          "is_overnight": false,
+                          "start": "0730",
+                          "end": "1500",
+                          "day": 0
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0730",
+                          "end": "1500",
+                          "day": 1
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0730",
+                          "end": "1500",
+                          "day": 2
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0730",
+                          "end": "1500",
+                          "day": 3
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0730",
+                          "end": "1500",
+                          "day": 4
+                      }
+                  ],
+                  "hours_type": "REGULAR",
+                  "is_open_now": false
+              }
+          ],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": null,
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
       },
-      "contactNumber": "555-321-9876",
-      "website": "http://www.casa-mexicana.com",
-      "imageCover": "https://picsum.photos/id/140/200",
-      "images": [
-        "https://picsum.photos/id/141/200",
-        "https://picsum.photos/id/142/200"
-      ]
-    }
-  ]
-  
+      {
+          "id": "eHcb8-ncYjdRZ6EIjbZgEw",
+          "alias": "café-edens-durham-2",
+          "name": "Café Edens",
+          "image_url": "https://s3-media1.fl.yelpcdn.com/bphoto/1qcXiI0ra5UjJ6soooh7Ag/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/caf%C3%A9-edens-durham-2?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 3,
+          "categories": [
+              {
+                  "alias": "cafeteria",
+                  "title": "Cafeteria"
+              }
+          ],
+          "rating": 4.3,
+          "coordinates": {
+              "latitude": 36.001061,
+              "longitude": -78.941083
+          },
+          "transactions": [
+              "delivery"
+          ],
+          "price": "$$",
+          "location": {
+              "address1": "101 Bryan Center",
+              "address2": "",
+              "address3": "",
+              "city": "Durham",
+              "zip_code": "27708",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "101 Bryan Center",
+                  "Durham, NC 27708"
+              ]
+          },
+          "phone": "+19196686784",
+          "display_phone": "(919) 668-6784",
+          "distance": 300.43837903667793,
+          "business_hours": [],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": null,
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
+      },
+      {
+          "id": "5vbdHQpv0bP74JPikiFzvw",
+          "alias": "dolce-vita-durham",
+          "name": "Dolce Vita",
+          "image_url": "https://s3-media4.fl.yelpcdn.com/bphoto/65LrVTUW4sGCJG5WoBpCLQ/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/dolce-vita-durham?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 6,
+          "categories": [
+              {
+                  "alias": "coffee",
+                  "title": "Coffee & Tea"
+              },
+              {
+                  "alias": "sandwiches",
+                  "title": "Sandwiches"
+              }
+          ],
+          "rating": 3.5,
+          "coordinates": {
+              "latitude": 36.0027900569136,
+              "longitude": -78.9433765411377
+          },
+          "transactions": [],
+          "price": "$",
+          "location": {
+              "address1": "124 Science Dr",
+              "address2": "",
+              "address3": "French Family Science Center",
+              "city": "Durham",
+              "zip_code": "27705",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "124 Science Dr",
+                  "French Family Science Center",
+                  "Durham, NC 27705"
+              ]
+          },
+          "phone": "",
+          "display_phone": "",
+          "distance": 302.81443680183946,
+          "business_hours": [],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": null,
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
+      },
+      {
+          "id": "8fhBWi4PcGWYcu0A4iR9xQ",
+          "alias": "saladelia-cafe-durham-23",
+          "name": "Saladelia Cafe",
+          "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/TUqfwIZpLABYyghdZOPOOA/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/saladelia-cafe-durham-23?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 0,
+          "categories": [
+              {
+                  "alias": "cafes",
+                  "title": "Cafes"
+              },
+              {
+                  "alias": "salad",
+                  "title": "Salad"
+              },
+              {
+                  "alias": "sandwiches",
+                  "title": "Sandwiches"
+              }
+          ],
+          "rating": 0.0,
+          "coordinates": {
+              "latitude": 35.9993892,
+              "longitude": -78.94400349074455
+          },
+          "transactions": [
+              "delivery"
+          ],
+          "location": {
+              "address1": "201 Science Dr",
+              "address2": "",
+              "address3": null,
+              "city": "Durham",
+              "zip_code": "27705",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "201 Science Dr",
+                  "Durham, NC 27705"
+              ]
+          },
+          "phone": "+19196137404",
+          "display_phone": "(919) 613-7404",
+          "distance": 87.62690627760853,
+          "business_hours": [
+              {
+                  "open": [
+                      {
+                          "is_overnight": false,
+                          "start": "0800",
+                          "end": "1500",
+                          "day": 0
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0800",
+                          "end": "1500",
+                          "day": 1
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0800",
+                          "end": "1500",
+                          "day": 2
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0800",
+                          "end": "1500",
+                          "day": 3
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0800",
+                          "end": "1430",
+                          "day": 4
+                      }
+                  ],
+                  "hours_type": "REGULAR",
+                  "is_open_now": false
+              }
+          ],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": "https://www.saladelia.com/cafe-menu/",
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
+      },
+      {
+          "id": "UZT-FfCOFZZExGSuyCt0zQ",
+          "alias": "the-loop-pizza-grill-durham",
+          "name": "The Loop Pizza Grill",
+          "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/toLbsQSOCcPQqlQy9ZO_rA/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/the-loop-pizza-grill-durham?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 41,
+          "categories": [
+              {
+                  "alias": "pizza",
+                  "title": "Pizza"
+              },
+              {
+                  "alias": "burgers",
+                  "title": "Burgers"
+              }
+          ],
+          "rating": 3.7,
+          "coordinates": {
+              "latitude": 36.0008545038551,
+              "longitude": -78.9389133453369
+          },
+          "transactions": [
+              "delivery"
+          ],
+          "price": "$$",
+          "location": {
+              "address1": "125 Science Dr",
+              "address2": "",
+              "address3": "",
+              "city": "Durham",
+              "zip_code": "27708",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "125 Science Dr",
+                  "Durham, NC 27708"
+              ]
+          },
+          "phone": "+19196608888",
+          "display_phone": "(919) 660-8888",
+          "distance": 484.52140826803554,
+          "business_hours": [
+              {
+                  "open": [
+                      {
+                          "is_overnight": false,
+                          "start": "1030",
+                          "end": "2300",
+                          "day": 0
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1030",
+                          "end": "2300",
+                          "day": 1
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1030",
+                          "end": "2300",
+                          "day": 2
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1030",
+                          "end": "2300",
+                          "day": 3
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1030",
+                          "end": "2300",
+                          "day": 4
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1030",
+                          "end": "2300",
+                          "day": 5
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2300",
+                          "day": 6
+                      }
+                  ],
+                  "hours_type": "REGULAR",
+                  "is_open_now": true
+              }
+          ],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": "https://www.thelooprestaurant.com/menu",
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
+      },
+      {
+          "id": "iRztnF1LMA7T6oEYEL3E7w",
+          "alias": "panera-bread-durham-11",
+          "name": "Panera Bread",
+          "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/bqnbkhK7x28wAQQAiEcS-g/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/panera-bread-durham-11?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 1,
+          "categories": [
+              {
+                  "alias": "salad",
+                  "title": "Salad"
+              },
+              {
+                  "alias": "soup",
+                  "title": "Soup"
+              },
+              {
+                  "alias": "sandwiches",
+                  "title": "Sandwiches"
+              }
+          ],
+          "rating": 4.0,
+          "coordinates": {
+              "latitude": 36.00063789471128,
+              "longitude": -78.93956804464867
+          },
+          "transactions": [],
+          "location": {
+              "address1": "416 Union Building Chapel Dr",
+              "address2": "West Union Building",
+              "address3": null,
+              "city": "Durham",
+              "zip_code": "27708",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "416 Union Building Chapel Dr",
+                  "West Union Building",
+                  "Durham, NC 27708"
+              ]
+          },
+          "phone": "+19192136623",
+          "display_phone": "(919) 213-6623",
+          "distance": 422.7691171888604,
+          "business_hours": [
+              {
+                  "open": [
+                      {
+                          "is_overnight": false,
+                          "start": "0700",
+                          "end": "2100",
+                          "day": 0
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0700",
+                          "end": "2100",
+                          "day": 1
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0700",
+                          "end": "2100",
+                          "day": 2
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0700",
+                          "end": "2100",
+                          "day": 3
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0700",
+                          "end": "2100",
+                          "day": 4
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0700",
+                          "end": "2100",
+                          "day": 5
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0700",
+                          "end": "2100",
+                          "day": 6
+                      }
+                  ],
+                  "hours_type": "REGULAR",
+                  "is_open_now": true
+              }
+          ],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": "https://www.panerabread.com/en-us/menu.html?utm_source=yelp&utm_medium=local&utm_campaign=dpm-dist&utm_term=609270&utm_content=menu",
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
+      },
+      {
+          "id": "R018QSGaZoZPXiQDYnRX0g",
+          "alias": "twinnies-durham",
+          "name": "Twinnie's",
+          "image_url": "https://s3-media1.fl.yelpcdn.com/bphoto/v4yYzoUioKrQ2nhijeR9Ww/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/twinnies-durham?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 7,
+          "categories": [
+              {
+                  "alias": "irish_pubs",
+                  "title": "Irish Pub"
+              },
+              {
+                  "alias": "sandwiches",
+                  "title": "Sandwiches"
+              }
+          ],
+          "rating": 4.3,
+          "coordinates": {
+              "latitude": 36.003413,
+              "longitude": -78.93974
+          },
+          "transactions": [],
+          "price": "$",
+          "location": {
+              "address1": "101 Science Dr",
+              "address2": "",
+              "address3": "",
+              "city": "Durham",
+              "zip_code": "27708",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "101 Science Dr",
+                  "Durham, NC 27708"
+              ]
+          },
+          "phone": "+19196603944",
+          "display_phone": "(919) 660-3944",
+          "distance": 542.4976555893595,
+          "business_hours": [
+              {
+                  "open": [
+                      {
+                          "is_overnight": false,
+                          "start": "0800",
+                          "end": "1900",
+                          "day": 0
+                      }
+                  ],
+                  "hours_type": "REGULAR",
+                  "is_open_now": false
+              }
+          ],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": null,
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
+      },
+      {
+          "id": "MaupvuqledO2Cu3pd1Bl3A",
+          "alias": "divinity-cafe-durham",
+          "name": "Divinity Cafe",
+          "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/5-JhqRanerNtviciVSVreg/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/divinity-cafe-durham?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 11,
+          "categories": [
+              {
+                  "alias": "cafeteria",
+                  "title": "Cafeteria"
+              }
+          ],
+          "rating": 3.9,
+          "coordinates": {
+              "latitude": 36.00181333,
+              "longitude": -78.93933333
+          },
+          "transactions": [],
+          "price": "$",
+          "location": {
+              "address1": "407 Chapel Dr",
+              "address2": "",
+              "address3": "",
+              "city": "Durham",
+              "zip_code": "27708",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "407 Chapel Dr",
+                  "Durham, NC 27708"
+              ]
+          },
+          "phone": "+19196683498",
+          "display_phone": "(919) 668-3498",
+          "distance": 469.16634187569605,
+          "business_hours": [
+              {
+                  "open": [
+                      {
+                          "is_overnight": false,
+                          "start": "0800",
+                          "end": "1600",
+                          "day": 0
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0800",
+                          "end": "1600",
+                          "day": 1
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0800",
+                          "end": "1600",
+                          "day": 2
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0800",
+                          "end": "1600",
+                          "day": 3
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0800",
+                          "end": "1600",
+                          "day": 4
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "1500",
+                          "day": 6
+                      }
+                  ],
+                  "hours_type": "REGULAR",
+                  "is_open_now": false
+              }
+          ],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": null,
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
+      },
+      {
+          "id": "FqWn2p0H24wZ-7yhe6DRRA",
+          "alias": "café-west-union-durham",
+          "name": "Café - West Union",
+          "image_url": "https://s3-media1.fl.yelpcdn.com/bphoto/dGAlDf2woiisigQctt4DzQ/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/caf%C3%A9-west-union-durham?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 2,
+          "categories": [
+              {
+                  "alias": "coffee",
+                  "title": "Coffee & Tea"
+              },
+              {
+                  "alias": "creperies",
+                  "title": "Creperies"
+              },
+              {
+                  "alias": "sandwiches",
+                  "title": "Sandwiches"
+              }
+          ],
+          "rating": 2.5,
+          "coordinates": {
+              "latitude": 36.0011381791564,
+              "longitude": -78.9392177439429
+          },
+          "transactions": [],
+          "location": {
+              "address1": "402 Chapel Dr",
+              "address2": "",
+              "address3": null,
+              "city": "Durham",
+              "zip_code": "27710",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "402 Chapel Dr",
+                  "Durham, NC 27710"
+              ]
+          },
+          "phone": "",
+          "display_phone": "",
+          "distance": 400.6480296543496,
+          "business_hours": [
+              {
+                  "open": [
+                      {
+                          "is_overnight": false,
+                          "start": "0730",
+                          "end": "2200",
+                          "day": 0
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0730",
+                          "end": "2200",
+                          "day": 1
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0730",
+                          "end": "2200",
+                          "day": 2
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0730",
+                          "end": "2200",
+                          "day": 3
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "0730",
+                          "end": "2200",
+                          "day": 4
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1000",
+                          "end": "2100",
+                          "day": 5
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1100",
+                          "end": "2100",
+                          "day": 6
+                      }
+                  ],
+                  "hours_type": "REGULAR",
+                  "is_open_now": true
+              }
+          ],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": null,
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
+      },
+      {
+          "id": "6_SEGWExrMfdV7izpN1Ovw",
+          "alias": "panda-express-durham-4",
+          "name": "Panda Express",
+          "image_url": "https://s3-media4.fl.yelpcdn.com/bphoto/cqEuh8zQQxDWQB5MINaLwg/o.jpg",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/panda-express-durham-4?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 21,
+          "categories": [
+              {
+                  "alias": "chinese",
+                  "title": "Chinese"
+              },
+              {
+                  "alias": "hotdogs",
+                  "title": "Fast Food"
+              }
+          ],
+          "rating": 3.1,
+          "coordinates": {
+              "latitude": 36.0032962,
+              "longitude": -78.9425445
+          },
+          "transactions": [],
+          "price": "$",
+          "location": {
+              "address1": "120 Science Drive",
+              "address2": "BRYAN CENTER",
+              "address3": "",
+              "city": "Durham",
+              "zip_code": "27708",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "120 Science Drive",
+                  "BRYAN CENTER",
+                  "Durham, NC 27708"
+              ]
+          },
+          "phone": "+19196605080",
+          "display_phone": "(919) 660-5080",
+          "distance": 377.3237269147745,
+          "business_hours": [
+              {
+                  "open": [
+                      {
+                          "is_overnight": false,
+                          "start": "1030",
+                          "end": "2200",
+                          "day": 0
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1030",
+                          "end": "2200",
+                          "day": 1
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1030",
+                          "end": "2200",
+                          "day": 2
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1030",
+                          "end": "2200",
+                          "day": 3
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1030",
+                          "end": "2200",
+                          "day": 4
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1030",
+                          "end": "2200",
+                          "day": 5
+                      },
+                      {
+                          "is_overnight": false,
+                          "start": "1030",
+                          "end": "2200",
+                          "day": 6
+                      }
+                  ],
+                  "hours_type": "REGULAR",
+                  "is_open_now": true
+              }
+          ],
+          "attributes": {
+              "business_temp_closed": 2524636800,
+              "menu_url": "https://www.pandaexpress.com/best-sellers",
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
+      },
+      {
+          "id": "5T6jjDkgb1xRKULeQM5Uzw",
+          "alias": "mcdonalds-durham-19",
+          "name": "McDonald's",
+          "image_url": "",
+          "is_closed": false,
+          "url": "https://www.yelp.com/biz/mcdonalds-durham-19?adjust_creative=2o92vQyDC4rI-sYAeJBTMA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=2o92vQyDC4rI-sYAeJBTMA",
+          "review_count": 0,
+          "categories": [
+              {
+                  "alias": "coffee",
+                  "title": "Coffee & Tea"
+              },
+              {
+                  "alias": "burgers",
+                  "title": "Burgers"
+              },
+              {
+                  "alias": "hotdogs",
+                  "title": "Fast Food"
+              }
+          ],
+          "rating": 0.0,
+          "coordinates": {
+              "latitude": 36.00123846955868,
+              "longitude": -78.9414183961809
+          },
+          "transactions": [
+              "delivery"
+          ],
+          "price": "$",
+          "location": {
+              "address1": "106 Bryan Ctr",
+              "address2": null,
+              "address3": null,
+              "city": "Durham",
+              "zip_code": "27708",
+              "country": "US",
+              "state": "NC",
+              "display_address": [
+                  "106 Bryan Ctr",
+                  "Durham, NC 27708"
+              ]
+          },
+          "phone": "+19196682404",
+          "display_phone": "(919) 668-2404",
+          "distance": 280.0970569906164,
+          "business_hours": [
+              {
+                  "open": [
+                      {
+                          "is_overnight": true,
+                          "start": "0000",
+                          "end": "0000",
+                          "day": 0
+                      },
+                      {
+                          "is_overnight": true,
+                          "start": "0000",
+                          "end": "0000",
+                          "day": 1
+                      },
+                      {
+                          "is_overnight": true,
+                          "start": "0000",
+                          "end": "0000",
+                          "day": 2
+                      },
+                      {
+                          "is_overnight": true,
+                          "start": "0000",
+                          "end": "0000",
+                          "day": 3
+                      },
+                      {
+                          "is_overnight": true,
+                          "start": "0000",
+                          "end": "0000",
+                          "day": 4
+                      },
+                      {
+                          "is_overnight": true,
+                          "start": "0000",
+                          "end": "0000",
+                          "day": 5
+                      },
+                      {
+                          "is_overnight": true,
+                          "start": "0000",
+                          "end": "0000",
+                          "day": 6
+                      }
+                  ],
+                  "hours_type": "REGULAR",
+                  "is_open_now": true
+              }
+          ],
+          "attributes": {
+              "business_temp_closed": null,
+              "menu_url": "https://www.mcdonalds.com/us/en-us/full-menu.html?cid=PS:GCM_MOP:NB::Yelp:All",
+              "open24_hours": null,
+              "waitlist_reservation": null
+          }
+      }
+  ],
+  "total": 15,
+  "region": {
+      "center": {
+          "longitude": -78.94422972195878,
+          "latitude": 36.00015569999999
+      }
+  }
+}
