@@ -1,14 +1,12 @@
 import React from 'react';
-import {View, Text, Image, FlatList, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useDietStore } from '@/zustand/diet';
-import { format } from 'date-fns/format';
-import {Ionicons} from "@expo/vector-icons";
-import {router} from "expo-router";
+import { format } from 'date-fns';
+import { Ionicons } from "@expo/vector-icons";
 
 const DietBlogScreen: React.FC = () => {
     const { diets, removeDiet } = useDietStore();
 
-    // Sort diets by date (newest first)
     const sortedDiets = diets.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     const renderDietItem = ({ item }: { item: typeof diets[0] }) => (
@@ -16,20 +14,27 @@ const DietBlogScreen: React.FC = () => {
             <Image source={{ uri: item.imgUri }} style={styles.dietImage} />
             <View style={styles.dietDetails}>
                 <Text style={styles.dietTitle}>{item.title}</Text>
-                <Text style={styles.dietDate}>{item.analysis}</Text>
                 <Text style={styles.dietDate}>{format(new Date(item.date), 'MMM dd, yyyy')}</Text>
+
+                {/* Display totals */}
+                <Text style={styles.dietStats}>Calories: {item.total_calories} kcal</Text>
+                <Text style={styles.dietStats}>Proteins: {item.total_proteins} g</Text>
+                <Text style={styles.dietStats}>Fat: {item.total_fat} g</Text>
+                <Text style={styles.dietStats}>Carbs: {item.total_carbs} g</Text>
+                <Text style={styles.dietStats}>Fibers: {item.total_fibers} g</Text>
+
                 <TouchableOpacity style={styles.deleteButton} onPress={() => removeDiet(item.id)}>
-                    <Ionicons name="trash" size={24} color="red" />
+                    <Ionicons name="trash" size={20} color="red" />
                 </TouchableOpacity>
             </View>
         </View>
     );
 
     return (
-        <SafeAreaView >
+        <SafeAreaView style={styles.container}>
             <FlatList
                 data={sortedDiets}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.id.toString()}
                 renderItem={renderDietItem}
                 contentContainerStyle={styles.flatListContent}
                 showsVerticalScrollIndicator={false}
@@ -42,61 +47,69 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f5f5f5',
-        padding: 20,
-    },
-    backButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    backText: {
-        fontSize: 18,
-        marginLeft: 10,
     },
     flatListContent: {
-        marginTop: 20,
-        paddingBottom: 20,
-        paddingHorizontal: 10,
+        paddingVertical: 20,
     },
     dietCard: {
-        backgroundColor: '#ffffff',
+        backgroundColor: '#fff',
         borderRadius: 10,
-        overflow: 'hidden',
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 15,
         shadowColor: '#000',
         shadowOpacity: 0.1,
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 5,
         elevation: 3,
-        flexDirection: 'row',
+        overflow: 'hidden',
     },
     dietImage: {
         width: 80,
         height: 80,
-        borderTopLeftRadius: 10,
-        borderBottomLeftRadius: 10,
     },
     dietDetails: {
         flex: 1,
         padding: 10,
-        justifyContent: 'space-between',
     },
     dietTitle: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#333333',
-    },
-    dietAmount: {
-        fontSize: 14,
-        color: '#00796b',
-        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 5,
     },
     dietDate: {
         fontSize: 12,
-        color: '#777777',
+        color: '#777',
+        marginBottom: 5,
+    },
+    dietStats: {
+        fontSize: 14,
+        color: '#333',
+        marginBottom: 3,
+    },
+    foodOptionContainer: {
+        marginTop: 10,
+        backgroundColor: '#f0f0f0',
+        padding: 10,
+        borderRadius: 8,
+    },
+    foodOptionHeader: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    foodDetail: {
+        fontSize: 13,
+        color: '#555',
+    },
+    nutrientDetail: {
+        fontSize: 12,
+        color: '#777',
     },
     deleteButton: {
-        padding: 2,
+        alignSelf: 'flex-start',
+        marginTop: 10,
     },
 });
 
