@@ -1,8 +1,19 @@
 import React, { useState } from 'react';
-import {View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity, Platform, ScrollView} from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    Button,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    Platform,
+    ScrollView,
+    ActivityIndicator
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useDietStore } from '@/zustand/diet';
+import { Diet, useDietStore } from '@/zustand/diet';
 import {router} from "expo-router";
 import * as FileSystem from 'expo-file-system';
 import axios from 'axios';
@@ -16,12 +27,13 @@ const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024; // 2MB in bytes
 const UploadDietScreen: React.FC = () => {
     const [imgUri, setImgUri] = useState<string | null>(null);
     const [title, setTitle] = useState<string>('');
-    // const [amount, setAmount] = useState<string>('');
     const [date, setDate] = useState<Date>(new Date());
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
     const { addDiet } = useDietStore();
     const [loading, setLoading] = useState(false);
-    let analysis: string;
+    const [analyzeLoading, setAnalyzeLoading] = useState(false);
+    let analysisData: any;
+    let newDiet: Diet;
     const navigation = useNavigation();
 
     const getImageSize = async (uri: string) => {
@@ -29,15 +41,18 @@ const UploadDietScreen: React.FC = () => {
         return fileInfo.exists ? fileInfo?.size : 0 ;
     };
 
+    // Todo: response.status === 4xx, return?
+    // Call api, return data
     const analyzeImage = async (imageUri: string) => {
         const apiKey = "vmg48AzN.7kadZgKHh9vPLjofJzyc2w21lRVSaVTg";
         const url = "https://vision.foodvisor.io/api/1.0/en/analysis/";
 
         try {
             // Load the image as bytes
-            const image = await FileSystem.readAsStringAsync(imageUri, {
+            const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {
                 encoding: FileSystem.EncodingType.Base64,
             });
+            const body = JSON.stringify({ image: imageBase64 });
 
             const formData = new FormData();
             formData.append('image', {
@@ -52,6 +67,7 @@ const UploadDietScreen: React.FC = () => {
             };
 
             const response = await axios.post(url, formData, { headers });
+            // const response = await axios.post(url, body, { headers });
 
             if (response.status === 200) {
                 console.log("Data:", response.data);
@@ -77,13 +93,6 @@ const UploadDietScreen: React.FC = () => {
                     topNutrients.forEach(([key, value]) => {
                         console.log(`      ${key}: ${value}`);
                     });
-                    // item.food.forEach((foodOption, foodIndex) => {
-                    //     console.log(`  Option ${foodIndex + 1}:`);
-                    //     console.log(`    Name: ${foodOption.food_info.display_name}`);
-                    //     console.log(`    Confidence: ${foodOption.confidence}`);
-                    //     console.log(`    Quantity: ${foodOption.food_info.quantity}`);
-                    //     console.log(`    Nutritional Info:`, foodOption.food_info.nutrition);
-                    // });
                 });
 
                 return response.data;
@@ -94,6 +103,7 @@ const UploadDietScreen: React.FC = () => {
     };
 
 
+    // Test
     const downloadImage = async (imageUrl: string) => {
         const localUri = `${FileSystem.cacheDirectory}image.jpg`;
 
@@ -113,6 +123,8 @@ const UploadDietScreen: React.FC = () => {
     // downloadImage("https://cdn.foodvisor.io/img/vision/examples/1.jpg");
 
 
+    // Todo: cancel button
+    // Options: select images from camera, album, or cancel
     const selectImage = async () => {
 
         Alert.alert('Select Image', 'Choose an option', [
@@ -122,8 +134,9 @@ const UploadDietScreen: React.FC = () => {
         ]);
     };
 
+    // Todo: compress not work
+    // pick img from camera/album, ask for authority, compress->setImgUri
     const pickImage = async (source: 'camera' | 'library') => {
-
         let result;
         if (source === "camera") {
             const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -161,7 +174,7 @@ const UploadDietScreen: React.FC = () => {
             let compressedImageUri = result.assets[0].uri;
             let imageSize = await getImageSize(compressedImageUri);
 
-            // Keep resizing/compressing until we're under 2MB
+            // Keep resizing/compressing until it's under 2MB
             while (imageSize > MAX_SIZE_BYTES) {
                 const manipulatedImage = await ImageManipulator.manipulateAsync(
                     compressedImageUri,
@@ -178,60 +191,45 @@ const UploadDietScreen: React.FC = () => {
         }
     };
 
+    // Todo: result screen, detail screen
+    // click "Start Analyze", call analyzeImage, jump to result screen
+    //
     const handleAnalyze = async () => {
         if (!imgUri) {
             Alert.alert('No Image Selected', 'Please select an image to analyze.');
             return;
         }
+        if (!title ) {
+            alert('Please fill the title before submitting.');
+            return;
+        }
 
         try {
-            const analysisData = await analyzeImage(imgUri); // Call analyzeImage with the image URI
+            // Check if the imgUri already exists in DietStore
+            const existingDiet = useDietStore.getState().diets.find(diet => {
+                console.log(`Comparing imgUri:\nStore: ${diet.imgUri}\nCurrent: ${imgUri}`);
+                return diet.imgUri === imgUri;
+            });
+            if (existingDiet) {
+                console.log("imgUri already exists in DietStore");
+                analysisData = existingDiet.analysis;
+                newDiet = existingDiet;
+            } else {
+                console.log("new imgUri");
+                setAnalyzeLoading(true);
+                analysisData = await analyzeImage(imgUri); // Call analyzeImage with the image URI
+                newDiet = await addDiet(imgUri, title, analysisData);
+                setAnalyzeLoading(false);
+            }
             navigation.reset({
                 index: 1,
                 routes: [
-                    { name: "index" },  // Assuming `index` is your main Me screen
-                    { name: "detaildiet", params: { analysisData } }
+                    { name: "index" },
+                    { name: "detaildiet", params: { newDiet: { ...newDiet, date: newDiet.date.toISOString() } } }
                 ],
             });
         } catch (error) {
             Alert.alert('Error', 'Failed to analyze the image.');
-        }
-    };
-
-    const pickImage2 = async () => {
-        // Request media library permissions
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-            alert('Sorry, we need media library permissions to make this work!');
-            return;
-        }
-
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setImgUri(result.assets[0].uri);
-        }
-    };
-
-    const takePhoto = async () => {
-        // Request camera permissions
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== 'granted') {
-            alert('Sorry, we need camera permissions to make this work!');
-            return;
-        }
-
-        const result = await ImagePicker.launchCameraAsync({
-            allowsEditing: true,
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setImgUri(result.assets[0].uri);
         }
     };
 
@@ -241,22 +239,6 @@ const UploadDietScreen: React.FC = () => {
             setDate(selectedDate);
         }
     };
-
-    const handleSubmit = () => {
-        if (!imgUri || !title ) {
-            alert('Please fill all fields before submitting.');
-            return;
-        }
-
-        addDiet(imgUri, title, analysis);
-        alert('Diet added successfully!');
-        // Clear form
-        setImgUri(null);
-        setTitle('');
-        setDate(new Date());
-        router.navigate("/profile/mydiets");
-    };
-
 
     return (
         <View style={styles.container}>
@@ -296,12 +278,25 @@ const UploadDietScreen: React.FC = () => {
                     <Image source={{ uri: imgUri }} style={styles.image} />
                 ) : (
                     <View style={styles.placeholderImage}>
-                        <Text>Select Image</Text>
+                        {loading ? (
+                            <>
+                                <ActivityIndicator size="large" color="#0000ff" />
+                                <Text>Compressing Image...</Text>
+                            </>
+                        ) : (
+                            <Text>Select Image</Text>
+                        )}
                     </View>
                 )}
             </TouchableOpacity>
 
             <Button title="Start Analyze" onPress={handleAnalyze} />
+            {analyzeLoading && (
+                <>
+                    <ActivityIndicator size="small" color="#0000ff" />
+                    <Text>Analyzing...</Text>
+                </>
+            )}
         </View>
     );
 };
