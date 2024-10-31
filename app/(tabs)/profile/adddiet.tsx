@@ -20,6 +20,7 @@ import axios from 'axios';
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as ImageManipulator from 'expo-image-manipulator';
+import CryptoJS from 'crypto-js';
 
 const MAX_SIZE_MB = 2;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024; // 2MB in bytes
@@ -39,6 +40,16 @@ const UploadDietScreen: React.FC = () => {
     const getImageSize = async (uri: string) => {
         const fileInfo = await FileSystem.getInfoAsync(uri);
         return fileInfo.exists ? fileInfo?.size : 0 ;
+    };
+
+    const generateImageHash = async (imgUri: string) => {
+        try {
+            const fileContent = await FileSystem.readAsStringAsync(imgUri, { encoding: 'base64' });
+            return CryptoJS.SHA256(fileContent).toString();
+        } catch (error) {
+            console.error("Error in generateImageHash:", error);
+            throw error;
+        }
     };
 
     // Todo: response.status === 4xx, return?
@@ -205,29 +216,74 @@ const UploadDietScreen: React.FC = () => {
         }
 
         try {
-            // Check if the imgUri already exists in DietStore
-            const existingDiet = useDietStore.getState().diets.find(diet => {
-                console.log(`Comparing imgUri:\nStore: ${diet.imgUri}\nCurrent: ${imgUri}`);
-                return diet.imgUri === imgUri;
-            });
+            const imgHash = await generateImageHash(imgUri);
+            // Check if the image hash already exists
+            const existingDiet = useDietStore.getState().diets.find(diet => diet.imgHash === imgHash);
+            // if (existingDiet) {
+            //     console.log("imgUri already exists in DietStore");
+            //     analysisData = existingDiet.analysis;
+            //     newDiet = existingDiet;
+            // } else {
+            //     console.log("new imgUri");
+            //     setAnalyzeLoading(true);
+            //     analysisData = await analyzeImage(imgUri); // Call analyzeImage with the image URI
+            //     newDiet = await addDiet(imgUri, imgHash, title, analysisData);
+            //     setAnalyzeLoading(false);
+            // }
+            // navigation.reset({
+            //     index: 1,
+            //     routes: [
+            //         { name: "index" },
+            //         { name: "detaildiet", params: { newDiet: { ...newDiet, date: newDiet.date.toISOString() } } }
+            //     ],
+            // });
             if (existingDiet) {
+                const existingDietWithDate = {
+                    ...existingDiet,
+                    date: existingDiet.date ? new Date(existingDiet.date) : new Date(),
+                };
                 console.log("imgUri already exists in DietStore");
-                analysisData = existingDiet.analysis;
-                newDiet = existingDiet;
+                Alert.alert(
+                    "Image Already Exists",
+                    "This image has already been analyzed. Showing you the saved details.",
+                    [
+                        {
+                            text: "OK",
+                            onPress: () => {
+                                navigation.reset({
+                                    index: 1,
+                                    routes: [
+                                        { name: "index" },
+                                        { name: "detaildiet",
+                                          params: {
+                                                newDiet: {
+                                                    ...existingDietWithDate,
+                                                    date: existingDietWithDate.date.toISOString(),
+                                        } } }
+                                    ],
+                                });
+                            },
+                        },
+                    ]
+                );
+                // analysisData = existingDiet.analysis;
+                // newDiet = existingDiet;
             } else {
                 console.log("new imgUri");
                 setAnalyzeLoading(true);
                 analysisData = await analyzeImage(imgUri); // Call analyzeImage with the image URI
-                newDiet = await addDiet(imgUri, title, analysisData);
+                newDiet = await addDiet(imgUri, imgHash, title, analysisData);
                 setAnalyzeLoading(false);
+
+                // Navigate without alert if new image
+                navigation.reset({
+                    index: 1,
+                    routes: [
+                        { name: "index" },
+                        { name: "detaildiet", params: { newDiet: { ...newDiet, date: newDiet.date.toISOString() } } }
+                    ],
+                });
             }
-            navigation.reset({
-                index: 1,
-                routes: [
-                    { name: "index" },
-                    { name: "detaildiet", params: { newDiet: { ...newDiet, date: newDiet.date.toISOString() } } }
-                ],
-            });
         } catch (error) {
             Alert.alert('Error', 'Failed to analyze the image.');
         }

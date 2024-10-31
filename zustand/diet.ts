@@ -28,6 +28,7 @@ type Food = {
 export type Diet = {
     id: number;
     imgUri: string;
+    imgHash: string; //consistent for the same image content
     title: string;
     analysis: any;
     date: Date;
@@ -41,11 +42,12 @@ export type Diet = {
 
 type DietStore = {
     diets: Diet[];
-    addDiet: (imgUri: string, title: string, analysis: any ) => Promise<Diet>;
+    addDiet: (imgUri: string, imgHash: string, title: string, analysis: any ) => Promise<Diet>;
     loadDiets: () => void;
     removeDiet: (id: number) => void;
 };
 
+//Todo: need Persist IDindex Using AsyncStorage
 let IDindex = 1;
 
 const useDietStore = create<DietStore>()(
@@ -53,7 +55,7 @@ const useDietStore = create<DietStore>()(
         (set, get) => ({
             diets: [],
             // Todo: compute total value, value in detail screen
-            addDiet: async (imgUri, title, analysis) => {
+            addDiet: async (imgUri, imgHash, title, analysis) => {
                 try {
                 const items = analysis.items;
 
@@ -132,6 +134,7 @@ const useDietStore = create<DietStore>()(
                 const newDiet: Diet = {
                     id: IDindex,
                     imgUri,
+                    imgHash,
                     title,
                     analysis,
                     date: new Date(),
