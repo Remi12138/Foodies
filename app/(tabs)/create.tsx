@@ -106,6 +106,16 @@ export default function CreateModal() {
                     toggleMenu();
                     router.push("/community/creation");
                   }
+                  if (index === 1) {
+                    // Navigate to the Scan Receipt Screen
+                    toggleMenu();
+                    router.push("/profile/addreceipt");
+                  }
+                  if (index === 2) {
+                    // Navigate to the Diet Camera Screen
+                    toggleMenu();
+                    router.push("/profile/adddiet");
+                  }
                   console.log("hander for", buttonLabels[index]);
                 }}
               >

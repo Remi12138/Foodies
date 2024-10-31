@@ -5,7 +5,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Ionicons } from "@expo/vector-icons";
 import ThemeSetting from "@/components/profile/ThemeSetting";
-import { router } from "expo-router";
+import {Href, router} from "expo-router";
 import WelcomeBar from "@/components/profile/WelcomeBar";
 
 export default function ProfileScreen() {
@@ -21,7 +21,12 @@ export default function ProfileScreen() {
     >
       <WelcomeBar />
       <ThemedView>
-        <TouchableOpacity style={styles.row}>
+        <TouchableOpacity
+            style={styles.row}
+            onPress={() => {
+              router.push("/profile/mydiets");
+            }}
+        >
           <ThemedText style={styles.rowText}>Diet</ThemedText>
           <Ionicons name="chevron-forward" size={24} color="gray" />
         </TouchableOpacity>
@@ -33,7 +38,12 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </ThemedView>
       <ThemedView>
-        <TouchableOpacity style={styles.row}>
+        <TouchableOpacity
+            style={styles.row}
+            onPress={() => {
+              router.push("/profile/myreceipts");
+            }}
+        >
           <ThemedText style={styles.rowText}>My Receipts</ThemedText>
           <Ionicons name="chevron-forward" size={24} color="gray" />
         </TouchableOpacity>
