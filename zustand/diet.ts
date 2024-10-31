@@ -47,8 +47,20 @@ type DietStore = {
     removeDiet: (id: number) => void;
 };
 
-//Todo: need Persist IDindex Using AsyncStorage
-let IDindex = 1;
+const ID_INDEX_KEY = 'IDindex';
+let IDindex: number | null = null;
+const initializeIDindex = async () => {
+    if (IDindex === null) {
+        const savedID = await AsyncStorage.getItem(ID_INDEX_KEY);
+        IDindex = savedID ? parseInt(savedID, 10) : 1;
+    }
+};
+initializeIDindex(); // Run this immediately to load IDindex on startup
+
+const saveIDindex = async (index: number) => {
+    await AsyncStorage.setItem(ID_INDEX_KEY, index.toString());
+};
+
 
 const useDietStore = create<DietStore>()(
     persist<DietStore>(
@@ -57,6 +69,9 @@ const useDietStore = create<DietStore>()(
             // Todo: compute total value, value in detail screen
             addDiet: async (imgUri, imgHash, title, analysis) => {
                 try {
+                    if (IDindex === null) {
+                        await initializeIDindex(); // Only runs once if IDindex is not loaded
+                    }
                 const items = analysis.items;
 
                 let totalCalories = 0;
@@ -132,7 +147,7 @@ const useDietStore = create<DietStore>()(
                 });
 
                 const newDiet: Diet = {
-                    id: IDindex,
+                    id: IDindex!,
                     imgUri,
                     imgHash,
                     title,
@@ -146,10 +161,12 @@ const useDietStore = create<DietStore>()(
                     total_fibers: totalFibers,
                 };
 
+                console.log("IDindex: ", IDindex);
                 const updatedDiets = [newDiet, ...get().diets];
                 set({ diets: updatedDiets });
                 await AsyncStorage.setItem('diets', JSON.stringify(updatedDiets));
-                IDindex++;
+                IDindex!++;
+                await saveIDindex(IDindex!); // Save the new IDindex
 
                 return newDiet;
                 } catch (error) {
