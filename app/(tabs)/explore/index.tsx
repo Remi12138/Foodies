@@ -13,15 +13,20 @@ import { ThemedText } from "@/components/ThemedText";
 
 import ExploreBar from "@/components/explore/ExploreBar";
 import RestaurantsView from "@/components/explore/RestaurantsView";
-import { useRestaurantStore } from "@/zustand/restaurant";
+import {Restaurant,useRestaurantStore } from "@/zustand/restaurant";
 import RestaurantsMapView from "@/components/explore/RestaurantsMapView";
 import { useLocation } from "@/zustand/location";
+
+interface FilterBarProps {
+  restaurants: Restaurant[];
+  onFilter: (filteredData: Restaurant[]) => void;
+}
 
 export default function ExploreScreen() {
   const [isMapView, setIsMapView] = useState(false);
   const [loading, setLoading] = useState(true);
   const fetchRestaurants = useRestaurantStore(
-    (state) => state.fetchRestaurants
+    (state) => state.fetchFakeRestaurants
   );
   const fetchFakeRestaurants = useRestaurantStore(
     (state) => state.fetchFakeRestaurants
@@ -42,7 +47,9 @@ export default function ExploreScreen() {
       console.log("Updated userLocation in component:", userLocation);
       if (userLocation.latitude && userLocation.longitude) { 
         //await fetchRestaurants(userLocation); 
+       // setFilteredRestaurants(restaurants);
         await fetchFakeRestaurants(); 
+        setFilteredRestaurants(restaurants);
       }
     };
     fetchData();
@@ -50,6 +57,7 @@ export default function ExploreScreen() {
 
   // Retrieve restaurants from Zustand store
   const restaurants = useRestaurantStore((state) => state.restaurants);
+  const [filteredRestaurants, setFilteredRestaurants] = useState(restaurants);
 
   async function handleGetRestaurants() {
     // Show loading indicator
@@ -63,7 +71,9 @@ export default function ExploreScreen() {
    // console.log(restaurants);
     setLoading(false);
   }
-
+  const handleFilter = (filteredData: Restaurant[]) => {
+    setFilteredRestaurants(filteredData);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
@@ -79,7 +89,7 @@ export default function ExploreScreen() {
         </TouchableOpacity>
       </ThemedView>
       <ThemedView style={{ flex: 1 }}>
-        <ExploreBar />
+        <ExploreBar restaurants={restaurants} onFilter={handleFilter} />
         {loading ? (
           <ActivityIndicator
             size="large"
@@ -87,9 +97,9 @@ export default function ExploreScreen() {
             style={styles.loadingIndicator}
           />
         ) : isMapView ? (
-          <RestaurantsMapView data={restaurants} />
+          <RestaurantsMapView data={filteredRestaurants} />
         ) : (
-          <RestaurantsView data={restaurants}  />
+          <RestaurantsView data={filteredRestaurants}  />
         )}
       </ThemedView>
     </SafeAreaView>
