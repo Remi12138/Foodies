@@ -1,11 +1,17 @@
-import { StyleSheet, Image } from "react-native";
+import { StyleSheet, Image, TouchableOpacity, Modal, View } from "react-native";
 import { Restaurant } from "@/zustand/restaurant";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import React from "react";
+import React, { useState } from "react";
+
 
 function RestaurantCard({ item }: { item: Restaurant }) {
+
+
+
   return (
+   
+    
     <ThemedView style={styles.cardContainer}>
       <Image source={{ uri: item.imageUrl }} style={styles.image} />
       <ThemedView style={styles.textContainer}>
@@ -21,6 +27,10 @@ function RestaurantCard({ item }: { item: Restaurant }) {
         </ThemedText>
       </ThemedView>
     </ThemedView>
+   
+
+   
+
   );
 }
 
@@ -61,6 +71,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#333",
   },
+ 
 });
 
 export default RestaurantCard;
