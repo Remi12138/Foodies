@@ -31,6 +31,9 @@ export default function ExploreScreen() {
   const fetchFakeRestaurants = useRestaurantStore(
     (state) => state.fetchFakeRestaurants
   );
+  const fetchFakeRestaurants = useRestaurantStore(
+    (state) => state.fetchFakeRestaurants
+  );
   const { userLocation, fetchLocation } = useLocation();
   const toggleMapView = () => {
     setIsMapView((prev) => !prev);
