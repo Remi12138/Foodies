@@ -3,8 +3,14 @@ import { StyleSheet, View } from "react-native";
 import Search from "@/components/navigation/Search";
 import LocatorDialog from "@/components/navigation/LocatorDialog";
 import FilterBar from "@/components/explore/FilterBar";
+import { Restaurant } from "@/zustand/restaurant";
 
-function ExploreBar() {
+interface ExploreBarProps {
+  restaurants: Restaurant[];
+  onFilter: (filteredData: Restaurant[]) => void;
+}
+
+const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const openLocatorDialog = () => {
@@ -18,7 +24,7 @@ function ExploreBar() {
   return (
     <View style={styles.container}>
       <Search openLocatorDialog={openLocatorDialog} />
-      <FilterBar />
+      <FilterBar restaurants={restaurants} onFilter={onFilter } />
       <LocatorDialog
         modalVisible={modalVisible}
         closeLocatorDialog={closeLocatorDialog}
