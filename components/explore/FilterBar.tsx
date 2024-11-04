@@ -1,7 +1,8 @@
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; 
 import { Restaurant } from "@/zustand/restaurant";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Picker } from '@react-native-picker/picker';
 
 interface ExploreBarProps {
   restaurants: Restaurant[];
@@ -10,6 +11,26 @@ interface ExploreBarProps {
 
 const FilterBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [sortOption, setSortOption] = useState<string>('default');
+  const [isAscending, setIsAscending] = useState<boolean>(true);
+  useEffect(() => {
+    let sortedData = [...restaurants];
+
+    if (sortOption === 'price') {
+      sortedData.sort((a, b) => (a.price?.length || 0) - (b.price?.length || 0));
+    } else if (sortOption === 'distance') {
+      sortedData.sort((a, b) => a.distance - b.distance);
+    }else if (sortOption === 'rating') {
+      sortedData.sort((a, b) => a.rating - b.rating);
+    }
+
+    if (!isAscending) {
+      sortedData.reverse();
+    }
+
+    onFilter(sortedData);
+  }, [sortOption, isAscending, restaurants]);
+
   console.log('restaurants:', restaurants);
   const filters = [
     { label: 'Pizza', icon: 'pizza' },
@@ -43,6 +64,22 @@ const FilterBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
 
   return (
     <View>
+        {/* Sort Dropdown */}
+      <View style={styles.sortContainer}>
+        <Picker
+          selectedValue={sortOption}
+          onValueChange={(itemValue) => setSortOption(itemValue)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Sort by Default" value="default" />
+          <Picker.Item label="Sort by Price" value="price" />
+          <Picker.Item label="Sort by Distance" value="distance" />
+          <Picker.Item label="Sort by Rating" value="rating" />
+        </Picker>
+        <TouchableOpacity onPress={() => setIsAscending(!isAscending)} style={styles.sortOrderButton}>
+          <Text style={styles.sortOrderText}>{isAscending ? "Ascending" : "Descending"}</Text>
+        </TouchableOpacity>
+      </View>
       {/* Filter Bar */}
       <ScrollView
         horizontal
@@ -74,6 +111,24 @@ const FilterBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
 };
 
 const styles = StyleSheet.create({
+  sortContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  picker: {
+    flex: 1,
+    marginRight: 8,
+  },
+  sortOrderButton: {
+    padding: 10,
+    backgroundColor: '#FFB74D',
+    borderRadius: 5,
+  },
+  sortOrderText: {
+    color: '#8B4513',
+    fontWeight: '600',
+  },
   filterContainer: {
     flexDirection: 'row',
     paddingHorizontal: 10,
