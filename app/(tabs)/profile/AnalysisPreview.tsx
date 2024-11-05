@@ -37,18 +37,18 @@ const AnalysisPreviewScreen: React.FC = () => {
                 <NutrientBar label="Fibers" value={Math.round(newDiet.total_fibers)} color="#D2B48C" max={maxNutrientValue} />
             </View>
 
-            {/* Details Button */}
+            {/* Detail Button */}
             <View style={styles.buttonContainer}>
-                {/*<Button title="Details" onPress={() => navigation.navigate('AnalysisDetail', { diet: newDiet })} />*/}
-                <Button title="Details" onPress={() =>
-                    navigation.reset({
-                        index: 1,
-                        routes: [
-                            { name: "index" },
-                            { name: "detaildiet", params: { newDiet: { ...newDiet, date: parsedDate.toISOString() } } },
-                            { name: "AnalysisDetail", params: { newDiet: { ...newDiet, date: parsedDate.toISOString() } } }
-                        ],
-            })} />
+                <Button title="Detail" onPress={() => navigation.navigate('AnalysisDetail', { newDiet: { ...newDiet, date: parsedDate.toISOString() } })} />
+            {/*    <Button title="Details" onPress={() =>*/}
+            {/*        navigation.reset({*/}
+            {/*            index: 1,*/}
+            {/*            routes: [*/}
+            {/*                { name: "index" },*/}
+            {/*                { name: "detaildiet", params: { newDiet: { ...newDiet, date: parsedDate.toISOString() } } },*/}
+            {/*                { name: "AnalysisDetail", params: { newDiet: { ...newDiet, date: parsedDate.toISOString() } } }*/}
+            {/*            ],*/}
+            {/*})} />*/}
             </View>
         </ScrollView>
     );

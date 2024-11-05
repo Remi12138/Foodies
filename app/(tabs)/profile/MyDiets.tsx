@@ -15,7 +15,7 @@ const DietListScreen: React.FC = () => {
         return (
             <TouchableOpacity
                 style={styles.dietCard}
-                onPress={() => navigation.navigate('detaildiet', { newDiet: item })}
+                onPress={() => navigation.navigate('AnalysisPreview', { newDiet: item })}
             >
                 <Image source={{ uri: item.imgUri }} style={styles.dietImage} />
                 <View style={styles.dietInfo}>

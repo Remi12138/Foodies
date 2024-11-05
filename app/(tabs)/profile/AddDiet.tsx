@@ -254,7 +254,7 @@ const UploadDietScreen: React.FC = () => {
                                     index: 1,
                                     routes: [
                                         { name: "index" },
-                                        { name: "detaildiet",
+                                        { name: "AnalysisPreview",
                                             params: {
                                                 newDiet: {
                                                     ...existingDietWithDate,
@@ -280,7 +280,7 @@ const UploadDietScreen: React.FC = () => {
                     index: 1,
                     routes: [
                         { name: "index" },
-                        { name: "detaildiet", params: { newDiet: { ...newDiet, date: newDiet.date.toISOString() } } }
+                        { name: "AnalysisPreview", params: { newDiet: { ...newDiet, date: newDiet.date.toISOString() } } }
                     ],
                 });
             }

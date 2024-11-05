@@ -10,28 +10,26 @@ const displayWidth = screenWidth - 80; // Fixed width for display img container
 type AnalysisDetailScreenProps = RouteProp<{ params: { newDiet: Diet } }, 'params'>;
 
 const recBackgroundColors = [
-    'rgba(252,134,164, 0.3)',    // Tomato
-    'rgba(54, 162, 235, 0.3)',   // Blue
-    'rgba(255, 235, 86, 0.3)',   // Yellow
-    'rgba(75, 192, 192, 0.3)',   // Green
-    'rgba(153, 102, 255, 0.3)',  // Purple
-    'rgba(255, 159, 64, 0.3)',   // Orange
+    'rgba(252,134,164, 0.3)',
+    'rgba(54, 162, 235, 0.3)',
+    'rgba(255, 235, 86, 0.3)',
+    'rgba(75, 192, 192, 0.3)',
+    'rgba(153, 102, 255, 0.3)',
+    'rgba(255, 159, 64, 0.3)',
 ];
 
 const recBorderColors = [
-    'rgba(252,134,164, 0.8)',    // Tomato
-    'rgba(54, 162, 235, 0.8)',   // Blue
-    'rgba(255, 235, 86,0.8)',   // Yellow
-    'rgba(75, 192, 192, 0.8)',   // Green
-    'rgba(153, 102, 255, 0.8)',  // Purple
-    'rgba(255, 159, 64, 0.8)',   // Orange
+    'rgba(252,134,164, 0.8)',
+    'rgba(54, 162, 235, 0.8)',
+    'rgba(255, 235, 86,0.8)',
+    'rgba(75, 192, 192, 0.8)',
+    'rgba(153, 102, 255, 0.8)',
+    'rgba(255, 159, 64, 0.8)',
 ];
 
 const AnalysisDetailScreen: React.FC = () => {
     const { params: { newDiet } } = useRoute<AnalysisDetailScreenProps>();
     const [selectedFoodIndex, setSelectedFoodIndex] = useState<number | null>(null);
-    // const imageWidth = Dimensions.get('window').width - 100;
-    // const imageHeight = 300;
 
     const [displayHeight, setDisplayHeight] = useState(displayWidth); // Initialize with a square layout
 
@@ -163,21 +161,6 @@ const AnalysisDetailScreen: React.FC = () => {
                 </TouchableOpacity>
             ))}
         </ScrollView>
-    );
-};
-
-// Custom component for displaying nutrient bars with background track
-const NutrientBar = ({ label, value, color, max }: { label: string, value: number, color: string, max: number }) => {
-    const barWidth = (value / max) * (screenWidth - 160);
-
-    return (
-        <View style={styles.nutrientBarContainer}>
-            <Text style={styles.nutrientLabel}>{label}</Text>
-            <View style={styles.nutrientBarBackground}>
-                <View style={[styles.nutrientBar, { backgroundColor: color, width: barWidth }]} />
-            </View>
-            <Text style={styles.nutrientValue}>{value} g</Text>
-        </View>
     );
 };
 

@@ -70,7 +70,7 @@ const UploadReceiptScreen: React.FC = () => {
         setTitle('');
         setAmount('');
         setDate(new Date());
-        router.navigate("/profile/myreceipts");
+        router.navigate("/profile/MyReceipts");
     };
 
     return (
