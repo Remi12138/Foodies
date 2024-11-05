@@ -45,6 +45,7 @@ type DietStore = {
     addDiet: (imgUri: string, imgHash: string, title: string, analysis: any ) => Promise<Diet>;
     loadDiets: () => void;
     removeDiet: (id: number) => void;
+    editDiet: (id: number, title: string, date: Date) => void;
 };
 
 const ID_INDEX_KEY = 'IDindex';
@@ -181,6 +182,13 @@ const useDietStore = create<DietStore>()(
             },
             removeDiet: async (id) => {
                 const updatedDiets = get().diets.filter(diet => diet.id !== id);
+                set({ diets: updatedDiets });
+                await AsyncStorage.setItem('diets', JSON.stringify(updatedDiets));
+            },
+            editDiet: async (id, title, date) => {
+                const updatedDiets = get().diets.map(diet =>
+                    diet.id === id ? { ...diet, title, date } : diet
+                );
                 set({ diets: updatedDiets });
                 await AsyncStorage.setItem('diets', JSON.stringify(updatedDiets));
             },

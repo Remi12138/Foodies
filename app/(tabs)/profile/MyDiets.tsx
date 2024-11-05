@@ -1,29 +1,51 @@
 import React, { useEffect } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useDietStore, Diet } from '@/zustand/diet';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const DietListScreen: React.FC = () => {
-    const { diets, loadDiets } = useDietStore();
+    const { diets, loadDiets, removeDiet } = useDietStore();
     const navigation = useNavigation();
 
     useEffect(() => {
-        loadDiets(); // Load diets from AsyncStorage on component mount
+        loadDiets();
     }, []);
+
+    const handleDelete = (id: number) => {
+        Alert.alert(
+            "Delete Diet",
+            "Are you sure you want to delete this diet?",
+            [
+                { text: "Cancel", style: "cancel" },
+                { text: "Delete", style: "destructive", onPress: () => removeDiet(id) }
+            ]
+        );
+    };
 
     const renderItem = ({ item }: { item: Diet }) => {
         return (
-            <TouchableOpacity
-                style={styles.dietCard}
-                onPress={() => navigation.navigate('AnalysisPreview', { newDiet: item })}
-            >
-                <Image source={{ uri: item.imgUri }} style={styles.dietImage} />
-                <View style={styles.dietInfo}>
-                    <Text style={styles.dietTitle}>{item.title}</Text>
-                    <Text style={styles.dietDate}>{new Date(item.date).toLocaleDateString()}</Text>
-                    <Text style={styles.dietCalories}>{Math.round(item.total_calories)} Cal</Text>
+            <View style={styles.dietCard}>
+                <TouchableOpacity
+                    style={styles.dietContent}
+                    onPress={() => navigation.navigate('AnalysisPreview', { newDiet: item })}
+                >
+                    <Image source={{ uri: item.imgUri }} style={styles.dietImage} />
+                    <View style={styles.dietInfo}>
+                        <Text style={styles.dietTitle}>{item.title}</Text>
+                        <Text style={styles.dietDate}>{new Date(item.date).toLocaleDateString()}</Text>
+                        <Text style={styles.dietCalories}>{Math.round(item.total_calories)} Cal</Text>
+                    </View>
+                </TouchableOpacity>
+                <View style={styles.iconButtons}>
+                    <TouchableOpacity onPress={() => navigation.navigate('EditDiet', { dietId: item.id })}>
+                        <Icon name="pencil" size={24} color="#4CAF50" style={styles.icon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleDelete(item.id)}>
+                        <Icon name="delete" size={24} color="#F44336" style={styles.icon} />
+                    </TouchableOpacity>
                 </View>
-            </TouchableOpacity>
+            </View>
         );
     };
 
@@ -60,6 +82,11 @@ const styles = StyleSheet.create({
         shadowRadius: 1.41,
         elevation: 2,
     },
+    dietContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+    },
     dietImage: {
         width: 60,
         height: 60,
@@ -82,6 +109,14 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#333',
         marginTop: 4,
+    },
+    iconButtons: {
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginLeft: 10,
+    },
+    icon: {
+        padding: 5,
     },
 });
 

@@ -134,7 +134,7 @@ const UploadDietScreen: React.FC = () => {
     // downloadImage("https://cdn.foodvisor.io/img/vision/examples/1.jpg");
 
 
-    // Todo: cancel button
+    // Todo: cancel button not checked
     // Options: select images from camera, album, or cancel
     const selectImage = async () => {
 
@@ -202,9 +202,7 @@ const UploadDietScreen: React.FC = () => {
         }
     };
 
-    // Todo: result screen, detail screen
     // click "Start Analyze", call analyzeImage, jump to result screen
-    //
     const handleAnalyze = async () => {
         if (!imgUri) {
             Alert.alert('No Image Selected', 'Please select an image to analyze.');
