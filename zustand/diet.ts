@@ -28,6 +28,7 @@ type Food = {
 export type Diet = {
     id: number;
     imgUri: string;
+    imgHash: string; //consistent for the same image content
     title: string;
     analysis: any;
     date: Date;
@@ -41,114 +42,133 @@ export type Diet = {
 
 type DietStore = {
     diets: Diet[];
-    addDiet: (imgUri: string, title: string, analysis: any ) => Promise<Diet>;
+    addDiet: (imgUri: string, imgHash: string, title: string, analysis: any ) => Promise<Diet>;
     loadDiets: () => void;
     removeDiet: (id: number) => void;
 };
 
-let IDindex = 1;
+const ID_INDEX_KEY = 'IDindex';
+let IDindex: number | null = null;
+const initializeIDindex = async () => {
+    if (IDindex === null) {
+        const savedID = await AsyncStorage.getItem(ID_INDEX_KEY);
+        IDindex = savedID ? parseInt(savedID, 10) : 1;
+    }
+};
+initializeIDindex(); // Run this immediately to load IDindex on startup
+
+const saveIDindex = async (index: number) => {
+    await AsyncStorage.setItem(ID_INDEX_KEY, index.toString());
+};
+
 
 const useDietStore = create<DietStore>()(
     persist<DietStore>(
         (set, get) => ({
             diets: [],
             // Todo: compute total value, value in detail screen
-            addDiet: async (imgUri, title, analysis) => {
+            addDiet: async (imgUri, imgHash, title, analysis) => {
                 try {
-                const items = analysis.items;
+                    if (IDindex === null) {
+                        await initializeIDindex(); // Only runs once if IDindex is not loaded
+                    }
+                    const items = analysis.items;
 
-                let totalCalories = 0;
-                let totalProteins = 0;
-                let totalFat = 0;
-                let totalCarbs = 0;
-                let totalFibers = 0;
+                    let totalCalories = 0;
+                    let totalProteins = 0;
+                    let totalFat = 0;
+                    let totalCarbs = 0;
+                    let totalFibers = 0;
 
-                const foodOptions: Food[] = items.map((item) => {
-                    const foodOption = item.food[0];
+                    const foodOptions: Food[] = items.map((item) => {
+                        const foodOption = item.food[0];
 
-                    const name = foodOption.food_info.display_name || '';
-                    const confidence = foodOption.confidence || 0;
-                    const quantity = foodOption.food_info.quantity || foodOption.food_info.g_per_serving || 0;
-                    const glycemic_index = foodOption.food_info.nutrition.glycemic_index || 0;
+                        const name = foodOption.food_info.display_name || '';
+                        const confidence = foodOption.confidence || 0;
+                        const quantity = foodOption.food_info.quantity || foodOption.food_info.g_per_serving || 0;
+                        const glycemic_index = foodOption.food_info.nutrition.glycemic_index || 0;
 
-                    const calories = (foodOption.food_info.nutrition.calories_100g || 0) * quantity / 100;
-                    const proteins = (foodOption.food_info.nutrition.proteins_100g || 0) * quantity / 100;
-                    // const fat = (foodOption.food_info.nutrition.fat_100g || 0) * quantity / 100;
-                    // const carbs = (foodOption.food_info.nutrition.carbs_100g || 0) * quantity / 100;
-                    const fibers = (foodOption.food_info.nutrition.fibers_100g || 0) * quantity / 100;
-                    const fat = (
-                        (foodOption.food_info.nutrition.fat_100g || 0) +
-                        (foodOption.food_info.nutrition.insat_fat_100g || 0) +
-                        (foodOption.food_info.nutrition.mono_fat_100g || 0) +
-                        (foodOption.food_info.nutrition.poly_fat_100g || 0) +
-                        (foodOption.food_info.nutrition.sat_fat_100g || 0) +
-                        (foodOption.food_info.nutrition.omega_3_100g || 0) +
-                        (foodOption.food_info.nutrition.omega_6_100g || 0)
-                    ) * quantity / 100;
+                        const calories = (foodOption.food_info.nutrition.calories_100g || 0) * quantity / 100;
+                        const proteins = (foodOption.food_info.nutrition.proteins_100g || 0) * quantity / 100;
+                        // const fat = (foodOption.food_info.nutrition.fat_100g || 0) * quantity / 100;
+                        // const carbs = (foodOption.food_info.nutrition.carbs_100g || 0) * quantity / 100;
+                        const fibers = (foodOption.food_info.nutrition.fibers_100g || 0) * quantity / 100;
+                        const fat = (
+                            (foodOption.food_info.nutrition.fat_100g || 0) +
+                            (foodOption.food_info.nutrition.insat_fat_100g || 0) +
+                            (foodOption.food_info.nutrition.mono_fat_100g || 0) +
+                            (foodOption.food_info.nutrition.poly_fat_100g || 0) +
+                            (foodOption.food_info.nutrition.sat_fat_100g || 0) +
+                            (foodOption.food_info.nutrition.omega_3_100g || 0) +
+                            (foodOption.food_info.nutrition.omega_6_100g || 0)
+                        ) * quantity / 100;
 
-                    const carbs = (
-                        (foodOption.food_info.nutrition.carbs_100g || 0) +
-                        (foodOption.food_info.nutrition.sugars_100g || 0) +
-                        (foodOption.food_info.nutrition.polyols_100g || 0)
-                    ) * quantity / 100;
+                        const carbs = (
+                            (foodOption.food_info.nutrition.carbs_100g || 0) +
+                            (foodOption.food_info.nutrition.sugars_100g || 0) +
+                            (foodOption.food_info.nutrition.polyols_100g || 0)
+                        ) * quantity / 100;
 
-                    // Calculate the top nutrients
-                    const topNutrients = Object.entries(foodOption.food_info.nutrition)
-                        .filter(([key, value]) => value && value > 0 && key !== "glycemic_index")
-                        .sort(([, a], [, b]) => b - a)
-                        .slice(0, 5);
+                        // Calculate the top nutrients
+                        const topNutrients = Object.entries(foodOption.food_info.nutrition)
+                            .filter(([key, value]) => value && value > 0 && key !== "glycemic_index")
+                            .sort(([, a], [, b]) => b - a)
+                            .slice(0, 5);
 
-                    // Accumulate totals
-                    totalCalories += calories;
-                    totalProteins += proteins;
-                    totalFat += fat;
-                    totalCarbs += carbs;
-                    totalFibers += fibers;
+                        // Accumulate totals
+                        totalCalories += calories;
+                        totalProteins += proteins;
+                        totalFat += fat;
+                        totalCarbs += carbs;
+                        totalFibers += fibers;
 
-                    // Extract position
-                    console.log("Position Data:", item.position);
-                    const position: Position = {
-                        height: item.position?.height || 0,
-                        width: item.position?.width || 0,
-                        x: item.position?.x || 0,
-                        y: item.position?.y || 0,
+                        // Extract position
+                        console.log("Position Data:", item.position);
+                        const position: Position = {
+                            height: item.position?.height || 0,
+                            width: item.position?.width || 0,
+                            x: item.position?.x || 0,
+                            y: item.position?.y || 0,
+                        };
+
+                        return {
+                            name,
+                            confidence,
+                            quantity,
+                            glycemic_index,
+                            topNutrients,
+                            calories,
+                            proteins,
+                            fat,
+                            carbs,
+                            fibers,
+                            position,
+                        };
+                    });
+
+                    const newDiet: Diet = {
+                        id: IDindex!,
+                        imgUri,
+                        imgHash,
+                        title,
+                        analysis,
+                        date: new Date(),
+                        foodOptions: foodOptions,
+                        total_calories: totalCalories,
+                        total_proteins: totalProteins,
+                        total_fat: totalFat,
+                        total_carbs: totalCarbs,
+                        total_fibers: totalFibers,
                     };
 
-                    return {
-                        name,
-                        confidence,
-                        quantity,
-                        glycemic_index,
-                        topNutrients,
-                        calories,
-                        proteins,
-                        fat,
-                        carbs,
-                        fibers,
-                        position,
-                    };
-                });
+                    console.log("IDindex: ", IDindex);
+                    const updatedDiets = [newDiet, ...get().diets];
+                    set({ diets: updatedDiets });
+                    await AsyncStorage.setItem('diets', JSON.stringify(updatedDiets));
+                    IDindex!++;
+                    await saveIDindex(IDindex!); // Save the new IDindex
 
-                const newDiet: Diet = {
-                    id: IDindex,
-                    imgUri,
-                    title,
-                    analysis,
-                    date: new Date(),
-                    foodOptions: foodOptions,
-                    total_calories: totalCalories,
-                    total_proteins: totalProteins,
-                    total_fat: totalFat,
-                    total_carbs: totalCarbs,
-                    total_fibers: totalFibers,
-                };
-
-                const updatedDiets = [newDiet, ...get().diets];
-                set({ diets: updatedDiets });
-                await AsyncStorage.setItem('diets', JSON.stringify(updatedDiets));
-                IDindex++;
-
-                return newDiet;
+                    return newDiet;
                 } catch (error) {
                     console.error("Error in addDiet:", error);
                     throw error;
