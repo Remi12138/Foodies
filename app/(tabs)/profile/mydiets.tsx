@@ -1,116 +1,88 @@
-import React from 'react';
-import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
-import { useDietStore } from '@/zustand/diet';
-import { format } from 'date-fns';
-import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect } from 'react';
+import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { useDietStore, Diet } from '@/zustand/diet';
+import { useNavigation } from '@react-navigation/native';
 
-const DietBlogScreen: React.FC = () => {
-    const { diets, removeDiet } = useDietStore();
+const DietListScreen: React.FC = () => {
+    const { diets, loadDiets } = useDietStore();
+    const navigation = useNavigation();
 
-    const sortedDiets = diets.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    useEffect(() => {
+        loadDiets(); // Load diets from AsyncStorage on component mount
+    }, []);
 
-    const renderDietItem = ({ item }: { item: typeof diets[0] }) => (
-        <View style={styles.dietCard}>
-            <Image source={{ uri: item.imgUri }} style={styles.dietImage} />
-            <View style={styles.dietDetails}>
-                <Text style={styles.dietTitle}>{item.title}</Text>
-                <Text style={styles.dietDate}>{format(new Date(item.date), 'MMM dd, yyyy')}</Text>
-
-                {/* Display totals */}
-                <Text style={styles.dietStats}>Calories: {item.total_calories} kcal</Text>
-                <Text style={styles.dietStats}>Proteins: {item.total_proteins} g</Text>
-                <Text style={styles.dietStats}>Fat: {item.total_fat} g</Text>
-                <Text style={styles.dietStats}>Carbs: {item.total_carbs} g</Text>
-                <Text style={styles.dietStats}>Fibers: {item.total_fibers} g</Text>
-
-                <TouchableOpacity style={styles.deleteButton} onPress={() => removeDiet(item.id)}>
-                    <Ionicons name="trash" size={20} color="red" />
-                </TouchableOpacity>
-            </View>
-        </View>
-    );
+    const renderItem = ({ item }: { item: Diet }) => {
+        return (
+            <TouchableOpacity
+                style={styles.dietCard}
+                onPress={() => navigation.navigate('detaildiet', { newDiet: item })}
+            >
+                <Image source={{ uri: item.imgUri }} style={styles.dietImage} />
+                <View style={styles.dietInfo}>
+                    <Text style={styles.dietTitle}>{item.title}</Text>
+                    <Text style={styles.dietDate}>{new Date(item.date).toLocaleDateString()}</Text>
+                    <Text style={styles.dietCalories}>{Math.round(item.total_calories)} Cal</Text>
+                </View>
+            </TouchableOpacity>
+        );
+    };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <FlatList
-                data={sortedDiets}
+                data={diets}
+                renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={renderDietItem}
-                contentContainerStyle={styles.flatListContent}
-                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.listContent}
             />
-        </SafeAreaView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#fff',
     },
-    flatListContent: {
-        paddingVertical: 20,
+    listContent: {
+        padding: 20,
     },
     dietCard: {
-        backgroundColor: '#fff',
-        borderRadius: 10,
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 15,
+        padding: 15,
+        marginVertical: 10,
+        backgroundColor: '#f5f5f5',
+        borderRadius: 10,
         shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 5,
-        elevation: 3,
-        overflow: 'hidden',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 1.41,
+        elevation: 2,
     },
     dietImage: {
-        width: 80,
-        height: 80,
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        marginRight: 15,
     },
-    dietDetails: {
+    dietInfo: {
         flex: 1,
-        padding: 10,
     },
     dietTitle: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 5,
     },
     dietDate: {
-        fontSize: 12,
-        color: '#777',
-        marginBottom: 5,
+        fontSize: 14,
+        color: '#888',
+        marginTop: 4,
     },
-    dietStats: {
+    dietCalories: {
         fontSize: 14,
         color: '#333',
-        marginBottom: 3,
-    },
-    foodOptionContainer: {
-        marginTop: 10,
-        backgroundColor: '#f0f0f0',
-        padding: 10,
-        borderRadius: 8,
-    },
-    foodOptionHeader: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        marginBottom: 5,
-    },
-    foodDetail: {
-        fontSize: 13,
-        color: '#555',
-    },
-    nutrientDetail: {
-        fontSize: 12,
-        color: '#777',
-    },
-    deleteButton: {
-        alignSelf: 'flex-start',
-        marginTop: 10,
+        marginTop: 4,
     },
 });
 
-export default DietBlogScreen;
+export default DietListScreen;
