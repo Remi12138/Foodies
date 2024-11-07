@@ -42,7 +42,7 @@ export type Diet = {
 
 type DietStore = {
     diets: Diet[];
-    addDiet: (imgUri: string, imgHash: string, title: string, analysis: any ) => Promise<Diet>;
+    addDiet: (imgUri: string, imgHash: string, title: string, analysis: any, date: Date ) => Promise<Diet>;
     loadDiets: () => void;
     removeDiet: (id: number) => void;
     editDiet: (id: number, title: string, date: Date) => void;
@@ -68,7 +68,7 @@ const useDietStore = create<DietStore>()(
         (set, get) => ({
             diets: [],
             // Todo: compute total value, value in detail screen
-            addDiet: async (imgUri, imgHash, title, analysis) => {
+            addDiet: async (imgUri, imgHash, title, analysis, date) => {
                 try {
                     if (IDindex === null) {
                         await initializeIDindex(); // Only runs once if IDindex is not loaded
@@ -153,7 +153,7 @@ const useDietStore = create<DietStore>()(
                         imgHash,
                         title,
                         analysis,
-                        date: new Date(),
+                        date,
                         foodOptions: foodOptions,
                         total_calories: totalCalories,
                         total_proteins: totalProteins,
