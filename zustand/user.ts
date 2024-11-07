@@ -7,6 +7,13 @@ import {
   updatePassword as firebaseUpdatePassword,
 } from "firebase/auth";
 
+export type UserPublicProfile = {
+  uid: string;
+  last_name: string;
+  first_name: string;
+  avatar: string;
+};
+
 export type UserProfile = {
   uid: string;
   name: string;
