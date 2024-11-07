@@ -1,32 +1,45 @@
 import React from 'react';
-import {View, Text, Image, FlatList, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useReceiptStore } from '@/zustand/receipt';
-import { format } from 'date-fns/format';
-import {Ionicons} from "@expo/vector-icons";
-import {router} from "expo-router";
+import { format } from 'date-fns';
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 const ReceiptBlogScreen: React.FC = () => {
     const { receipts, removeReceipt } = useReceiptStore();
 
-    // Sort receipts by date (newest first)
     const sortedReceipts = receipts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    const handleEdit = (id: string) => {
+        router.push({
+            pathname: '/profile/EditReceipt',
+            params: { id },
+        });
+    };
 
     const renderReceiptItem = ({ item }: { item: typeof receipts[0] }) => (
         <View style={styles.receiptCard}>
             <Image source={{ uri: item.imgUri }} style={styles.receiptImage} />
             <View style={styles.receiptDetails}>
-                <Text style={styles.receiptTitle}>{item.title}</Text>
-                <Text style={styles.receiptAmount}>${item.amount.toFixed(2)}</Text>
+                <View style={styles.headerRow}>
+                    <Text style={styles.receiptTitle}>{item.title}</Text>
+                    <Text style={styles.receiptAmount}>${item.amount.toFixed(2)}</Text>
+                </View>
                 <Text style={styles.receiptDate}>{format(new Date(item.date), 'MMM dd, yyyy')}</Text>
-                <TouchableOpacity style={styles.deleteButton} onPress={() => removeReceipt(item.id)}>
-                    <Ionicons name="trash" size={24} color="red" />
-                </TouchableOpacity>
+                <View style={styles.buttonRow}>
+                    <TouchableOpacity style={styles.editButton} onPress={() => handleEdit(item.id)}>
+                        <Ionicons name="pencil" size={20} color="#4CAF50" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.deleteButton} onPress={() => removeReceipt(item.id)}>
+                        <Ionicons name="trash" size={20} color="#f44336" />
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
 
     return (
-        <SafeAreaView >
+        <SafeAreaView style={styles.container}>
             <FlatList
                 data={sortedReceipts}
                 keyExtractor={(item) => item.id}
@@ -42,33 +55,23 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f5f5f5',
-        padding: 20,
-    },
-    backButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    backText: {
-        fontSize: 18,
-        marginLeft: 10,
+        padding: 15,
     },
     flatListContent: {
-        marginTop: 20,
         paddingBottom: 20,
-        paddingHorizontal: 10,
     },
     receiptCard: {
         backgroundColor: '#ffffff',
         borderRadius: 10,
-        overflow: 'hidden',
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 15,
         shadowColor: '#000',
         shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 5,
-        elevation: 3,
-        flexDirection: 'row',
+        shadowOffset: { width: 0, height: 3 },
+        shadowRadius: 6,
+        elevation: 4,
+        overflow: 'hidden',
     },
     receiptImage: {
         width: 80,
@@ -81,22 +84,40 @@ const styles = StyleSheet.create({
         padding: 10,
         justifyContent: 'space-between',
     },
+    headerRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
     receiptTitle: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#333333',
+        color: '#333',
     },
     receiptAmount: {
         fontSize: 14,
-        color: '#00796b',
         fontWeight: 'bold',
+        color: '#00796b',
     },
     receiptDate: {
         fontSize: 12,
-        color: '#777777',
+        color: '#777',
+        marginTop: 4,
+    },
+    buttonRow: {
+        flexDirection: 'row',
+        marginTop: 10,
+    },
+    editButton: {
+        marginRight: 10,
+        backgroundColor: '#e8f5e9',
+        borderRadius: 5,
+        padding: 5,
     },
     deleteButton: {
-        padding: 2,
+        backgroundColor: '#ffebee',
+        borderRadius: 5,
+        padding: 5,
     },
 });
 
