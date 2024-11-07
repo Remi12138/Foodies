@@ -3,6 +3,7 @@
     "id": "1",
     "title": "Blog Post 1",
     "author": "Author 1",
+    "author_ref": "1",
     "restaurant": "1",
     "location": {
       "Latitude": 36.0032351,
@@ -23,6 +24,7 @@
     "id": "2",
     "title": "Blog Post 2",
     "author": "Author 2",
+    "author_ref": "2",
     "restaurant": "2",
     "location": {
       "Latitude": 36.0032351,
@@ -43,6 +45,7 @@
     "id": "3",
     "title": "Blog Post 3",
     "author": "Author 3",
+    "author_ref": "3",
     "restaurant": "3",
     "location": {
       "Latitude": 36.0032351,

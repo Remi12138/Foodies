@@ -1,3 +1,4 @@
+import StackHeader from "@/components/common/StackHeader";
 import { ThemedText } from "@/components/ThemedText";
 import React, { useState } from "react";
 import { TextInput, Button, StyleSheet, ScrollView } from "react-native";
@@ -14,26 +15,29 @@ const BlogCreationScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <ThemedText style={styles.label}>Title</ThemedText>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter blog title"
-        value={title}
-        onChangeText={setTitle}
-      />
+    <>
+      <StackHeader title="Write a post" />
+      <ScrollView contentContainerStyle={styles.container}>
+        <ThemedText style={styles.label}>Title</ThemedText>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter blog title"
+          value={title}
+          onChangeText={setTitle}
+        />
 
-      <ThemedText style={styles.label}>Content</ThemedText>
-      <TextInput
-        style={[styles.input, styles.contentInput]}
-        placeholder="Enter blog content"
-        value={content}
-        onChangeText={setContent}
-        multiline
-      />
+        <ThemedText style={styles.label}>Content</ThemedText>
+        <TextInput
+          style={[styles.input, styles.contentInput]}
+          placeholder="Enter blog content"
+          value={content}
+          onChangeText={setContent}
+          multiline
+        />
 
-      <Button title="Create Blog" onPress={handleCreateBlog} />
-    </ScrollView>
+        <Button title="Create Blog" onPress={handleCreateBlog} />
+      </ScrollView>
+    </>
   );
 };
 

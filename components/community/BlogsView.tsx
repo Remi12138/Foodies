@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import BlogCard from "@/components/community/BlogCard";
 import { Blog, useBlogStore } from "@/zustand/blog";
+import { Link } from "expo-router";
 
 function Blogs({ data }: { data: Blog[] }) {
   const [refreshing, setRefreshing] = useState(false);
@@ -15,11 +16,13 @@ function Blogs({ data }: { data: Blog[] }) {
 
   const renderBlogCard = ({ item }: { item: Blog }) => (
     <View style={styles.cardContainer}>
-      <BlogCard
-        imageUrl={item.image_cover}
-        title={item.title}
-        author={item.author}
-      />
+      <Link href={`/community/blog?blogId=${item.id}&blogTitle=${item.title}`}>
+        <BlogCard
+          imageUrl={item.image_cover}
+          title={item.title}
+          author={item.author.first_name}
+        />
+      </Link>
     </View>
   );
 

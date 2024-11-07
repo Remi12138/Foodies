@@ -15,10 +15,20 @@ export default function CommunityLayout() {
     >
       <Stack.Screen
         name="index"
-        options={{ headerShown: false, headerTitle: "Home" }}
+        options={{ headerShown: false, headerTitle: "Community" }}
       />
-      <Stack.Screen name="collections" options={{ title: "My collections" }} />
-      <Stack.Screen name="creation" options={{ title: "Create a blog" }} />
+      <Stack.Screen
+        name="collections"
+        options={{ headerShown: false, headerTitle: "Collections" }}
+      />
+      <Stack.Screen
+        name="creation"
+        options={{ headerShown: false, title: "Create a blog" }}
+      />
+      <Stack.Screen
+        name="blog"
+        options={{ headerShown: false, title: "Blog Details" }}
+      />
     </Stack>
   );
 }
