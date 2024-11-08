@@ -10,8 +10,7 @@ interface ExploreBarProps {
   onFilter: (filteredData: Restaurant[]) => void;
 }
 
-const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
-import { Restaurant } from "@/zustand/restaurant";
+
 
 interface ExploreBarProps {
   restaurants: Restaurant[];
