@@ -40,7 +40,7 @@ export default function ExploreScreen() {
   useEffect(() => {
     console.log("Fetching restaurants...");
     handleGetRestaurants();
-   // handleGetLocation();
+    // handleGetLocation();
   }, []);
 
   useEffect(() => {
@@ -64,12 +64,12 @@ export default function ExploreScreen() {
     // Show loading indicator
     setLoading(true);
     await fetchLocation();
-    if (userLocation.latitude && userLocation.longitude) { 
-     //await fetchRestaurants(userLocation); 
-      await fetchFakeRestaurants(); 
+    if (userLocation.latitude && userLocation.longitude) {
+      //await fetchRestaurants(userLocation);
+      await fetchFakeRestaurants();
     }
     console.log("userLocation", userLocation);
-   // console.log(restaurants);
+    // console.log(restaurants);
     setLoading(false);
   }
   const handleFilter = (filteredData: Restaurant[]) => {

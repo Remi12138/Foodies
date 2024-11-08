@@ -11,6 +11,14 @@ interface ExploreBarProps {
 }
 
 const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
+import { Restaurant } from "@/zustand/restaurant";
+
+interface ExploreBarProps {
+  restaurants: Restaurant[];
+  onFilter: (filteredData: Restaurant[]) => void;
+}
+
+const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const openLocatorDialog = () => {

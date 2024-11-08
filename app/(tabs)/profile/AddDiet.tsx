@@ -21,6 +21,8 @@ import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as ImageManipulator from 'expo-image-manipulator';
 import CryptoJS from 'crypto-js';
+import {Simulate} from "react-dom/test-utils";
+import compositionEnd = Simulate.compositionEnd;
 
 const MAX_SIZE_MB = 2;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024; // 2MB in bytes
@@ -134,7 +136,7 @@ const UploadDietScreen: React.FC = () => {
     // downloadImage("https://cdn.foodvisor.io/img/vision/examples/1.jpg");
 
 
-    // Todo: cancel button
+    // Todo: cancel button not checked
     // Options: select images from camera, album, or cancel
     const selectImage = async () => {
 
@@ -202,9 +204,7 @@ const UploadDietScreen: React.FC = () => {
         }
     };
 
-    // Todo: result screen, detail screen
     // click "Start Analyze", call analyzeImage, jump to result screen
-    //
     const handleAnalyze = async () => {
         if (!imgUri) {
             Alert.alert('No Image Selected', 'Please select an image to analyze.');
@@ -240,7 +240,7 @@ const UploadDietScreen: React.FC = () => {
             if (existingDiet) {
                 const existingDietWithDate = {
                     ...existingDiet,
-                    date: existingDiet.date ? new Date(existingDiet.date) : new Date(),
+                    date: existingDiet.date ? new Date(existingDiet.date) : new Date(date),
                 };
                 console.log("imgUri already exists in DietStore");
                 Alert.alert(
@@ -254,12 +254,12 @@ const UploadDietScreen: React.FC = () => {
                                     index: 1,
                                     routes: [
                                         { name: "index" },
-                                        { name: "detaildiet",
-                                          params: {
+                                        { name: "AnalysisPreview",
+                                            params: {
                                                 newDiet: {
                                                     ...existingDietWithDate,
                                                     date: existingDietWithDate.date.toISOString(),
-                                        } } }
+                                                } } }
                                     ],
                                 });
                             },
@@ -272,7 +272,7 @@ const UploadDietScreen: React.FC = () => {
                 console.log("new imgUri");
                 setAnalyzeLoading(true);
                 analysisData = await analyzeImage(imgUri); // Call analyzeImage with the image URI
-                newDiet = await addDiet(imgUri, imgHash, title, analysisData);
+                newDiet = await addDiet(imgUri, imgHash, title, analysisData, date);
                 setAnalyzeLoading(false);
 
                 // Navigate without alert if new image
@@ -280,7 +280,7 @@ const UploadDietScreen: React.FC = () => {
                     index: 1,
                     routes: [
                         { name: "index" },
-                        { name: "detaildiet", params: { newDiet: { ...newDiet, date: newDiet.date.toISOString() } } }
+                        { name: "AnalysisPreview", params: { newDiet: { ...newDiet, date: newDiet.date.toISOString() } } }
                     ],
                 });
             }
@@ -290,7 +290,7 @@ const UploadDietScreen: React.FC = () => {
     };
 
     const onDateChange = (event: any, selectedDate?: Date) => {
-        setShowDatePicker(Platform.OS === 'ios');
+        setShowDatePicker(false);
         if (selectedDate) {
             setDate(selectedDate);
         }
@@ -298,7 +298,7 @@ const UploadDietScreen: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Create New Entry</Text>
+            <Text style={styles.header}>Create New Diet</Text>
 
             <Text style={styles.label}>Title:</Text>
             <TextInput
@@ -317,12 +317,14 @@ const UploadDietScreen: React.FC = () => {
                     editable={false}
                 />
             </TouchableOpacity>
-
+            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
+                <Text style={styles.dateText}>Select Date: {date.toLocaleDateString()}</Text>
+            </TouchableOpacity>
             {showDatePicker && (
                 <DateTimePicker
                     value={date}
                     mode="date"
-                    display="default"
+                    display={Platform.OS === 'ios' ? 'inline' : 'default'}
                     onChange={onDateChange}
                 />
             )}
@@ -364,23 +366,18 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#f5f5f5',
     },
-    imagePicker: {
-        height: 200,
-        backgroundColor: '#e0e0e0',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10,
-        marginBottom: 20,
-    },
-    // image: {
-    //     width: '100%',
-    //     height: '100%',
+    // imagePicker: {
+    //     height: 200,
+    //     backgroundColor: '#e0e0e0',
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
     //     borderRadius: 10,
+    //     marginBottom: 20,
     // },
-    imagePlaceholder: {
-        color: '#777',
-        fontSize: 16,
-    },
+    // imagePlaceholder: {
+    //     color: '#777',
+    //     fontSize: 16,
+    // },
     // input: {
     //     height: 50,
     //     borderColor: '#ccc',
@@ -393,7 +390,7 @@ const styles = StyleSheet.create({
     datePickerButton: {
         marginBottom: 20,
         paddingVertical: 10,
-        backgroundColor: '#00796b',
+        backgroundColor: '#f46b42',
         borderRadius: 5,
         alignItems: 'center',
     },
@@ -401,7 +398,6 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
     },
-
     header: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -419,15 +415,16 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         marginVertical: 10,
+        alignItems: 'center',
     },
     image: {
-        width: 100,
-        height: 100,
+        width: '100%',
+        height: 300,
         borderRadius: 8,
     },
     placeholderImage: {
-        width: 100,
-        height: 100,
+        width: '100%',
+        height: 300,
         backgroundColor: '#ddd',
         justifyContent: 'center',
         alignItems: 'center',

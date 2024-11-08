@@ -1,5 +1,6 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { ThemedView } from "../ThemedView";
 
 function BlogCard({
   imageUrl,
@@ -11,45 +12,51 @@ function BlogCard({
   author: string;
 }) {
   return (
-    <View style={styles.card}>
+    <ThemedView style={styles.card}>
       <Image source={{ uri: imageUrl }} style={styles.image} />
-      <Text style={styles.title}>{title}</Text>
-      <View style={styles.footerRow}>
-        <Text style={styles.author}>by {author}</Text>
-        <TouchableOpacity>
-          <Ionicons name="heart-outline" size={24} color="red" />
-        </TouchableOpacity>
-      </View>
-    </View>
+      <ThemedView style={styles.contentContainer}>
+        <Text style={styles.title}>{title}</Text>
+        <ThemedView style={styles.footerRow}>
+          <Text style={styles.author}>by {author}</Text>
+          <TouchableOpacity>
+            <Ionicons name="heart-outline" size={24} color="red" />
+          </TouchableOpacity>
+        </ThemedView>
+      </ThemedView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
-    borderRadius: 10,
     overflow: "hidden",
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 5 },
     elevation: 3,
     borderWidth: 1,
+    flex: 1,
   },
   image: {
     width: "100%",
-    height: 150,
+    aspectRatio: 1 / 1,
+  },
+  contentContainer: {
+    padding: 10,
+    flex: 1,
+    justifyContent: "space-between",
   },
   title: {
-    padding: 10,
     fontSize: 16,
     fontWeight: "bold",
+    marginBottom: 10,
+    flex: 1, // allows title to take proportional space if more space is available
   },
   footerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 10,
-    paddingBottom: 10,
   },
   author: {
     fontSize: 14,

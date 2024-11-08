@@ -18,7 +18,7 @@ import { router } from "expo-router";
 
 export default function CommunityScreen() {
   const [loading, setLoading] = useState(true);
-  const fetchBlogs = useBlogStore((state) => state.fetchFakeBlogs);
+  const fetchBlogs = useBlogStore((state) => state.fetchBlogs);
 
   useEffect(() => {
     handleGetBlogs();
