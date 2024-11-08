@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { useEffect, useState } from "react";
 import {
+  Platform,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
@@ -13,7 +14,7 @@ import { ThemedText } from "@/components/ThemedText";
 
 import ExploreBar from "@/components/explore/ExploreBar";
 import RestaurantsView from "@/components/explore/RestaurantsView";
-import { Restaurant, useRestaurantStore } from "@/zustand/restaurant";
+import {Restaurant,useRestaurantStore } from "@/zustand/restaurant";
 import RestaurantsMapView from "@/components/explore/RestaurantsMapView";
 import { useLocation } from "@/zustand/location";
 
@@ -45,10 +46,10 @@ export default function ExploreScreen() {
   useEffect(() => {
     const fetchData = async () => {
       console.log("Updated userLocation in component:", userLocation);
-      if (userLocation.latitude && userLocation.longitude) {
-        //await fetchRestaurants(userLocation);
-        // setFilteredRestaurants(restaurants);
-        await fetchFakeRestaurants();
+      if (userLocation.latitude && userLocation.longitude) { 
+        //await fetchRestaurants(userLocation); 
+       // setFilteredRestaurants(restaurants);
+        await fetchFakeRestaurants(); 
         setFilteredRestaurants(restaurants);
       }
     };
@@ -99,7 +100,7 @@ export default function ExploreScreen() {
         ) : isMapView ? (
           <RestaurantsMapView data={filteredRestaurants} />
         ) : (
-          <RestaurantsView data={filteredRestaurants} />
+          <RestaurantsView data={filteredRestaurants}  />
         )}
       </ThemedView>
     </SafeAreaView>
