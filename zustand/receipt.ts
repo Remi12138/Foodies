@@ -12,22 +12,23 @@ type Receipt = {
 
 type ReceiptStore = {
     receipts: Receipt[];
-    addReceipt: (imgUri: string, title: string, amount: number) => void;
+    addReceipt: (imgUri: string, title: string, amount: number, date: Date) => void;
     loadReceipts: () => void;
     removeReceipt: (id: string) => void;
+    updateReceipt: (id: string, updatedData: Partial<Omit<Receipt, 'id'>>) => void;
 };
 
 const useReceiptStore = create<ReceiptStore>()(
     persist<ReceiptStore>(
         (set, get) => ({
             receipts: [],
-            addReceipt: async (imgUri, title, amount) => {
+            addReceipt: async (imgUri, title, amount, date) => {
                 const newReceipt: Receipt = {
                     id: Date.now().toString(),
                     imgUri,
                     title,
                     amount,
-                    date: new Date(),
+                    date,
                 };
                 const updatedReceipts = [newReceipt, ...get().receipts];
                 set({ receipts: updatedReceipts });
@@ -39,6 +40,13 @@ const useReceiptStore = create<ReceiptStore>()(
             },
             removeReceipt: async (id) => {
                 const updatedReceipts = get().receipts.filter(receipt => receipt.id !== id);
+                set({ receipts: updatedReceipts });
+                await AsyncStorage.setItem('receipts', JSON.stringify(updatedReceipts));
+            },
+            updateReceipt: async (id, updatedData) => {
+                const updatedReceipts = get().receipts.map(receipt =>
+                    receipt.id === id ? { ...receipt, ...updatedData } : receipt
+                );
                 set({ receipts: updatedReceipts });
                 await AsyncStorage.setItem('receipts', JSON.stringify(updatedReceipts));
             },

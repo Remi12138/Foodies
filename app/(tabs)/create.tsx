@@ -109,12 +109,12 @@ export default function CreateModal() {
                   if (index === 1) {
                     // Navigate to the Scan Receipt Screen
                     toggleMenu();
-                    router.push("/profile/addreceipt");
+                    router.push("/profile/AddReceipt");
                   }
                   if (index === 2) {
                     // Navigate to the Diet Camera Screen
                     toggleMenu();
-                    router.push("/profile/adddiet");
+                    router.push("/profile/AddDiet");
                   }
                   console.log("hander for", buttonLabels[index]);
                 }}

@@ -24,10 +24,10 @@ export default function ProfileScreen() {
         <TouchableOpacity
             style={styles.row}
             onPress={() => {
-              router.push("/profile/mydiets");
+              router.push("/profile/MyDiets");
             }}
         >
-          <ThemedText style={styles.rowText}>Diet</ThemedText>
+          <ThemedText style={styles.rowText}>My Diets</ThemedText>
           <Ionicons name="chevron-forward" size={24} color="gray" />
         </TouchableOpacity>
       </ThemedView>
@@ -41,7 +41,7 @@ export default function ProfileScreen() {
         <TouchableOpacity
             style={styles.row}
             onPress={() => {
-              router.push("/profile/myreceipts");
+              router.push("/profile/MyReceipts");
             }}
         >
           <ThemedText style={styles.rowText}>My Receipts</ThemedText>
