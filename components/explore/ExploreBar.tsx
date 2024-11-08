@@ -10,6 +10,13 @@ interface ExploreBarProps {
   onFilter: (filteredData: Restaurant[]) => void;
 }
 
+
+
+interface ExploreBarProps {
+  restaurants: Restaurant[];
+  onFilter: (filteredData: Restaurant[]) => void;
+}
+
 const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -23,15 +30,21 @@ const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
 
   return (
     <View style={styles.container}>
-      <Search openLocatorDialog={openLocatorDialog} />
-      <FilterBar restaurants={restaurants} onFilter={onFilter } />
+      <View style={styles.row}>
+        <View style={styles.searchContainer}>
+          <Search openLocatorDialog={openLocatorDialog} />
+        </View>
+        <View style={styles.filterContainer}>
+          <FilterBar restaurants={restaurants} onFilter={onFilter} />
+        </View>
+      </View>
       <LocatorDialog
         modalVisible={modalVisible}
         closeLocatorDialog={closeLocatorDialog}
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -41,6 +54,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchContainer: {
+    flex: 1, // Makes the search bar take up available space
+  },
+  filterContainer: {
+    paddingLeft: 8, // Adds space between search and filter icon
   },
 });
 
