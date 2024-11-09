@@ -21,6 +21,8 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
+import PostAuthorTool from "@/components/community/post/postAuthor/PostAuthorTool";
+
 const { width } = Dimensions.get("window");
 
 function BlogDetail({ blogId }: { blogId: string }) {
@@ -116,6 +118,9 @@ function BlogDetail({ blogId }: { blogId: string }) {
         <ThemedView style={styles.contentContainer}>
           <ThemedText style={styles.title}>{blog.title}</ThemedText>
           <BlogInfo blog={blog} isInitiallyLiked={isLiked} />
+          {user && user.uid === blog.author.uid && (
+            <PostAuthorTool blogId={blog.id} />
+          )}
           <ThemedText style={styles.content}>
             <ThemedText style={styles.firstLetter}>
               {blog.content[0]}
@@ -169,7 +174,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 16,
+    marginVertical: 12,
   },
   dot: {
     width: 8,
@@ -178,13 +183,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   contentContainer: {
-    padding: 16,
+    paddingHorizontal: 16,
   },
   title: {
     fontFamily: "Times New Roman",
     fontWeight: "bold",
     fontSize: 24,
-    marginBottom: 8,
     textAlign: "left",
   },
   content: {

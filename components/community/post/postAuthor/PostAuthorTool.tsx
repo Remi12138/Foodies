@@ -6,10 +6,10 @@ import { StyleSheet, View } from "react-native";
 function PostAuthorTool({ blogId }: { blogId: string }) {
   return (
     <ThemedView style={styles.row}>
-      <View style={styles.buttonContainer}>
+      <View style={styles.buttonStartContainer}>
         <PostBtnModify blogId={blogId} />
       </View>
-      <View style={styles.buttonContainer}>
+      <View style={styles.buttonEndContainer}>
         <PostBtnDeletion blogId={blogId} />
       </View>
     </ThemedView>
@@ -24,8 +24,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  buttonContainer: {
+  buttonStartContainer: {
     flex: 1,
-    marginHorizontal: 10,
+    marginHorizontal: 8,
+    marginStart: 0,
+  },
+  buttonEndContainer: {
+    flex: 1,
+    marginHorizontal: 8,
+    marginEnd: 0,
   },
 });
