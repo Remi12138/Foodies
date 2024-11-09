@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -9,10 +9,21 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
 import * as ImagePicker from "expo-image-picker";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { usePostStore } from "@/zustand/post";
 
 function PostImagePicker() {
-  const [images, setImages] = useState<string[]>([]);
+  const {
+    draft,
+    setImageCover,
+    addImage,
+    loadDraftFromStorage,
+    saveDraftToStorage,
+  } = usePostStore();
+
+  useEffect(() => {
+    // Load images from AsyncStorage when the component mounts
+    loadDraftFromStorage();
+  }, []);
 
   const pickImages = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -24,17 +35,19 @@ function PostImagePicker() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
-      selectionLimit: 9 - images.length,
+      selectionLimit: 9 - draft.images.length,
     });
 
     if (!result.canceled) {
       const selectedImages = result.assets.map((asset) => asset.uri);
-      const updatedImages = [...images, ...selectedImages];
-      setImages(updatedImages);
-      await AsyncStorage.setItem(
-        "selectedImages",
-        JSON.stringify(updatedImages)
-      );
+      selectedImages.forEach((image, index) => {
+        if (draft.images.length === 0 && index === 0) {
+          setImageCover(image); // Set the first image as the cover image if none exists
+        }
+        addImage(image);
+      });
+
+      await saveDraftToStorage();
     }
   };
 
@@ -42,10 +55,10 @@ function PostImagePicker() {
     <ThemedView style={styles.imageContainer}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View style={styles.imageRow}>
-          {images.map((uri, index) => (
+          {draft.images.map((uri, index) => (
             <Image key={index} source={{ uri }} style={styles.image} />
           ))}
-          {images.length < 9 && (
+          {draft.images.length < 9 && (
             <TouchableOpacity
               onPress={pickImages}
               style={styles.imagePlaceholder}
