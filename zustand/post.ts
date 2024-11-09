@@ -24,6 +24,7 @@ type PostStore = {
   setImageCover: (imageCover: string) => void;
   addImage: (image: string) => void;
   removeImage: (index: number) => void;
+  setImages: (images: string[]) => void;
   resetDraft: () => void;
   saveDraftToStorage: () => Promise<void>;
   loadDraftFromStorage: () => Promise<void>;
@@ -82,6 +83,14 @@ export const usePostStore = create<PostStore>()((set) => ({
         },
       };
     }),
+  setImages: (images) =>
+    set((state) => ({
+      draft: {
+        ...state.draft,
+        images,
+        image_cover: images.length > 0 ? images[0] : "",
+      },
+    })),
   resetDraft: () => set(() => ({ draft: defaultDraft })),
   saveDraftToStorage: async () => {
     try {

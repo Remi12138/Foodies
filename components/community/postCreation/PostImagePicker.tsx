@@ -1,27 +1,27 @@
-import { useEffect } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  View,
-} from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, TouchableOpacity, Image } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
 import * as ImagePicker from "expo-image-picker";
+import DraggableFlatList, {
+  RenderItemParams,
+} from "react-native-draggable-flatlist";
 import { usePostStore } from "@/zustand/post";
+
+type DraftImage = string;
 
 function PostImagePicker() {
   const {
     draft,
     setImageCover,
     addImage,
+    setImages,
     loadDraftFromStorage,
     saveDraftToStorage,
   } = usePostStore();
 
   useEffect(() => {
-    // Load images from AsyncStorage when the component mounts
     loadDraftFromStorage();
   }, []);
 
@@ -39,7 +39,7 @@ function PostImagePicker() {
     });
 
     if (!result.canceled) {
-      const selectedImages = result.assets.map((asset) => asset.uri);
+      const selectedImages = result.assets?.map((asset) => asset.uri) || [];
       selectedImages.forEach((image, index) => {
         if (draft.images.length === 0 && index === 0) {
           setImageCover(image); // Set the first image as the cover image if none exists
@@ -51,35 +51,53 @@ function PostImagePicker() {
     }
   };
 
+  const renderItem = ({ item, drag }: RenderItemParams<DraftImage>) => (
+    <TouchableOpacity onLongPress={drag} style={styles.imageWrapper}>
+      <Image source={{ uri: item }} style={styles.image} />
+    </TouchableOpacity>
+  );
+
   return (
-    <ThemedView style={styles.imageContainer}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.imageRow}>
-          {draft.images.map((uri, index) => (
-            <Image key={index} source={{ uri }} style={styles.image} />
-          ))}
-          {draft.images.length < 9 && (
-            <TouchableOpacity
-              onPress={pickImages}
-              style={styles.imagePlaceholder}
-            >
-              <Ionicons name="add" size={48} color="#ccc" />
-            </TouchableOpacity>
-          )}
-        </View>
-      </ScrollView>
-    </ThemedView>
+    <GestureHandlerRootView style={styles.container}>
+      <ThemedView style={styles.imageContainer}>
+        <DraggableFlatList
+          data={draft.images}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => `draggable-item-${index}`}
+          horizontal
+          onDragEnd={({ data }) => {
+            setImages(data);
+            setImageCover(data[0]);
+            saveDraftToStorage();
+          }}
+          ListFooterComponent={
+            draft.images.length < 9 ? (
+              <TouchableOpacity
+                onPress={pickImages}
+                style={styles.imagePlaceholder}
+              >
+                <Ionicons name="add" size={48} color="#ccc" />
+              </TouchableOpacity>
+            ) : null
+          }
+        />
+      </ThemedView>
+    </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    height: 139,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   imageContainer: {
     alignItems: "center",
     marginBottom: 20,
   },
-  imageRow: {
-    flexDirection: "row",
-    alignItems: "center",
+  imageWrapper: {
+    margin: 5,
   },
   imagePlaceholder: {
     width: 100,
@@ -93,7 +111,6 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-    margin: 5,
     borderRadius: 8,
   },
 });
