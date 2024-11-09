@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   ScrollView,
-  View,
   Image,
   StyleSheet,
   Dimensions,
@@ -62,9 +61,9 @@ function BlogDetail({ blogId }: { blogId: string }) {
 
   if (!blog) {
     return (
-      <View style={styles.loadingContainer}>
+      <ThemedView style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000FF" />
-      </View>
+      </ThemedView>
     );
   }
 
@@ -102,7 +101,7 @@ function BlogDetail({ blogId }: { blogId: string }) {
             ))}
           </ThemedView>
         </ThemedView>
-        <View style={styles.contentContainer}>
+        <ThemedView style={styles.contentContainer}>
           <ThemedText style={styles.title}>{blog.title}</ThemedText>
           <BlogInfo blog={blog} isInitiallyLiked={isLiked} />
           <ThemedText style={styles.content}>
@@ -111,7 +110,7 @@ function BlogDetail({ blogId }: { blogId: string }) {
             </ThemedText>
             {blog.content.substring(1)}
           </ThemedText>
-        </View>
+        </ThemedView>
       </ScrollView>
     </GestureHandlerRootView>
   );

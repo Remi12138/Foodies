@@ -2,16 +2,25 @@ import { TouchableOpacity, StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { UserPublicProfile } from "@/zustand/user";
+import { getAuth } from "firebase/auth";
 
 function BlogAuthor({ author }: { author: UserPublicProfile }) {
+  const currentUser = getAuth().currentUser;
   return (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.authorText}>
         {author.first_name} {author.last_name}
       </ThemedText>
-      <TouchableOpacity style={styles.followButton}>
-        <ThemedText style={styles.followButtonText}>Follow</ThemedText>
-      </TouchableOpacity>
+
+      {currentUser && currentUser.uid !== author.uid ? (
+        <TouchableOpacity style={styles.followButton}>
+          <ThemedText style={styles.followButtonText}>Follow</ThemedText>
+        </TouchableOpacity>
+      ) : (
+        <ThemedView style={{ marginLeft: 5 }}>
+          <ThemedText>(Me)</ThemedText>
+        </ThemedView>
+      )}
     </ThemedView>
   );
 }
