@@ -2,17 +2,32 @@ import { TouchableOpacity, StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { usePostStore } from "@/zustand/post";
+import { createPostRecord } from "@/utils/blogs/posts";
+import { getAuth } from "firebase/auth";
 
 function PostBtnSubmit() {
   const { draft, resetDraft } = usePostStore();
+  const currentUser = getAuth().currentUser;
 
-  const handleCreateBlog = () => {
+  const handleCreateBlog = async () => {
     console.log({
       title: draft.title,
       content: draft.content,
+      cover: draft.image_cover,
+      images: draft.images,
     });
-    alert("Post created successfully!");
-    resetDraft();
+    try {
+      if (currentUser) {
+        await createPostRecord(draft, currentUser);
+        alert("Post created successfully!");
+        resetDraft();
+      } else {
+        alert("User not logged in");
+      }
+    } catch (error) {
+      console.error("Error creating post:", error);
+      alert("An error occurred while creating the post");
+    }
   };
 
   const postButtonBackground = useThemeColor(
