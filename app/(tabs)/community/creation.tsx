@@ -1,5 +1,5 @@
 import StackHeader from "@/components/common/StackHeader";
-import PostCreate from "@/components/community/postCreation/PostCreate";
+import PostCreate from "@/components/community/post/postCreation/PostCreate";
 
 const BlogCreationScreen = () => {
   return (
