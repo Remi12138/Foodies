@@ -10,7 +10,6 @@ function PostBtnSubmit() {
     console.log({
       title: draft.title,
       content: draft.content,
-      location: draft.location,
     });
     alert("Post created successfully!");
     resetDraft();

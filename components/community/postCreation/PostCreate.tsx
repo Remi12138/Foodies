@@ -1,36 +1,64 @@
+import { useEffect } from "react";
 import {
   TextInput,
   StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
-import PostImagePicker from "@/components/community/postCreation/PostImagePicker";
-import PostBtnSubmit from "@/components/community/postCreation/PostBtnSubmit";
+import PostImagePicker from "./PostImagePicker";
 import { ThemedView } from "@/components/ThemedView";
 import { usePostStore } from "@/zustand/post";
+import PostBtnSubmit from "./PostBtnSubmit";
+import { debounce } from "lodash";
 
 function PostCreate() {
-  const { draft, setTitle, setContent } = usePostStore();
+  const {
+    draft,
+    setTitle,
+    setContent,
+    loadDraftFromStorage,
+    saveDraftToStorage,
+  } = usePostStore();
+
+  useEffect(() => {
+    // Load saved draft when the component mounts
+    loadDraftFromStorage();
+  }, []);
+
+  const handleTitleChange = (title: string) => {
+    setTitle(title);
+    debouncedSaveDraft();
+  };
+
+  const handleContentChange = (content: string) => {
+    setContent(content);
+    debouncedSaveDraft();
+  };
+
+  const debouncedSaveDraft = debounce(() => {
+    saveDraftToStorage();
+  }, 2000);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ThemedView style={styles.container}>
-        <PostImagePicker />
-        <TextInput
-          style={styles.titleInput}
-          placeholder="Add a title"
-          value={draft.title}
-          onChangeText={setTitle}
-        />
-
-        <TextInput
-          style={styles.contentInput}
-          placeholder="Add text"
-          value={draft.content}
-          onChangeText={setContent}
-          multiline
-        />
-
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <PostImagePicker />
+          <TextInput
+            style={styles.titleInput}
+            placeholder="Add a title"
+            value={draft.title}
+            onChangeText={handleTitleChange}
+          />
+          <TextInput
+            style={styles.contentInput}
+            placeholder="Add text"
+            value={draft.content}
+            onChangeText={handleContentChange}
+            multiline
+          />
+        </ScrollView>
         <PostBtnSubmit />
       </ThemedView>
     </TouchableWithoutFeedback>
@@ -43,17 +71,8 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "white",
   },
-  imageContainer: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  imagePlaceholder: {
-    width: 100,
-    height: 100,
-    backgroundColor: "#f0f0f0",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 8,
+  scrollViewContent: {
+    paddingBottom: 80,
   },
   titleInput: {
     fontSize: 18,
