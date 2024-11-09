@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { StyleSheet, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, TouchableOpacity, Image, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
@@ -51,11 +51,26 @@ function PostImagePicker() {
     }
   };
 
-  const renderItem = ({ item, drag }: RenderItemParams<DraftImage>) => (
-    <TouchableOpacity onLongPress={drag} style={styles.imageWrapper}>
-      <Image source={{ uri: item }} style={styles.image} />
-    </TouchableOpacity>
-  );
+  const renderItem = ({ item, drag }: RenderItemParams<DraftImage>) => {
+    const index = draft.images.indexOf(item);
+    const label =
+      index === 0 ? "Cover" : `${index + 1}${getOrdinalSuffix(index + 1)}`;
+    return (
+      <View style={styles.imageWrapper}>
+        <TouchableOpacity onLongPress={drag}>
+          <Image source={{ uri: item }} style={styles.image} />
+        </TouchableOpacity>
+        <Text style={styles.imageLabel}>{label}</Text>
+      </View>
+    );
+  };
+
+  const getOrdinalSuffix = (number: number) => {
+    if (number === 1) return "st";
+    if (number === 2) return "nd";
+    if (number === 3) return "rd";
+    return "th";
+  };
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -72,12 +87,19 @@ function PostImagePicker() {
           }}
           ListFooterComponent={
             draft.images.length < 9 ? (
-              <TouchableOpacity
-                onPress={pickImages}
-                style={styles.imagePlaceholder}
-              >
-                <Ionicons name="add" size={48} color="#ccc" />
-              </TouchableOpacity>
+              <View style={styles.placeholderWrapper}>
+                <TouchableOpacity
+                  onPress={pickImages}
+                  style={styles.imagePlaceholder}
+                >
+                  <Ionicons name="add" size={48} color="#ccc" />
+                </TouchableOpacity>
+                <Text style={styles.placeholderLabel}>
+                  {draft.images.length === 0
+                    ? "Pick a Cover"
+                    : `${9 - draft.images.length} Seats Available`}
+                </Text>
+              </View>
             ) : null
           }
         />
@@ -88,7 +110,7 @@ function PostImagePicker() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 150,
+    height: 180,
     alignItems: "flex-start",
     justifyContent: "center",
   },
@@ -98,6 +120,11 @@ const styles = StyleSheet.create({
   },
   imageWrapper: {
     margin: 5,
+    alignItems: "center",
+  },
+  placeholderWrapper: {
+    alignItems: "center",
+    margin: 5,
   },
   imagePlaceholder: {
     width: 135,
@@ -105,11 +132,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F0",
     alignItems: "center",
     justifyContent: "center",
-    margin: 5,
+  },
+  placeholderLabel: {
+    marginTop: 5,
+    fontSize: 12,
+    color: "#333",
   },
   image: {
     width: 135,
     height: 135,
+  },
+  imageLabel: {
+    marginTop: 5,
+    fontSize: 10,
+    color: "#FFF",
+    backgroundColor: "#000",
+    paddingHorizontal: 20,
+    paddingVertical: 2,
+    overflow: "hidden",
   },
 });
 
