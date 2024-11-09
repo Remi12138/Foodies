@@ -17,6 +17,7 @@ import {
   doc,
   getDoc,
   DocumentReference,
+  Timestamp,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -68,6 +69,17 @@ function BlogDetail({ blogId }: { blogId: string }) {
   }
 
   const images = [blog.image_cover, ...blog.images];
+  const blogUpdatedTime = blog.updated_at as unknown as Timestamp;
+  const formattedUpdatedTime = blogUpdatedTime
+    .toDate()
+    .toLocaleString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
 
   return (
     <GestureHandlerRootView style={styles.gestureContainer}>
@@ -110,6 +122,11 @@ function BlogDetail({ blogId }: { blogId: string }) {
             </ThemedText>
             {blog.content.substring(1)}
           </ThemedText>
+          <ThemedView>
+            <ThemedText style={styles.updatedTime}>
+              {formattedUpdatedTime}
+            </ThemedText>
+          </ThemedView>
         </ThemedView>
       </ScrollView>
     </GestureHandlerRootView>
@@ -164,8 +181,9 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   title: {
-    fontSize: 24,
+    fontFamily: "Times New Roman",
     fontWeight: "bold",
+    fontSize: 24,
     marginBottom: 8,
     textAlign: "left",
   },
@@ -179,6 +197,13 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     textTransform: "uppercase",
+  },
+  updatedTime: {
+    fontFamily: "Times New Roman",
+    fontStyle: "italic",
+    fontSize: 14,
+    textAlign: "right",
+    marginTop: 8,
   },
 });
 
