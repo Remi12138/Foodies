@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import PostImagePicker from "./PostImagePicker";
 import { ThemedView } from "@/components/ThemedView";
 
 function PostCreate() {
@@ -22,13 +22,8 @@ function PostCreate() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <ThemedView style={styles.imageContainer}>
-        <ThemedView style={styles.imagePlaceholder}>
-          <Ionicons name="add" size={48} color="#ccc" />
-        </ThemedView>
-      </ThemedView>
-
+    <ThemedView style={styles.container}>
+      <PostImagePicker />
       <TextInput
         style={styles.titleInput}
         placeholder="Add a title"
@@ -59,13 +54,15 @@ function PostCreate() {
       </TouchableOpacity>
 
       <Button title="Post" onPress={handleCreateBlog} />
-    </ScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 20,
+    backgroundColor: "white",
   },
   imageContainer: {
     alignItems: "center",
