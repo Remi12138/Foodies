@@ -21,6 +21,7 @@
     "@react-native-community/datetimepicker": "^8.0.1",
     "@react-native-picker/picker": "^2.9.0",
     "@react-navigation/native": "^6.0.2",
+    "@types/lodash": "^4.17.13",
     "axios": "^1.7.7",
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
