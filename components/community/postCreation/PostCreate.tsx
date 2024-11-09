@@ -1,60 +1,39 @@
-import { ThemedText } from "@/components/ThemedText";
-import { useState } from "react";
 import {
   TextInput,
-  Button,
   StyleSheet,
-  ScrollView,
-  TouchableOpacity,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
-import PostImagePicker from "./PostImagePicker";
+import PostImagePicker from "@/components/community/postCreation/PostImagePicker";
+import PostBtnSubmit from "@/components/community/postCreation/PostBtnSubmit";
 import { ThemedView } from "@/components/ThemedView";
+import { usePostStore } from "@/zustand/post";
 
 function PostCreate() {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [location, setLocation] = useState("");
-  const [isPublic, setIsPublic] = useState(true);
-
-  const handleCreateBlog = () => {
-    console.log({ title, content, location, isPublic });
-    alert("Post created successfully!");
-  };
+  const { draft, setTitle, setContent } = usePostStore();
 
   return (
-    <ThemedView style={styles.container}>
-      <PostImagePicker />
-      <TextInput
-        style={styles.titleInput}
-        placeholder="Add a title"
-        value={title}
-        onChangeText={setTitle}
-      />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ThemedView style={styles.container}>
+        <PostImagePicker />
+        <TextInput
+          style={styles.titleInput}
+          placeholder="Add a title"
+          value={draft.title}
+          onChangeText={setTitle}
+        />
 
-      <TextInput
-        style={styles.contentInput}
-        placeholder="Add text"
-        value={content}
-        onChangeText={setContent}
-        multiline
-      />
+        <TextInput
+          style={styles.contentInput}
+          placeholder="Add text"
+          value={draft.content}
+          onChangeText={setContent}
+          multiline
+        />
 
-      <TextInput
-        style={styles.locationInput}
-        placeholder="Mark Locations"
-        value={location}
-        onChangeText={setLocation}
-      />
-
-      <TouchableOpacity
-        style={styles.publicToggle}
-        onPress={() => setIsPublic((prev) => !prev)}
-      >
-        <ThemedText>{isPublic ? "Public" : "Private"}</ThemedText>
-      </TouchableOpacity>
-
-      <Button title="Post" onPress={handleCreateBlog} />
-    </ThemedView>
+        <PostBtnSubmit />
+      </ThemedView>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -93,18 +72,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     height: 120,
     textAlignVertical: "top",
-  },
-  locationInput: {
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 15,
-  },
-  publicToggle: {
-    alignSelf: "flex-start",
-    marginBottom: 20,
   },
 });
 
