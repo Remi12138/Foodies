@@ -71,7 +71,7 @@ function BlogDetail({ blogId }: { blogId: string }) {
   const images = [blog.image_cover, ...blog.images];
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={styles.gestureContainer}>
       <ScrollView contentContainerStyle={styles.container}>
         <ThemedView>
           <FlatList
@@ -135,8 +135,9 @@ function BlogDetail({ blogId }: { blogId: string }) {
 }
 
 const styles = StyleSheet.create({
+  gestureContainer: { flex: 1, backgroundColor: "#FFF" },
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: "#FFF",
   },
   loadingContainer: {
@@ -167,12 +168,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 8,
-    textAlign: "center",
+    textAlign: "left",
   },
   content: {
     fontSize: 16,
-    lineHeight: 24,
     textAlign: "justify",
+    paddingVertical: 8,
   },
   firstLetter: {
     fontSize: 28,
