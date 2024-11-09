@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { StyleSheet, TouchableOpacity, Image } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
@@ -88,30 +88,28 @@ function PostImagePicker() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 139,
-    alignItems: "center",
+    height: 150,
+    alignItems: "flex-start",
     justifyContent: "center",
   },
   imageContainer: {
-    alignItems: "center",
-    marginBottom: 20,
+    width: "100%",
+    alignItems: "flex-start",
   },
   imageWrapper: {
     margin: 5,
   },
   imagePlaceholder: {
-    width: 100,
-    height: 100,
-    backgroundColor: "#f0f0f0",
+    width: 135,
+    height: 135,
+    backgroundColor: "#F0F0F0",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 8,
     margin: 5,
   },
   image: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
+    width: 135,
+    height: 135,
   },
 });
 
