@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   content: {
+    fontFamily: "Times New Roman",
     fontSize: 16,
     textAlign: "justify",
     paddingVertical: 8,
