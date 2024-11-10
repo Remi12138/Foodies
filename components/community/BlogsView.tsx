@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -9,6 +9,7 @@ import {
 import BlogCard from "@/components/community/BlogCard";
 import { Blog, useBlogStore } from "@/zustand/blog";
 import { Link } from "expo-router";
+import { Timestamp } from "firebase/firestore";
 
 function Blogs({ data }: { data: Blog[] }) {
   const [refreshing, setRefreshing] = useState(false);
@@ -21,6 +22,7 @@ function Blogs({ data }: { data: Blog[] }) {
           imageUrl={item.image_cover}
           title={item.title}
           author={item.author.first_name}
+          date={item.updated_at as unknown as Timestamp}
         />
       </Link>
     </View>

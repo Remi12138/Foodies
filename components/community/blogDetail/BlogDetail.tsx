@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   ScrollView,
-  View,
   Image,
   StyleSheet,
   Dimensions,
@@ -18,8 +17,11 @@ import {
   doc,
   getDoc,
   DocumentReference,
+  Timestamp,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+
+import PostAuthorTool from "@/components/community/post/postAuthor/PostAuthorTool";
 
 const { width } = Dimensions.get("window");
 
@@ -62,16 +64,27 @@ function BlogDetail({ blogId }: { blogId: string }) {
 
   if (!blog) {
     return (
-      <View style={styles.loadingContainer}>
+      <ThemedView style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000FF" />
-      </View>
+      </ThemedView>
     );
   }
 
   const images = [blog.image_cover, ...blog.images];
+  const blogUpdatedTime = blog.updated_at as unknown as Timestamp;
+  const formattedUpdatedTime = blogUpdatedTime
+    .toDate()
+    .toLocaleString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={styles.gestureContainer}>
       <ScrollView contentContainerStyle={styles.container}>
         <ThemedView>
           <FlatList
@@ -102,16 +115,24 @@ function BlogDetail({ blogId }: { blogId: string }) {
             ))}
           </ThemedView>
         </ThemedView>
-        <View style={styles.contentContainer}>
+        <ThemedView style={styles.contentContainer}>
           <ThemedText style={styles.title}>{blog.title}</ThemedText>
           <BlogInfo blog={blog} isInitiallyLiked={isLiked} />
+          {user && user.uid === blog.author.uid && (
+            <PostAuthorTool blogId={blog.id} />
+          )}
           <ThemedText style={styles.content}>
             <ThemedText style={styles.firstLetter}>
               {blog.content[0]}
             </ThemedText>
             {blog.content.substring(1)}
           </ThemedText>
-        </View>
+          <ThemedView>
+            <ThemedText style={styles.updatedTime}>
+              {formattedUpdatedTime}
+            </ThemedText>
+          </ThemedView>
+        </ThemedView>
       </ScrollView>
     </GestureHandlerRootView>
   );
@@ -135,8 +156,9 @@ function BlogDetail({ blogId }: { blogId: string }) {
 }
 
 const styles = StyleSheet.create({
+  gestureContainer: { flex: 1, backgroundColor: "#FFF" },
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: "#FFF",
   },
   loadingContainer: {
@@ -152,7 +174,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 16,
+    marginVertical: 12,
   },
   dot: {
     width: 8,
@@ -161,23 +183,31 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   contentContainer: {
-    padding: 16,
+    paddingHorizontal: 16,
   },
   title: {
-    fontSize: 24,
+    fontFamily: "Times New Roman",
     fontWeight: "bold",
-    marginBottom: 8,
-    textAlign: "center",
+    fontSize: 24,
+    textAlign: "left",
   },
   content: {
+    fontFamily: "Times New Roman",
     fontSize: 16,
-    lineHeight: 24,
     textAlign: "justify",
+    paddingVertical: 8,
   },
   firstLetter: {
     fontSize: 28,
     fontWeight: "bold",
     textTransform: "uppercase",
+  },
+  updatedTime: {
+    fontFamily: "Times New Roman",
+    fontStyle: "italic",
+    fontSize: 14,
+    textAlign: "right",
+    marginTop: 8,
   },
 });
 
