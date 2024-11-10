@@ -9,6 +9,7 @@ import {
 
 export type UserPublicProfile = {
   uid: string;
+  customize_id: string;
   last_name: string;
   first_name: string;
   avatar: string;

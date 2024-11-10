@@ -10,14 +10,16 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { Blog } from "@/zustand/blog";
 import BlogAuthor from "@/components/community/blogDetail/BlogAuthor";
+import { UserPublicProfile } from "@/zustand/user";
 
 function BlogInfo({
-  blog,
+  blogId,
+  authorPublicProfile,
   isInitiallyLiked,
 }: {
-  blog: Blog;
+  blogId: string;
+  authorPublicProfile: UserPublicProfile | null;
   isInitiallyLiked: boolean;
 }) {
   const [isLiked, setIsLiked] = useState<boolean>(isInitiallyLiked);
@@ -32,11 +34,11 @@ function BlogInfo({
         const collectionRef = doc(firestore, `collections/${user.uid}`);
         if (isLiked) {
           await updateDoc(collectionRef, {
-            blogs: arrayRemove(doc(firestore, `blogs/${blog.id}`)),
+            blogs: arrayRemove(doc(firestore, `blogs/${blogId}`)),
           });
         } else {
           await updateDoc(collectionRef, {
-            blogs: arrayUnion(doc(firestore, `blogs/${blog.id}`)),
+            blogs: arrayUnion(doc(firestore, `blogs/${blogId}`)),
           });
         }
       } catch (error) {
@@ -48,7 +50,7 @@ function BlogInfo({
 
   return (
     <ThemedView style={styles.blogInfoContainer}>
-      <BlogAuthor author={blog.author} />
+      {authorPublicProfile && <BlogAuthor author={authorPublicProfile} />}
       <ThemedView style={styles.toolContainer}>
         <TouchableOpacity style={styles.likeButton} onPress={toggleLike}>
           <AntDesign

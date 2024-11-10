@@ -23,6 +23,8 @@ import { getAuth } from "firebase/auth";
 
 import PostAuthorTool from "@/components/community/post/postAuthor/PostAuthorTool";
 import { fetchPostRecord } from "@/utils/blogs/posts";
+import { fetchUserPublicProfile } from "@/utils/users/info";
+import { UserPublicProfile } from "@/zustand/user";
 
 const { width } = Dimensions.get("window");
 
@@ -34,6 +36,8 @@ function BlogDetail({
   blogId: string;
 }) {
   const [blog, setBlog] = useState<Blog | null>(null);
+  const [authorPulicProfile, setAuthorPublicProfile] =
+    useState<UserPublicProfile | null>(null);
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -42,17 +46,27 @@ function BlogDetail({
   const user = auth.currentUser;
 
   useEffect(() => {
+    const fetchAuthorProfile = async () => {
+      const authorProfile = await fetchUserPublicProfile(authorUid);
+      if (authorProfile) {
+        setAuthorPublicProfile(authorProfile);
+      }
+    };
+    fetchAuthorProfile();
+  }, [authorUid]);
+
+  useEffect(() => {
     const fetchBlogDetailsAndLikeStatus = async () => {
       try {
         const blogPromise = fetchPostRecord(authorUid, blogId);
         let isBlogLiked = false;
 
-        // if (user) {
-        //   isBlogLiked = await checkIfBlogIsLiked(user.uid);
-        //   if (isBlogLiked) {
-        //     setIsLiked(true);
-        //   }
-        // }
+        if (user) {
+          isBlogLiked = await checkIfBlogIsLiked(user.uid);
+          if (isBlogLiked) {
+            setIsLiked(true);
+          }
+        }
 
         const blog = await blogPromise;
         if (blog) {
@@ -124,7 +138,11 @@ function BlogDetail({
         </ThemedView>
         <ThemedView style={styles.contentContainer}>
           <ThemedText style={styles.title}>{blog.post_title}</ThemedText>
-          {/* <BlogInfo blog={blog} isInitiallyLiked={isLiked} /> */}
+          <BlogInfo
+            blogId={blog.id}
+            authorPublicProfile={authorPulicProfile}
+            isInitiallyLiked={isLiked}
+          />
           {user && user.uid === authorUid && (
             <PostAuthorTool blogId={blog.id} />
           )}
