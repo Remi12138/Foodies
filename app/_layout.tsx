@@ -17,10 +17,10 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-    SpaceMonoI: require("../assets/fonts/SpaceMono-Italic.ttf"),
-    SpaceMonoB: require("../assets/fonts/SpaceMono-Bold.ttf"),
-    SpaceMonoBI: require("../assets/fonts/SpaceMono-BoldItalic.ttf"),
+    SpaceMono: require("@/assets/fonts/SpaceMono-Regular.ttf"),
+    SpaceMonoI: require("@/assets/fonts/SpaceMono-Italic.ttf"),
+    SpaceMonoB: require("@/assets/fonts/SpaceMono-Bold.ttf"),
+    SpaceMonoBI: require("@/assets/fonts/SpaceMono-BoldItalic.ttf"),
   });
 
   useEffect(() => {
@@ -36,6 +36,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />

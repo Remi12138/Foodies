@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
-import BlogAuthor from "./BlogAuthor";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { Blog } from "@/zustand/blog";
-import { ThemedView } from "../../ThemedView";
+import { ThemedView } from "@/components/ThemedView";
 import {
   getFirestore,
   doc,
@@ -12,6 +10,8 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { Blog } from "@/zustand/blog";
+import BlogAuthor from "@/components/community/blogDetail/BlogAuthor";
 
 function BlogInfo({
   blog,
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 16,
+    marginVertical: 8,
   },
   toolContainer: {
     flexDirection: "row",

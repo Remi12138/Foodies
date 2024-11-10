@@ -72,8 +72,6 @@ const fetchBlogs = async (): Promise<Blog[] | void> => {
         } as Blog;
       })
     );
-
-    console.log("Fetched blogs from Firestore:", blogs);
     return blogs;
   } catch (error) {
     console.error("Error fetching blogs from Firestore:", error);
