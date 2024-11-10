@@ -1,6 +1,6 @@
 import { FIREBASE_DB } from "@/firebaseConfig";
 import { getAuth } from "firebase/auth";
-import { doc, DocumentReference, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 async function checkIfBlogIsLiked(blogId: string): Promise<boolean> {
   const currentUser = getAuth().currentUser;
@@ -8,17 +8,13 @@ async function checkIfBlogIsLiked(blogId: string): Promise<boolean> {
 
   const collectionRef = doc(
     FIREBASE_DB,
-    "users",
-    currentUser.uid,
-    "collections",
-    "blogs"
+    `users/${currentUser.uid}/collections/blogs`
   );
   const collectionDoc = await getDoc(collectionRef);
 
   if (collectionDoc.exists()) {
-    const collectionData = collectionDoc.data();
-    const blogReferences: DocumentReference[] = collectionData.favorites;
-    return blogReferences.some((ref) => ref.id === blogId);
+    const likedPosts: string[] = collectionDoc.data().favorites;
+    return likedPosts.some((str) => str === blogId);
   }
   return false;
 }

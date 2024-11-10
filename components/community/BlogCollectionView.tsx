@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, ActivityIndicator, Image } from "react-native";
-import { doc, getDoc, DocumentReference } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  DocumentReference,
+  collection,
+  query,
+  where,
+  documentId,
+  getDocs,
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { BlogCover } from "@/zustand/blog";
 import { ThemedView } from "@/components/ThemedView";
@@ -20,27 +29,25 @@ function BlogCollectionView() {
       try {
         const collectionRef = doc(
           FIREBASE_DB,
-          "users",
-          currentUser.uid,
-          "collections",
-          "blogs"
+          `users/${currentUser.uid}/collections/blogs`
         );
         const collectionDoc = await getDoc(collectionRef);
 
         if (collectionDoc.exists()) {
-          const collectionData = collectionDoc.data();
-          console.log("collectionData: ", collectionData);
-          const blogReferences: DocumentReference[] = collectionData.favorites;
-
-          const blogPromises = blogReferences.map(async (blogRef) => {
-            const blogSnap = await getDoc(blogRef);
-            return blogSnap.exists()
-              ? ({ blog_id: blogSnap.id, ...blogSnap.data() } as BlogCover)
-              : null;
-          });
-
-          const blogsData = await Promise.all(blogPromises);
-          setBlogs(blogsData.filter((blog) => blog !== null) as BlogCover[]);
+          const collectedBlogIds = collectionDoc.data().favorites;
+          if (collectedBlogIds.length > 0) {
+            const blogsRef = collection(FIREBASE_DB, "blog_covers");
+            const q = query(
+              blogsRef,
+              where(documentId(), "in", collectedBlogIds)
+            );
+            const querySnapshot = await getDocs(q);
+            const blogsData = querySnapshot.docs.map((doc) => ({
+              blog_id: doc.id,
+              ...doc.data(),
+            }));
+            setBlogs(blogsData.filter((blog) => blog !== null) as BlogCover[]);
+          }
         }
       } catch (error) {
         console.error("Error fetching user collections: ", error);

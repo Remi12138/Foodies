@@ -30,11 +30,11 @@ function BlogInfo({
         );
         if (isLiked) {
           await updateDoc(collectionRef, {
-            favorites: arrayRemove(doc(FIREBASE_DB, `blog_covers/${blogId}`)),
+            favorites: arrayRemove(blogId),
           });
         } else {
           await updateDoc(collectionRef, {
-            favorites: arrayUnion(doc(FIREBASE_DB, `blog_covers/${blogId}`)),
+            favorites: arrayUnion(blogId),
           });
         }
       } catch (error) {
