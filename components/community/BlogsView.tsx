@@ -38,7 +38,7 @@ function Blogs() {
     return (
       <View style={styles.cardContainer}>
         <Link
-          href={`/community/blog?blogId=${item.blog_id}&blogTitle=${item.post_title}`}
+          href={`/community/blog?authorUid=${item.author_id}&blogId=${item.blog_id}&blogTitle=${item.post_title}`}
         >
           <BlogCard
             imageUrl={item.post_image_cover}

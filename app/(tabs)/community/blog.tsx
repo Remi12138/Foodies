@@ -3,7 +3,10 @@ import BlogDetail from "@/components/community/blogDetail/BlogDetail";
 import { useLocalSearchParams } from "expo-router";
 
 export default function BlogScreen() {
-  const { blogId, blogTitle } = useLocalSearchParams();
+  const { authorUid, blogId, blogTitle } = useLocalSearchParams();
+
+  const author_id = Array.isArray(authorUid) ? authorUid[0] : authorUid;
+  const blog_id = Array.isArray(blogId) ? blogId[0] : blogId;
 
   const MAX_TITLE_LENGTH = 30;
   const truncatedTitle =
@@ -16,7 +19,7 @@ export default function BlogScreen() {
   return (
     <>
       <StackHeader title={truncatedTitle} />
-      <BlogDetail blogId={Array.isArray(blogId) ? blogId[0] : blogId} />
+      <BlogDetail authorUid={author_id} blogId={blog_id} />
     </>
   );
 }

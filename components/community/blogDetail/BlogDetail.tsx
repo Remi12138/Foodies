@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { useBlogStore, Blog } from "@/zustand/blog";
+import { Blog } from "@/zustand/blog";
 import { router } from "expo-router";
 import { GestureHandlerRootView, FlatList } from "react-native-gesture-handler";
 import { ThemedView } from "@/components/ThemedView";
@@ -22,14 +22,21 @@ import {
 import { getAuth } from "firebase/auth";
 
 import PostAuthorTool from "@/components/community/post/postAuthor/PostAuthorTool";
+import { fetchPostRecord } from "@/utils/blogs/posts";
 
 const { width } = Dimensions.get("window");
 
-function BlogDetail({ blogId }: { blogId: string }) {
+function BlogDetail({
+  authorUid,
+  blogId,
+}: {
+  authorUid: string;
+  blogId: string;
+}) {
   const [blog, setBlog] = useState<Blog | null>(null);
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const fetchBlog = useBlogStore((state) => state.fetchBlog);
+
   const firestore = getFirestore();
   const auth = getAuth();
   const user = auth.currentUser;
@@ -37,15 +44,15 @@ function BlogDetail({ blogId }: { blogId: string }) {
   useEffect(() => {
     const fetchBlogDetailsAndLikeStatus = async () => {
       try {
-        const blogPromise = fetchBlog(blogId);
+        const blogPromise = fetchPostRecord(authorUid, blogId);
         let isBlogLiked = false;
 
-        if (user) {
-          isBlogLiked = await checkIfBlogIsLiked(user.uid);
-          if (isBlogLiked) {
-            setIsLiked(true);
-          }
-        }
+        // if (user) {
+        //   isBlogLiked = await checkIfBlogIsLiked(user.uid);
+        //   if (isBlogLiked) {
+        //     setIsLiked(true);
+        //   }
+        // }
 
         const blog = await blogPromise;
         if (blog) {
@@ -60,7 +67,7 @@ function BlogDetail({ blogId }: { blogId: string }) {
     };
 
     fetchBlogDetailsAndLikeStatus();
-  }, [blogId, fetchBlog, user, firestore]);
+  }, []);
 
   if (!blog) {
     return (
@@ -70,7 +77,7 @@ function BlogDetail({ blogId }: { blogId: string }) {
     );
   }
 
-  const images = [blog.image_cover, ...blog.images];
+  const images = [blog.post_image_cover, ...blog.post_images];
   const blogUpdatedTime = blog.updated_at as unknown as Timestamp;
   const formattedUpdatedTime = blogUpdatedTime
     .toDate()
@@ -116,16 +123,16 @@ function BlogDetail({ blogId }: { blogId: string }) {
           </ThemedView>
         </ThemedView>
         <ThemedView style={styles.contentContainer}>
-          <ThemedText style={styles.title}>{blog.title}</ThemedText>
-          <BlogInfo blog={blog} isInitiallyLiked={isLiked} />
-          {user && user.uid === blog.author.uid && (
+          <ThemedText style={styles.title}>{blog.post_title}</ThemedText>
+          {/* <BlogInfo blog={blog} isInitiallyLiked={isLiked} /> */}
+          {user && user.uid === authorUid && (
             <PostAuthorTool blogId={blog.id} />
           )}
           <ThemedText style={styles.content}>
             <ThemedText style={styles.firstLetter}>
-              {blog.content[0]}
+              {blog.post_content[0]}
             </ThemedText>
-            {blog.content.substring(1)}
+            {blog.post_content.substring(1)}
           </ThemedText>
           <ThemedView>
             <ThemedText style={styles.updatedTime}>

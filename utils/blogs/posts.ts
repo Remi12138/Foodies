@@ -1,3 +1,5 @@
+import { FIREBASE_DB } from "@/firebaseConfig";
+import { Blog } from "@/zustand/blog";
 import { PostDraft } from "@/zustand/post";
 import { User } from "firebase/auth";
 import {
@@ -6,7 +8,32 @@ import {
   addDoc,
   doc,
   deleteDoc,
+  getDoc,
 } from "firebase/firestore";
+
+async function fetchPostRecord(
+  userUid: string,
+  blogId: string
+): Promise<Blog | null> {
+  try {
+    const blogDocRef = doc(FIREBASE_DB, "users", userUid, "blogs", blogId);
+    const blogDoc = await getDoc(blogDocRef);
+
+    if (blogDoc.exists()) {
+      const blogData = blogDoc.data();
+
+      return {
+        id: blogDoc.id,
+        ...blogData,
+      } as Blog;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching blog from Firestore:", error);
+    return null;
+  }
+}
 
 async function createPostRecord(draft: PostDraft, currentUser: User) {
   try {
@@ -40,4 +67,4 @@ async function destroyPostRecord(blogId: string) {
   }
 }
 
-export { createPostRecord, destroyPostRecord };
+export { fetchPostRecord, createPostRecord, destroyPostRecord };
