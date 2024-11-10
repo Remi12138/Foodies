@@ -10,6 +10,16 @@ import {
 } from "firebase/firestore";
 import { UserPublicProfile } from "@/zustand/user";
 
+export type BlogCover = {
+  blog_id: string;
+  post_title: string;
+  post_image_cover: string;
+  post_likes_count: number;
+  author_id: string;
+  author_name: string;
+  author_avatar: string;
+};
+
 export type Blog = {
   id: string;
   author: UserPublicProfile;
@@ -23,6 +33,7 @@ export type Blog = {
   rate: string;
   image_cover: string;
   images: string[];
+  likes_count: number;
   created_at: string;
   updated_at: string;
 };
@@ -32,8 +43,32 @@ type BlogStore = {
   setBlogs: (blogs: Blog[]) => void;
   addBlog: (blog: Blog) => void;
   removeBlog: (id: string) => void;
+  blogCovers: BlogCover[];
+  setBlogCovers: (blogCovers: BlogCover[]) => void;
   fetchBlog: (blogId: string) => Promise<Blog | null>;
   fetchBlogs: () => Promise<void>;
+  fetchBlogCovers: () => Promise<BlogCover[] | void>;
+};
+
+const fetchBlogCovers = async (): Promise<BlogCover[] | void> => {
+  try {
+    const blogCoversCollection = collection(FIREBASE_DB, "blog_covers");
+    const blogsQuery = query(blogCoversCollection, limit(10));
+    const querySnapshot = await getDocs(blogsQuery);
+
+    const blogCovers: BlogCover[] = querySnapshot.docs.map((doc) => {
+      const blogCoverData = doc.data();
+      return {
+        blog_id: doc.id,
+        ...blogCoverData,
+      } as BlogCover;
+    });
+    console.log("Blog covers fetched:", blogCovers);
+
+    return blogCovers;
+  } catch (error) {
+    console.error("Error fetching blog covers from Firestore:", error);
+  }
 };
 
 const fetchBlogs = async (): Promise<Blog[] | void> => {
@@ -136,6 +171,14 @@ export const useBlogStore = create<BlogStore>()((set) => ({
     const blogs = await fetchBlogs();
     if (blogs) {
       set(() => ({ blogs }));
+    }
+  },
+  blogCovers: [],
+  setBlogCovers: (blogCovers) => set(() => ({ blogCovers })),
+  fetchBlogCovers: async () => {
+    const blogCovers = await fetchBlogCovers();
+    if (blogCovers) {
+      set(() => ({ blogCovers }));
     }
   },
 }));

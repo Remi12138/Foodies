@@ -1,44 +1,68 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
   FlatList,
   Dimensions,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import BlogCard from "@/components/community/BlogCard";
-import { Blog, useBlogStore } from "@/zustand/blog";
+import { BlogCover, useBlogStore } from "@/zustand/blog";
 import { Link } from "expo-router";
-import { Timestamp } from "firebase/firestore";
+import { ThemedView } from "../ThemedView";
 
-function Blogs({ data }: { data: Blog[] }) {
+function Blogs() {
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const fetchBlogs = useBlogStore((state) => state.fetchBlogs);
+  const { blogCovers, fetchBlogs, fetchBlogCovers } = useBlogStore();
 
-  const renderBlogCard = ({ item }: { item: Blog }) => (
-    <View style={styles.cardContainer}>
-      <Link href={`/community/blog?blogId=${item.id}&blogTitle=${item.title}`}>
-        <BlogCard
-          imageUrl={item.image_cover}
-          title={item.title}
-          author={item.author.first_name}
-          date={item.updated_at as unknown as Timestamp}
-        />
-      </Link>
-    </View>
-  );
+  useEffect(() => {
+    onRetrieveBlogs();
+  }, []);
 
-  const onRefresh = async () => {
-    setRefreshing(true);
+  async function onRetrieveBlogs() {
+    setLoading(true);
     await fetchBlogs();
+    setLoading(false);
+  }
+
+  async function onRefresh() {
+    setRefreshing(true);
+    await fetchBlogCovers();
     setRefreshing(false);
-  };
+  }
+
+  function renderBlogCard({ item }: { item: BlogCover }) {
+    return (
+      <View style={styles.cardContainer}>
+        <Link
+          href={`/community/blog?blogId=${item.blog_id}&blogTitle=${item.post_title}`}
+        >
+          <BlogCard
+            imageUrl={item.post_image_cover}
+            title={item.post_title}
+            authorName={item.author_name}
+            likesCount={item.post_likes_count}
+          />
+        </Link>
+      </View>
+    );
+  }
+
+  if (loading) {
+    return (
+      <ThemedView style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#000000" />
+      </ThemedView>
+    );
+  }
 
   return (
     <FlatList
-      data={data}
+      data={blogCovers}
       renderItem={renderBlogCard}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.blog_id}
       numColumns={2}
       contentContainerStyle={styles.listContainer}
       columnWrapperStyle={styles.row}
@@ -55,6 +79,11 @@ const styles = StyleSheet.create({
   },
   row: {
     justifyContent: "space-between",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   cardContainer: {
     flex: 1,

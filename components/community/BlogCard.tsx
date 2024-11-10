@@ -1,18 +1,17 @@
 import { Image, StyleSheet } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import { Timestamp } from "firebase/firestore";
-
+import { Ionicons } from "@expo/vector-icons";
 function BlogCard({
   imageUrl,
   title,
-  author,
-  date,
+  authorName,
+  likesCount,
 }: {
   imageUrl: string;
   title: string;
-  author: string;
-  date: Timestamp;
+  authorName: string;
+  likesCount: number;
 }) {
   return (
     <ThemedView style={styles.card}>
@@ -22,10 +21,13 @@ function BlogCard({
           {title}
         </ThemedText>
         <ThemedView style={styles.footerRow}>
-          <ThemedText style={styles.author}>{author}</ThemedText>
-          <ThemedText style={styles.author}>
-            {date.toDate().toLocaleDateString()}
-          </ThemedText>
+          <ThemedText style={styles.authorName}>{authorName}</ThemedText>
+          <ThemedView style={styles.likeContainer}>
+            <ThemedText style={styles.likesIcon}>
+              <Ionicons name="heart-outline" size={14} />
+            </ThemedText>
+            <ThemedText style={styles.likesCount}>{likesCount}</ThemedText>
+          </ThemedView>
         </ThemedView>
       </ThemedView>
     </ThemedView>
@@ -64,7 +66,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  author: {
+  authorName: {
+    fontSize: 12,
+    color: "#555",
+  },
+  likeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  likesIcon: {
+    marginRight: 4,
+  },
+  likesCount: {
     fontSize: 12,
     color: "#555",
   },
