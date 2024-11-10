@@ -82,7 +82,7 @@ function BlogDetail({
     );
   }
 
-  const images = [blog.post_image_cover, ...blog.post_images];
+  const images = [blog.post.image_cover, ...blog.post.images];
   const blogUpdatedTime = blog.updated_at as unknown as Timestamp;
   const formattedUpdatedTime = blogUpdatedTime
     .toDate()
@@ -128,7 +128,7 @@ function BlogDetail({
           </ThemedView>
         </ThemedView>
         <ThemedView style={styles.contentContainer}>
-          <ThemedText style={styles.title}>{blog.post_title}</ThemedText>
+          <ThemedText style={styles.title}>{blog.post.title}</ThemedText>
           <BlogInfo
             blogId={blog.id}
             authorPublicProfile={authorPulicProfile}
@@ -139,9 +139,9 @@ function BlogDetail({
           )}
           <ThemedText style={styles.content}>
             <ThemedText style={styles.firstLetter}>
-              {blog.post_content[0]}
+              {blog.post.content[0]}
             </ThemedText>
-            {blog.post_content.substring(1)}
+            {blog.post.content.substring(1)}
           </ThemedText>
           <ThemedView>
             <ThemedText style={styles.updatedTime}>
