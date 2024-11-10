@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { fetchBlogCovers } from "@/utils/blogs/covers";
 
 export type BlogCover = {
   blog_id: string;
@@ -29,7 +28,8 @@ type BlogStore = {
   removeBlog: (id: string) => void;
   blogCovers: BlogCover[];
   setBlogCovers: (blogCovers: BlogCover[]) => void;
-  fetchBlogCovers: () => Promise<BlogCover[] | void>;
+  blogCollections: BlogCover[];
+  setBlogCollections: (blogCollections: BlogCover[]) => void;
 };
 
 export const useBlogStore = create<BlogStore>()((set) => ({
@@ -38,12 +38,10 @@ export const useBlogStore = create<BlogStore>()((set) => ({
   addBlog: (blog) => set((state) => ({ blogs: [...state.blogs, blog] })),
   removeBlog: (id) =>
     set((state) => ({ blogs: state.blogs.filter((blog) => blog.id !== id) })),
+  // blogCovers
   blogCovers: [],
   setBlogCovers: (blogCovers) => set(() => ({ blogCovers })),
-  fetchBlogCovers: async () => {
-    const blogCovers = await fetchBlogCovers();
-    if (blogCovers) {
-      set(() => ({ blogCovers }));
-    }
-  },
+  // blogCollections
+  blogCollections: [],
+  setBlogCollections: (blogCollections) => set(() => ({ blogCollections })),
 }));

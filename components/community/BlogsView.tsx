@@ -12,11 +12,12 @@ import { Link } from "expo-router";
 import BlogCard from "@/components/community/BlogCard";
 import { ThemedView } from "@/components/ThemedView";
 import { BlogCover, useBlogStore } from "@/zustand/blog";
+import { fetchBlogCovers } from "@/utils/blogs/covers";
 
 function Blogs() {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const { blogCovers, fetchBlogCovers } = useBlogStore();
+  const { blogCovers, setBlogCovers } = useBlogStore();
 
   useEffect(() => {
     onRetrieveBlogs();
@@ -24,13 +25,15 @@ function Blogs() {
 
   async function onRetrieveBlogs() {
     setLoading(true);
-    await fetchBlogCovers();
+    const covers = await fetchBlogCovers();
+    if (covers) setBlogCovers(covers);
     setLoading(false);
   }
 
   async function onRefresh() {
     setRefreshing(true);
-    await fetchBlogCovers();
+    const covers = await fetchBlogCovers();
+    if (covers) setBlogCovers(covers);
     setRefreshing(false);
   }
 
