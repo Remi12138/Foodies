@@ -12,18 +12,13 @@ import { router } from "expo-router";
 import { GestureHandlerRootView, FlatList } from "react-native-gesture-handler";
 import { ThemedView } from "@/components/ThemedView";
 import BlogInfo from "./BlogInfo";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  DocumentReference,
-  Timestamp,
-} from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 import PostAuthorTool from "@/components/community/post/postAuthor/PostAuthorTool";
 import { fetchPostRecord } from "@/utils/blogs/posts";
 import { fetchUserPublicProfile } from "@/utils/users/info";
+import { checkIfBlogIsLiked } from "@/utils/blogs/info";
 import { UserPublicProfile } from "@/zustand/user";
 
 const { width } = Dimensions.get("window");
@@ -41,7 +36,6 @@ function BlogDetail({
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const firestore = getFirestore();
   const auth = getAuth();
   const user = auth.currentUser;
 
@@ -61,13 +55,10 @@ function BlogDetail({
         const blogPromise = fetchPostRecord(authorUid, blogId);
         let isBlogLiked = false;
 
-        if (user) {
-          isBlogLiked = await checkIfBlogIsLiked(user.uid);
-          if (isBlogLiked) {
-            setIsLiked(true);
-          }
+        isBlogLiked = await checkIfBlogIsLiked(blogId);
+        if (isBlogLiked) {
+          setIsLiked(true);
         }
-
         const blog = await blogPromise;
         if (blog) {
           setBlog(blog);
@@ -161,23 +152,6 @@ function BlogDetail({
       </ScrollView>
     </GestureHandlerRootView>
   );
-
-  async function checkIfBlogIsLiked(userId: string) {
-    const collectionRef = doc(firestore, `collections/${userId}`);
-    const collectionSnap = await getDoc(collectionRef);
-    if (collectionSnap.exists()) {
-      const collectionData = collectionSnap.data();
-      if (
-        collectionData &&
-        "blogs" in collectionData &&
-        Array.isArray(collectionData.blogs)
-      ) {
-        const blogReferences: DocumentReference[] = collectionData.blogs;
-        return blogReferences.some((ref) => ref.id === blogId);
-      }
-    }
-    return false;
-  }
 }
 
 const styles = StyleSheet.create({

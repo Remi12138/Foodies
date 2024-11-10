@@ -1,58 +1,46 @@
 import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, ActivityIndicator, Image } from "react-native";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  DocumentReference,
-} from "firebase/firestore";
-import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import { Blog } from "@/zustand/blog";
+import { doc, getDoc, DocumentReference } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { BlogCover } from "@/zustand/blog";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { Link } from "expo-router";
+import { FIREBASE_DB } from "@/firebaseConfig";
 
 function BlogCollectionView() {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [blogs, setBlogs] = useState<BlogCover[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<User | null>(null);
-  const firestore = getFirestore();
-  const auth = getAuth();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-
-    return () => unsubscribe();
-  }, [auth]);
+  const currentUser = getAuth().currentUser;
 
   useEffect(() => {
     const fetchCollections = async () => {
-      if (!user) return;
+      if (!currentUser) return;
       try {
-        const collectionRef = doc(firestore, `collections/${user.uid}`);
-        const collectionSnap = await getDoc(collectionRef);
+        const collectionRef = doc(
+          FIREBASE_DB,
+          "users",
+          currentUser.uid,
+          "collections",
+          "blogs"
+        );
+        const collectionDoc = await getDoc(collectionRef);
 
-        if (collectionSnap.exists()) {
-          const collectionData = collectionSnap.data();
-          if (
-            collectionData &&
-            "blogs" in collectionData &&
-            Array.isArray(collectionData.blogs)
-          ) {
-            const blogReferences: DocumentReference[] = collectionData.blogs;
+        if (collectionDoc.exists()) {
+          const collectionData = collectionDoc.data();
+          console.log("collectionData: ", collectionData);
+          const blogReferences: DocumentReference[] = collectionData.favorites;
 
-            const blogPromises = blogReferences.map(async (blogRef) => {
-              const blogSnap = await getDoc(blogRef);
-              return blogSnap.exists()
-                ? ({ id: blogSnap.id, ...blogSnap.data() } as Blog)
-                : null;
-            });
+          const blogPromises = blogReferences.map(async (blogRef) => {
+            const blogSnap = await getDoc(blogRef);
+            return blogSnap.exists()
+              ? ({ blog_id: blogSnap.id, ...blogSnap.data() } as BlogCover)
+              : null;
+          });
 
-            const blogsData = await Promise.all(blogPromises);
-            setBlogs(blogsData.filter((blog) => blog !== null) as Blog[]);
-          }
+          const blogsData = await Promise.all(blogPromises);
+          setBlogs(blogsData.filter((blog) => blog !== null) as BlogCover[]);
         }
       } catch (error) {
         console.error("Error fetching user collections: ", error);
@@ -62,16 +50,18 @@ function BlogCollectionView() {
     };
 
     fetchCollections();
-  }, [user, firestore]);
+  }, [currentUser]);
 
-  const renderItem = ({ item }: { item: Blog }) => (
+  const renderItem = ({ item }: { item: BlogCover }) => (
     <ThemedView style={styles.rowContainer}>
-      <Link href={`/community/blog?blogId=${item.id}&blogTitle=${item.title}`}>
+      <Link
+        href={`/community/blog?authorUid=${item.author_id}&blogId=${item.blog_id}&blogTitle=${item.post_title}`}
+      >
         <ThemedView style={styles.card}>
-          <Image source={{ uri: item.image_cover }} style={styles.image} />
+          <Image source={{ uri: item.post_image_cover }} style={styles.image} />
           <ThemedView style={styles.textContainer}>
-            <ThemedText style={styles.title}>{item.title}</ThemedText>
-            <ThemedText style={styles.rate}>Rate: {item.rate}</ThemedText>
+            <ThemedText style={styles.title}>{item.post_title}</ThemedText>
+            {/* <ThemedText style={styles.rate}>Rate: {item.rate}</ThemedText> */}
           </ThemedView>
         </ThemedView>
       </Link>
@@ -90,7 +80,7 @@ function BlogCollectionView() {
     <FlatList
       data={blogs}
       renderItem={renderItem}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.blog_id}
       contentContainerStyle={styles.container}
     />
   );
