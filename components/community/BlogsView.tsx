@@ -7,15 +7,16 @@ import {
   RefreshControl,
   ActivityIndicator,
 } from "react-native";
-import BlogCard from "@/components/community/BlogCard";
-import { BlogCover, useBlogStore } from "@/zustand/blog";
 import { Link } from "expo-router";
-import { ThemedView } from "../ThemedView";
+
+import BlogCard from "@/components/community/BlogCard";
+import { ThemedView } from "@/components/ThemedView";
+import { BlogCover, useBlogStore } from "@/zustand/blog";
 
 function Blogs() {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const { blogCovers, fetchBlogs, fetchBlogCovers } = useBlogStore();
+  const { blogCovers, fetchBlogCovers } = useBlogStore();
 
   useEffect(() => {
     onRetrieveBlogs();
@@ -23,7 +24,7 @@ function Blogs() {
 
   async function onRetrieveBlogs() {
     setLoading(true);
-    await fetchBlogs();
+    await fetchBlogCovers();
     setLoading(false);
   }
 
