@@ -2,16 +2,11 @@ import { useState } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
-import {
-  getFirestore,
-  doc,
-  updateDoc,
-  arrayRemove,
-  arrayUnion,
-} from "firebase/firestore";
+import { doc, updateDoc, arrayRemove, arrayUnion } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import BlogAuthor from "@/components/community/blogDetail/BlogAuthor";
 import { UserPublicProfile } from "@/zustand/user";
+import { FIREBASE_DB } from "@/firebaseConfig";
 
 function BlogInfo({
   blogId,
@@ -23,22 +18,23 @@ function BlogInfo({
   isInitiallyLiked: boolean;
 }) {
   const [isLiked, setIsLiked] = useState<boolean>(isInitiallyLiked);
-  const firestore = getFirestore();
-  const auth = getAuth();
-  const user = auth.currentUser;
+  const currentUser = getAuth().currentUser;
 
   const toggleLike = async () => {
-    if (user) {
+    if (currentUser) {
       try {
         setIsLiked(!isLiked);
-        const collectionRef = doc(firestore, `collections/${user.uid}`);
+        const collectionRef = doc(
+          FIREBASE_DB,
+          `users/${currentUser.uid}/collections/blogs`
+        );
         if (isLiked) {
           await updateDoc(collectionRef, {
-            blogs: arrayRemove(doc(firestore, `blogs/${blogId}`)),
+            favorites: arrayRemove(doc(FIREBASE_DB, `blog_covers/${blogId}`)),
           });
         } else {
           await updateDoc(collectionRef, {
-            blogs: arrayUnion(doc(firestore, `blogs/${blogId}`)),
+            favorites: arrayUnion(doc(FIREBASE_DB, `blog_covers/${blogId}`)),
           });
         }
       } catch (error) {
