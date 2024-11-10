@@ -52,16 +52,17 @@ async function createPostRecord(draft: Post, userId: string) {
       createBlogCoverRecord(draftBlog, userId);
     }
   } catch (error) {
-    console.error("An error occurred while creating the post");
+    console.error("An error occurred while creating the post", error);
   }
 }
 
-async function destroyPostRecord(blogId: string) {
+async function destroyPostRecord(userUid: string, blogId: string) {
   try {
-    const postRef = doc(FIREBASE_DB, `blog_covers/${blogId}`);
+    const postRef = doc(FIREBASE_DB, `users/${userUid}/blogs/${blogId}`);
     await deleteDoc(postRef);
+    destroyBlogCoverRecord(blogId);
   } catch (error) {
-    console.error("An error occurred while destroying the post");
+    console.error("An error occurred while destroying the post", error);
   }
 }
 
@@ -83,9 +84,19 @@ async function createBlogCoverRecord(blog: Blog, userId: string) {
   }
 }
 
+async function destroyBlogCoverRecord(blogId: string) {
+  try {
+    const blogCoverRef = doc(FIREBASE_DB, "blog_covers", blogId);
+    await deleteDoc(blogCoverRef);
+  } catch (error) {
+    console.error("An error occurred while destroying the post cover", error);
+  }
+}
+
 export {
   fetchPostRecord,
   createPostRecord,
   destroyPostRecord,
   createBlogCoverRecord,
+  destroyBlogCoverRecord,
 };
