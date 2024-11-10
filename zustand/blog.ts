@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { Post } from "./post";
 
 export type BlogCover = {
   blog_id: string;
@@ -12,13 +13,11 @@ export type BlogCover = {
 
 export type Blog = {
   id: string;
-  post_title: string;
-  post_content: string;
-  post_image_cover: string;
-  post_images: string[];
-  post_likes_count: number;
-  created_at: string;
-  updated_at: string;
+  post: Post;
+  likes_count: number;
+  is_public: boolean;
+  created_at: Date;
+  updated_at: Date;
 };
 
 type BlogStore = {

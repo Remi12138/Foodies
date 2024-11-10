@@ -1,21 +1,15 @@
 import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export type PostDraft = {
+export type Post = {
   title: string;
   content: string;
-  restaurant: string;
-  location: {
-    Latitude: number;
-    Longitude: number;
-  };
-  rate: string;
   image_cover: string;
   images: string[];
 };
 
 type PostStore = {
-  draft: PostDraft;
+  draft: Post;
   setTitle: (title: string) => void;
   setContent: (content: string) => void;
   setRestaurant: (restaurant: string) => void;
@@ -30,16 +24,10 @@ type PostStore = {
   loadDraftFromStorage: () => Promise<void>;
 };
 
-const defaultDraft: PostDraft = {
+const defaultDraft: Post = {
   title: "",
   content: "",
-  restaurant: "",
-  location: {
-    Latitude: 0,
-    Longitude: 0,
-  },
-  rate: "",
-  image_cover: "",
+  image_cover: "https://picsum.photos/id/4/200",
   images: [],
 };
 

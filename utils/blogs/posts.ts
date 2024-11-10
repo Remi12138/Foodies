@@ -1,14 +1,13 @@
 import { FIREBASE_DB } from "@/firebaseConfig";
-import { Blog } from "@/zustand/blog";
-import { PostDraft } from "@/zustand/post";
-import { User } from "firebase/auth";
+import { Blog, BlogCover } from "@/zustand/blog";
+import { Post } from "@/zustand/post";
 import {
-  getFirestore,
   collection,
   addDoc,
   doc,
   deleteDoc,
   getDoc,
+  setDoc,
 } from "firebase/firestore";
 
 async function fetchPostRecord(
@@ -16,7 +15,7 @@ async function fetchPostRecord(
   blogId: string
 ): Promise<Blog | null> {
   try {
-    const blogDocRef = doc(FIREBASE_DB, "users", userUid, "blogs", blogId);
+    const blogDocRef = doc(FIREBASE_DB, `users/${userUid}/blogs/${blogId}`);
     const blogDoc = await getDoc(blogDocRef);
 
     if (blogDoc.exists()) {
@@ -35,23 +34,23 @@ async function fetchPostRecord(
   }
 }
 
-async function createPostRecord(draft: PostDraft, currentUser: User) {
+async function createPostRecord(draft: Post, userId: string) {
+  const current_time = new Date();
+  let draftBlog = {
+    post: draft,
+    likes_count: 0,
+    is_public: true,
+    created_at: current_time,
+    updated_at: current_time,
+  } as Blog;
+
   try {
-    const firestore = getFirestore();
-    const postsCollectionRef = collection(firestore, "blogs");
-    const creation_time = new Date();
-
-    const postData = {
-      title: draft.title,
-      content: draft.content,
-      image_cover: "https://picsum.photos/id/4/200",
-      images: [],
-      created_at: creation_time,
-      updated_at: creation_time,
-      author_ref: doc(firestore, `users/${currentUser.uid}`),
-    };
-
-    await addDoc(postsCollectionRef, postData);
+    const blogsCollectionRef = collection(FIREBASE_DB, `users/${userId}/blogs`);
+    const blog = await addDoc(blogsCollectionRef, draftBlog);
+    if (blog && draftBlog.is_public) {
+      draftBlog.id = blog.id;
+      createBlogCoverRecord(draftBlog, userId);
+    }
   } catch (error) {
     console.error("An error occurred while creating the post");
   }
@@ -59,12 +58,34 @@ async function createPostRecord(draft: PostDraft, currentUser: User) {
 
 async function destroyPostRecord(blogId: string) {
   try {
-    const firestore = getFirestore();
-    const postRef = doc(firestore, `blogs/${blogId}`);
+    const postRef = doc(FIREBASE_DB, `blog_covers/${blogId}`);
     await deleteDoc(postRef);
   } catch (error) {
     console.error("An error occurred while destroying the post");
   }
 }
 
-export { fetchPostRecord, createPostRecord, destroyPostRecord };
+async function createBlogCoverRecord(blog: Blog, userId: string) {
+  let blogCoverData = {
+    post_title: blog.post.title,
+    post_image_cover: blog.post.image_cover,
+    post_likes_count: blog.likes_count,
+    author_id: userId,
+    author_name: "John Doe",
+    author_avatar: "",
+  } as BlogCover;
+
+  try {
+    const blogCoverDocRef = doc(FIREBASE_DB, "blog_covers", blog.id);
+    await setDoc(blogCoverDocRef, blogCoverData);
+  } catch (error) {
+    console.error("An error occurred while creating the post cover", error);
+  }
+}
+
+export {
+  fetchPostRecord,
+  createPostRecord,
+  destroyPostRecord,
+  createBlogCoverRecord,
+};
