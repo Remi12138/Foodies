@@ -5,7 +5,10 @@ import { useEffect, useState } from "react";
 import { View, StyleSheet, Image } from "react-native";
 import * as Notifications from "expo-notifications";
 import { useCollectionStore } from "@/zustand/collections";
-import { fetchFavoriteBlogs } from "@/utils/blogs/favorites";
+import {
+  fetchFavoriteBlogCoverIds,
+  fetchFavoriteBlogs,
+} from "@/utils/blogs/favorites";
 
 // Set up notification handler for in-app notifications
 Notifications.setNotificationHandler({
@@ -20,10 +23,15 @@ export default function HomeScreen() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
-  const { setBlogCovers } = useCollectionStore();
+  const { setBlogIds, setBlogCovers } = useCollectionStore();
 
   const fetchBlogCollections = async (userUid: string) => {
-    const blogFavorites = await fetchFavoriteBlogs(userUid);
+    const favoriteBlogCoverIds = await fetchFavoriteBlogCoverIds(userUid);
+    setBlogIds(favoriteBlogCoverIds);
+    const blogFavorites = await fetchFavoriteBlogs(
+      favoriteBlogCoverIds,
+      userUid
+    );
     if (blogFavorites) setBlogCovers(blogFavorites);
   };
 

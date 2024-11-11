@@ -1,6 +1,17 @@
 import { FIREBASE_DB } from "@/firebaseConfig";
 import { getAuth } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, Timestamp } from "firebase/firestore";
+
+const formatBlogUpdatedTime = (timestamp: Timestamp) => {
+  return timestamp.toDate().toLocaleString("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
 
 async function checkIfBlogIsLiked(blogId: string): Promise<boolean> {
   const currentUser = getAuth().currentUser;
@@ -19,4 +30,4 @@ async function checkIfBlogIsLiked(blogId: string): Promise<boolean> {
   return false;
 }
 
-export { checkIfBlogIsLiked };
+export { formatBlogUpdatedTime, checkIfBlogIsLiked };

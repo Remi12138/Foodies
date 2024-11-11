@@ -10,27 +10,50 @@ import {
   where,
 } from "firebase/firestore";
 
-async function fetchFavoriteBlogs(userId: string) {
+function checkIfBlogIsLikedLocal(
+  blogCoverIds: string[],
+  blogId: string
+): boolean {
+  return blogCoverIds.includes(blogId);
+}
+
+async function fetchFavoriteBlogCoverIds(userId: string) {
+  let favorites: string[] = [];
   try {
     const collectionRef = doc(FIREBASE_DB, `users/${userId}/collections/blogs`);
     const collectionDoc = await getDoc(collectionRef);
-
-    if (collectionDoc.exists()) {
-      const collectedBlogIds = collectionDoc.data().favorites;
-      if (collectedBlogIds.length > 0) {
-        const blogsRef = collection(FIREBASE_DB, "blog_covers");
-        const q = query(blogsRef, where(documentId(), "in", collectedBlogIds));
-        const querySnapshot = await getDocs(q);
-        const blogsData = querySnapshot.docs.map((doc) => ({
-          blog_id: doc.id,
-          ...doc.data(),
-        }));
-        return blogsData.filter((blog) => blog !== null) as BlogCover[];
-      }
-    }
+    favorites = collectionDoc.data()?.favorites;
   } catch (error) {
     console.error("Error fetching user collections: ", error);
+  } finally {
+    return favorites;
   }
 }
 
-export { fetchFavoriteBlogs };
+async function fetchFavoriteBlogs(favBlogIds: string[], userId: string) {
+  let blogsFilteredData: BlogCover[] = [];
+  try {
+    if (favBlogIds.length > 0) {
+      const blogsRef = collection(FIREBASE_DB, "blog_covers");
+      const q = query(blogsRef, where(documentId(), "in", favBlogIds));
+      const querySnapshot = await getDocs(q);
+      const blogsDataRes = querySnapshot.docs.map((doc) => ({
+        blog_id: doc.id,
+        ...doc.data(),
+      }));
+      blogsFilteredData = blogsDataRes.filter(
+        (blog) => blog !== null
+      ) as BlogCover[];
+    }
+  } catch (error) {
+    console.error("Error fetching user collections: ", error);
+  } finally {
+    return blogsFilteredData;
+  }
+}
+
+export {
+  fetchFavoriteBlogCoverIds,
+  fetchFavoriteBlogs,
+  checkIfBlogIsLikedLocal,
+};

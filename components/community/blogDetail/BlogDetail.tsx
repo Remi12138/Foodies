@@ -18,8 +18,10 @@ import { getAuth } from "firebase/auth";
 import PostAuthorTool from "@/components/community/post/postAuthor/PostAuthorTool";
 import { fetchPostRecord } from "@/utils/blogs/posts";
 import { fetchUserPublicProfile } from "@/utils/users/info";
-import { checkIfBlogIsLiked } from "@/utils/blogs/info";
+import { checkIfBlogIsLikedLocal } from "@/utils/blogs/favorites";
 import { UserPublicProfile } from "@/zustand/user";
+import { useCollectionStore } from "@/zustand/collections";
+import { formatBlogUpdatedTime } from "@/utils/blogs/info";
 
 const { width } = Dimensions.get("window");
 
@@ -31,6 +33,7 @@ function BlogDetail({
   blogId: string;
 }) {
   const [blog, setBlog] = useState<Blog | null>(null);
+  const { blogIds } = useCollectionStore();
   const [authorPulicProfile, setAuthorPublicProfile] =
     useState<UserPublicProfile | null>(null);
   const [isLiked, setIsLiked] = useState<boolean>(false);
@@ -52,15 +55,9 @@ function BlogDetail({
   useEffect(() => {
     const fetchBlogDetailsAndLikeStatus = async () => {
       try {
-        const blogPromise = fetchPostRecord(authorUid, blogId);
-        let isBlogLiked = false;
-
-        isBlogLiked = await checkIfBlogIsLiked(blogId);
-        if (isBlogLiked) {
-          setIsLiked(true);
-        }
-        const blog = await blogPromise;
+        const blog = await fetchPostRecord(authorUid, blogId);
         if (blog) {
+          setIsLiked(checkIfBlogIsLikedLocal(blogIds, blogId));
           setBlog(blog);
         } else {
           router.back();
@@ -84,16 +81,7 @@ function BlogDetail({
 
   const images = [blog.post.image_cover, ...blog.post.images];
   const blogUpdatedTime = blog.updated_at as unknown as Timestamp;
-  const formattedUpdatedTime = blogUpdatedTime
-    .toDate()
-    .toLocaleString("en-US", {
-      month: "short",
-      day: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
+  const formattedUpdatedTime = formatBlogUpdatedTime(blogUpdatedTime);
 
   return (
     <GestureHandlerRootView style={styles.gestureContainer}>
