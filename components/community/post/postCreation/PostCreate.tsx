@@ -22,7 +22,6 @@ function PostCreate() {
   } = usePostStore();
 
   useEffect(() => {
-    // Load saved draft when the component mounts
     loadDraftFromStorage();
   }, []);
 
@@ -38,7 +37,7 @@ function PostCreate() {
 
   const debouncedSaveDraft = debounce(() => {
     saveDraftToStorage();
-  }, 2000);
+  }, 5000);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
