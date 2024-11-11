@@ -5,21 +5,24 @@ import { ThemedView } from "@/components/ThemedView";
 import { getAuth } from "firebase/auth";
 import { fetchFavoriteBlogs } from "@/utils/blogs/favorites";
 import BlogFavoritesList from "@/components/community/blogCollection/BlogFavoritesList";
-import { useBlogStore } from "@/zustand/blog";
+import { useCollectionStore } from "@/zustand/collections";
 
 function BlogCollectionView() {
-  const { setBlogCollections } = useBlogStore();
+  const { blogCovers, setBlogCovers } = useCollectionStore();
   const currentUser = getAuth().currentUser;
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    fetchBlogCollections();
+    if (blogCovers.length === 0) {
+      setLoading(true);
+      fetchBlogCollections();
+    }
   }, []);
 
   const fetchBlogCollections = async () => {
     if (!currentUser) return;
     const blogFavorites = await fetchFavoriteBlogs(currentUser.uid);
-    if (blogFavorites) setBlogCollections(blogFavorites);
+    if (blogFavorites) setBlogCovers(blogFavorites);
     setLoading(false);
   };
 

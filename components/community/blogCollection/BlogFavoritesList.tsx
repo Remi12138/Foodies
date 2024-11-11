@@ -3,10 +3,11 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Link } from "expo-router";
 
-import { BlogCover, useBlogStore } from "@/zustand/blog";
+import { useCollectionStore } from "@/zustand/collections";
+import { BlogCover } from "@/zustand/blog";
 
 function BlogFavoritesList() {
-  const { blogCollections } = useBlogStore();
+  const { blogCovers } = useCollectionStore();
 
   function renderItem({ item }: { item: BlogCover }) {
     return (
@@ -31,7 +32,7 @@ function BlogFavoritesList() {
 
   return (
     <FlatList
-      data={blogCollections}
+      data={blogCovers}
       renderItem={renderItem}
       keyExtractor={(item) => item.blog_id}
       contentContainerStyle={styles.container}
