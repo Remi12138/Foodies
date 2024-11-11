@@ -47,19 +47,7 @@ export default function HomeScreen() {
   }, []);
 
   // Show splash screen for 1 second
-  if (showSplash) {
-    return (
-      <View style={styles.container}>
-        <Image
-          source={require("@/assets/images/foodies-entry.jpg")}
-          style={styles.fullScreenImage}
-        />
-      </View>
-    );
-  }
-
-  // Show loading screen if not finished loading after splash
-  if (loading) {
+  if (showSplash || loading) {
     return (
       <View style={styles.container}>
         <Image
