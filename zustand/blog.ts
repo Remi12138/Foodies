@@ -18,6 +18,7 @@ export type Blog = {
   is_public: boolean;
   created_at: Date;
   updated_at: Date;
+  author_uid: string;
 };
 
 type BlogStore = {

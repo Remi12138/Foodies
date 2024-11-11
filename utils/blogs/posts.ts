@@ -11,11 +11,11 @@ import {
 } from "firebase/firestore";
 
 async function fetchPostRecord(
-  userUid: string,
+  authorUid: string,
   blogId: string
 ): Promise<Blog | null> {
   try {
-    const blogDocRef = doc(FIREBASE_DB, `users/${userUid}/blogs/${blogId}`);
+    const blogDocRef = doc(FIREBASE_DB, `users/${authorUid}/blogs/${blogId}`);
     const blogDoc = await getDoc(blogDocRef);
 
     if (blogDoc.exists()) {
@@ -23,6 +23,7 @@ async function fetchPostRecord(
 
       return {
         id: blogDoc.id,
+        author_uid: authorUid,
         ...blogData,
       } as Blog;
     } else {

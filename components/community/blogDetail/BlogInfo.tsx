@@ -41,7 +41,7 @@ function BlogInfo({
             post_title: blog.post.title,
             post_image_cover: blog.post.image_cover,
             post_likes_count: blog.likes_count,
-            author_id: "",
+            author_id: blog.author_uid,
             author_name: "",
             author_avatar: "",
           } as BlogCover;
