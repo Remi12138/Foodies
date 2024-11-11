@@ -7,6 +7,7 @@ import {
   getDoc,
   getDocs,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
 
@@ -15,6 +16,26 @@ function checkIfBlogIsLikedLocal(
   blogId: string
 ): boolean {
   return blogCoverIds.includes(blogId);
+}
+
+async function initBlogCollections(
+  userUid: string,
+  setBlogIds: (blogIds: string[]) => void,
+  setBlogCovers: (blogCovers: BlogCover[]) => void
+) {
+  const favoriteBlogCoverIds = await fetchFavoriteBlogCoverIds(userUid);
+  setBlogIds(favoriteBlogCoverIds);
+  const blogFavorites = await fetchFavoriteBlogs(favoriteBlogCoverIds);
+  if (blogFavorites) {
+    setBlogCovers(blogFavorites);
+    // update BlogIds by removing any invalid blog
+    const validBlogIds = blogFavorites.map((blog) => blog.blog_id);
+    setBlogIds(validBlogIds);
+    // sync latest favoriteBlogCoverIds with server
+    if (validBlogIds.length !== favoriteBlogCoverIds.length) {
+      updateFavoriteBlogCoverIds(userUid, validBlogIds);
+    }
+  }
 }
 
 async function fetchFavoriteBlogCoverIds(userId: string) {
@@ -30,7 +51,21 @@ async function fetchFavoriteBlogCoverIds(userId: string) {
   }
 }
 
-async function fetchFavoriteBlogs(favBlogIds: string[], userId: string) {
+async function updateFavoriteBlogCoverIds(
+  userId: string,
+  favBlogIds: string[]
+) {
+  try {
+    const collectionRef = doc(FIREBASE_DB, `users/${userId}/collections/blogs`);
+    await setDoc(collectionRef, {
+      favorites: favBlogIds,
+    });
+  } catch (error) {
+    console.error("Error updating user blog collections: ", error);
+  }
+}
+
+async function fetchFavoriteBlogs(favBlogIds: string[]) {
   let blogsFilteredData: BlogCover[] = [];
   try {
     if (favBlogIds.length > 0) {
@@ -53,7 +88,9 @@ async function fetchFavoriteBlogs(favBlogIds: string[], userId: string) {
 }
 
 export {
+  initBlogCollections,
   fetchFavoriteBlogCoverIds,
+  updateFavoriteBlogCoverIds,
   fetchFavoriteBlogs,
   checkIfBlogIsLikedLocal,
 };

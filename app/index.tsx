@@ -5,10 +5,7 @@ import { useEffect, useState } from "react";
 import { View, StyleSheet, Image } from "react-native";
 import * as Notifications from "expo-notifications";
 import { useCollectionStore } from "@/zustand/collections";
-import {
-  fetchFavoriteBlogCoverIds,
-  fetchFavoriteBlogs,
-} from "@/utils/blogs/favorites";
+import { initBlogCollections } from "@/utils/blogs/favorites";
 
 // Set up notification handler for in-app notifications
 Notifications.setNotificationHandler({
@@ -25,16 +22,6 @@ export default function HomeScreen() {
   const [showSplash, setShowSplash] = useState(true);
   const { setBlogIds, setBlogCovers } = useCollectionStore();
 
-  const fetchBlogCollections = async (userUid: string) => {
-    const favoriteBlogCoverIds = await fetchFavoriteBlogCoverIds(userUid);
-    setBlogIds(favoriteBlogCoverIds);
-    const blogFavorites = await fetchFavoriteBlogs(
-      favoriteBlogCoverIds,
-      userUid
-    );
-    if (blogFavorites) setBlogCovers(blogFavorites);
-  };
-
   useEffect(() => {
     // Show splash screen for 1 second
     const splashTimeout = setTimeout(() => {
@@ -45,7 +32,7 @@ export default function HomeScreen() {
     const session = onAuthStateChanged(FIREBASE_AUTH, (user) => {
       console.log("User:", user?.email);
       setUser(user);
-      if (user) fetchBlogCollections(user.uid);
+      if (user) initBlogCollections(user.uid, setBlogIds, setBlogCovers);
       setLoading(false);
     });
 
