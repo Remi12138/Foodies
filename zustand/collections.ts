@@ -26,7 +26,7 @@ export const useCollectionStore = create<CollectionStore>((set) => ({
   blogCovers: [],
   setBlogCovers: (blogCovers) => set(() => ({ blogCovers })),
   addBlogCover: (blogCover) =>
-    set((state) => ({ blogCovers: [...state.blogCovers, blogCover] })),
+    set((state) => ({ blogCovers: [blogCover, ...state.blogCovers] })),
   removeBlogCover: (id) =>
     set((state) => ({
       blogCovers: state.blogCovers.filter(
