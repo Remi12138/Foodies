@@ -5,7 +5,6 @@ import {
   deleteDoc,
   doc,
   documentId,
-  getDoc,
   getDocs,
   limit,
   orderBy,
@@ -45,20 +44,12 @@ async function initBlogCollections(
 async function fetchFavoriteBlogCoverIds(userId: string) {
   let favorites: string[] = [];
   try {
-    const collectionRef = doc(FIREBASE_DB, `users/${userId}/collections/blogs`);
-    const collectionDoc = await getDoc(collectionRef);
-
-    // if not found, create a new collection
-    if (!collectionDoc.exists()) {
-      await setDoc(collectionRef, {
-        isPublic: false,
-      });
-      return favorites;
-    }
-
-    const collectionIndexRef = collection(collectionRef, "index");
+    const collectionRef = collection(
+      FIREBASE_DB,
+      `users/${userId}/collections/blogs/index`
+    );
     const querySnapshot = await getDocs(
-      query(collectionIndexRef, orderBy("added_at", "desc"), limit(10))
+      query(collectionRef, orderBy("added_at", "desc"), limit(10))
     );
     favorites = querySnapshot.docs.map((doc) => doc.id);
   } catch (error) {

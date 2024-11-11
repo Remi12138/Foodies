@@ -6,6 +6,7 @@ import { View, StyleSheet, Image } from "react-native";
 import * as Notifications from "expo-notifications";
 import { useCollectionStore } from "@/zustand/collections";
 import { initBlogCollections } from "@/utils/blogs/favorites";
+import { initUserCollection } from "@/utils/users/init";
 
 // Set up notification handler for in-app notifications
 Notifications.setNotificationHandler({
@@ -32,7 +33,10 @@ export default function HomeScreen() {
     const session = onAuthStateChanged(FIREBASE_AUTH, (user) => {
       console.log("User:", user?.email);
       setUser(user);
-      if (user) initBlogCollections(user.uid, setBlogIds, setBlogCovers);
+      if (user) {
+        initUserCollection(user.uid);
+        initBlogCollections(user.uid, setBlogIds, setBlogCovers);
+      }
       setLoading(false);
     });
 
