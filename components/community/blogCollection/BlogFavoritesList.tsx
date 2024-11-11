@@ -8,6 +8,7 @@ import { useCollectionStore } from "@/zustand/collections";
 import { BlogCover } from "@/zustand/blog";
 import { initBlogCollections } from "@/utils/blogs/favorites";
 import { getAuth } from "firebase/auth";
+import BlogFavoritesEmpty from "@/components/community/blogCollection/BlogFavoritesEmpty";
 
 function BlogFavoritesList() {
   const { blogCovers } = useCollectionStore();
@@ -46,14 +47,20 @@ function BlogFavoritesList() {
   };
 
   return (
-    <FlatList
-      data={blogCovers}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.blog_id}
-      contentContainerStyle={styles.container}
-      refreshing={refreshing}
-      onRefresh={onRefresh}
-    />
+    <>
+      {blogCovers.length > 0 ? (
+        <FlatList
+          data={blogCovers}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.blog_id}
+          contentContainerStyle={styles.container}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      ) : (
+        <BlogFavoritesEmpty />
+      )}
+    </>
   );
 }
 
