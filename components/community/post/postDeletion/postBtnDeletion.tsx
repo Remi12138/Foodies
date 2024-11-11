@@ -22,7 +22,7 @@ function PostBtnDeletion({ blogId }: { blogId: string }) {
     setDestroying(true);
     try {
       if (currentUser) {
-        await destroyPostRecord(blogId);
+        await destroyPostRecord(currentUser.uid, blogId);
         router.replace("/community");
         console.log(`Post with ID: ${blogId} destroyed`);
       } else {

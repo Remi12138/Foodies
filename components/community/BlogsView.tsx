@@ -1,44 +1,72 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
   FlatList,
   Dimensions,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
-import BlogCard from "@/components/community/BlogCard";
-import { Blog, useBlogStore } from "@/zustand/blog";
 import { Link } from "expo-router";
-import { Timestamp } from "firebase/firestore";
 
-function Blogs({ data }: { data: Blog[] }) {
+import BlogCard from "@/components/community/BlogCard";
+import { ThemedView } from "@/components/ThemedView";
+import { BlogCover, useBlogStore } from "@/zustand/blog";
+import { fetchBlogCovers } from "@/utils/blogs/covers";
+
+function Blogs() {
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const fetchBlogs = useBlogStore((state) => state.fetchBlogs);
+  const { blogCovers, setBlogCovers } = useBlogStore();
 
-  const renderBlogCard = ({ item }: { item: Blog }) => (
-    <View style={styles.cardContainer}>
-      <Link href={`/community/blog?blogId=${item.id}&blogTitle=${item.title}`}>
-        <BlogCard
-          imageUrl={item.image_cover}
-          title={item.title}
-          author={item.author.first_name}
-          date={item.updated_at as unknown as Timestamp}
-        />
-      </Link>
-    </View>
-  );
+  useEffect(() => {
+    onRetrieveBlogs();
+  }, []);
 
-  const onRefresh = async () => {
+  async function onRetrieveBlogs() {
+    setLoading(true);
+    const covers = await fetchBlogCovers();
+    if (covers) setBlogCovers(covers);
+    setLoading(false);
+  }
+
+  async function onRefresh() {
     setRefreshing(true);
-    await fetchBlogs();
+    const covers = await fetchBlogCovers();
+    if (covers) setBlogCovers(covers);
     setRefreshing(false);
-  };
+  }
+
+  function renderBlogCard({ item }: { item: BlogCover }) {
+    return (
+      <View style={styles.cardContainer}>
+        <Link
+          href={`/community/blog?authorUid=${item.author_uid}&blogId=${item.blog_id}&blogTitle=${item.post_title}`}
+        >
+          <BlogCard
+            imageUrl={item.post_image_cover}
+            title={item.post_title}
+            authorName={item.author.name}
+            likesCount={item.post_likes_count}
+          />
+        </Link>
+      </View>
+    );
+  }
+
+  if (loading) {
+    return (
+      <ThemedView style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#000000" />
+      </ThemedView>
+    );
+  }
 
   return (
     <FlatList
-      data={data}
+      data={blogCovers}
       renderItem={renderBlogCard}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.blog_id}
       numColumns={2}
       contentContainerStyle={styles.listContainer}
       columnWrapperStyle={styles.row}
@@ -55,6 +83,11 @@ const styles = StyleSheet.create({
   },
   row: {
     justifyContent: "space-between",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   cardContainer: {
     flex: 1,

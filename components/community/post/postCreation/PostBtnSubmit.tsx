@@ -18,7 +18,7 @@ function PostBtnSubmit() {
     });
     try {
       if (currentUser) {
-        await createPostRecord(draft, currentUser);
+        await createPostRecord(draft, currentUser.uid);
         alert("Post created successfully!");
         resetDraft();
       } else {

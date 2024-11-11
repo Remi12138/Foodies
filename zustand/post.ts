@@ -1,26 +1,17 @@
 import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export type PostDraft = {
+export type Post = {
   title: string;
   content: string;
-  restaurant: string;
-  location: {
-    Latitude: number;
-    Longitude: number;
-  };
-  rate: string;
   image_cover: string;
   images: string[];
 };
 
 type PostStore = {
-  draft: PostDraft;
+  draft: Post;
   setTitle: (title: string) => void;
   setContent: (content: string) => void;
-  setRestaurant: (restaurant: string) => void;
-  setLocation: (latitude: number, longitude: number) => void;
-  setRate: (rate: string) => void;
   setImageCover: (imageCover: string) => void;
   addImage: (image: string) => void;
   removeImage: (index: number) => void;
@@ -30,16 +21,10 @@ type PostStore = {
   loadDraftFromStorage: () => Promise<void>;
 };
 
-const defaultDraft: PostDraft = {
+const defaultDraft: Post = {
   title: "",
   content: "",
-  restaurant: "",
-  location: {
-    Latitude: 0,
-    Longitude: 0,
-  },
-  rate: "",
-  image_cover: "",
+  image_cover: "https://picsum.photos/id/4/200",
   images: [],
 };
 
@@ -48,16 +33,6 @@ export const usePostStore = create<PostStore>()((set) => ({
   setTitle: (title) => set((state) => ({ draft: { ...state.draft, title } })),
   setContent: (content) =>
     set((state) => ({ draft: { ...state.draft, content } })),
-  setRestaurant: (restaurant) =>
-    set((state) => ({ draft: { ...state.draft, restaurant } })),
-  setLocation: (latitude, longitude) =>
-    set((state) => ({
-      draft: {
-        ...state.draft,
-        location: { Latitude: latitude, Longitude: longitude },
-      },
-    })),
-  setRate: (rate) => set((state) => ({ draft: { ...state.draft, rate } })),
   setImageCover: (imageCover) =>
     set((state) => ({ draft: { ...state.draft, image_cover: imageCover } })),
   addImage: (image) =>
@@ -91,7 +66,14 @@ export const usePostStore = create<PostStore>()((set) => ({
         image_cover: images.length > 0 ? images[0] : "",
       },
     })),
-  resetDraft: () => set(() => ({ draft: defaultDraft })),
+  resetDraft: () => {
+    set(() => ({ draft: defaultDraft }));
+    try {
+      AsyncStorage.removeItem("postDraft");
+    } catch (error) {
+      console.error("Error resetting post draft storage:", error);
+    }
+  },
   saveDraftToStorage: async () => {
     try {
       const state = usePostStore.getState();
