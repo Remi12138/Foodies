@@ -35,7 +35,7 @@ async function fetchPostRecord(
   }
 }
 
-async function createPostRecord(draft: Post, userId: string) {
+async function createPostRecord(draft: Post, authorUid: string) {
   const current_time = new Date();
   let draftBlog = {
     post: draft,
@@ -43,14 +43,23 @@ async function createPostRecord(draft: Post, userId: string) {
     is_public: true,
     created_at: current_time,
     updated_at: current_time,
+    author_uid: authorUid,
+    author: {
+      cid: "",
+      name: "Anonymous",
+      avatar: "",
+    },
   } as Blog;
 
   try {
-    const blogsCollectionRef = collection(FIREBASE_DB, `users/${userId}/blogs`);
+    const blogsCollectionRef = collection(
+      FIREBASE_DB,
+      `users/${authorUid}/blogs`
+    );
     const blog = await addDoc(blogsCollectionRef, draftBlog);
     if (blog && draftBlog.is_public) {
       draftBlog.id = blog.id;
-      createBlogCoverRecord(draftBlog, userId);
+      createBlogCoverRecord(draftBlog);
     }
   } catch (error) {
     console.error("An error occurred while creating the post", error);
@@ -67,14 +76,13 @@ async function destroyPostRecord(userUid: string, blogId: string) {
   }
 }
 
-async function createBlogCoverRecord(blog: Blog, userId: string) {
+async function createBlogCoverRecord(blog: Blog) {
   let blogCoverData = {
     post_title: blog.post.title,
     post_image_cover: blog.post.image_cover,
     post_likes_count: blog.likes_count,
-    author_id: userId,
-    author_name: "John Doe",
-    author_avatar: "",
+    author_uid: blog.author_uid,
+    author: blog.author,
   } as BlogCover;
 
   try {
