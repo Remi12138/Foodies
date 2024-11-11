@@ -27,8 +27,6 @@ type BlogStore = {
   removeBlog: (id: string) => void;
   blogCovers: BlogCover[];
   setBlogCovers: (blogCovers: BlogCover[]) => void;
-  blogCollections: BlogCover[];
-  setBlogCollections: (blogCollections: BlogCover[]) => void;
 };
 
 export const useBlogStore = create<BlogStore>()((set) => ({
@@ -40,7 +38,4 @@ export const useBlogStore = create<BlogStore>()((set) => ({
   // blogCovers
   blogCovers: [],
   setBlogCovers: (blogCovers) => set(() => ({ blogCovers })),
-  // blogCollections
-  blogCollections: [],
-  setBlogCollections: (blogCollections) => set(() => ({ blogCollections })),
 }));
