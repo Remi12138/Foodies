@@ -1,14 +1,14 @@
 import { create } from "zustand";
 import { Post } from "./post";
+import { UserPublicProfile } from "./user";
 
 export type BlogCover = {
   blog_id: string;
   post_title: string;
   post_image_cover: string;
   post_likes_count: number;
-  author_id: string;
-  author_name: string;
-  author_avatar: string;
+  author_uid: string;
+  author: UserPublicProfile;
 };
 
 export type Blog = {
@@ -19,6 +19,7 @@ export type Blog = {
   created_at: Date;
   updated_at: Date;
   author_uid: string;
+  author: UserPublicProfile;
 };
 
 type BlogStore = {

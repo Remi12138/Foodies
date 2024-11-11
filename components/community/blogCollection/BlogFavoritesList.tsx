@@ -20,7 +20,7 @@ function BlogFavoritesList() {
     return (
       <ThemedView style={styles.rowContainer}>
         <Link
-          href={`/community/blog?authorUid=${item.author_id}&blogId=${item.blog_id}&blogTitle=${item.post_title}`}
+          href={`/community/blog?authorUid=${item.author_uid}&blogId=${item.blog_id}&blogTitle=${item.post_title}`}
         >
           <ThemedView style={styles.card}>
             <Image

@@ -8,10 +8,8 @@ import {
 } from "firebase/auth";
 
 export type UserPublicProfile = {
-  uid: string;
-  customize_id: string;
-  last_name: string;
-  first_name: string;
+  cid: string;
+  name: string;
   avatar: string;
 };
 

@@ -17,9 +17,7 @@ import { getAuth } from "firebase/auth";
 
 import PostAuthorTool from "@/components/community/post/postAuthor/PostAuthorTool";
 import { fetchPostRecord } from "@/utils/blogs/posts";
-import { fetchUserPublicProfile } from "@/utils/users/info";
 import { checkIfBlogIsLikedLocal } from "@/utils/blogs/favorites";
-import { UserPublicProfile } from "@/zustand/user";
 import { useCollectionStore } from "@/zustand/collections";
 import { formatBlogUpdatedTime } from "@/utils/blogs/info";
 
@@ -34,22 +32,10 @@ function BlogDetail({
 }) {
   const [blog, setBlog] = useState<Blog | null>(null);
   const { blogIds } = useCollectionStore();
-  const [authorPulicProfile, setAuthorPublicProfile] =
-    useState<UserPublicProfile | null>(null);
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const currentUser = getAuth().currentUser;
-
-  useEffect(() => {
-    const fetchAuthorProfile = async () => {
-      const authorProfile = await fetchUserPublicProfile(authorUid);
-      if (authorProfile) {
-        setAuthorPublicProfile(authorProfile);
-      }
-    };
-    fetchAuthorProfile();
-  }, [authorUid]);
 
   useEffect(() => {
     const fetchBlogDetailsAndLikeStatus = async () => {
@@ -116,11 +102,7 @@ function BlogDetail({
         </ThemedView>
         <ThemedView style={styles.contentContainer}>
           <ThemedText style={styles.title}>{blog.post.title}</ThemedText>
-          <BlogInfo
-            blog={blog}
-            authorPublicProfile={authorPulicProfile}
-            isInitiallyLiked={isLiked}
-          />
+          <BlogInfo blog={blog} isInitiallyLiked={isLiked} />
           {currentUser?.uid === authorUid && (
             <PostAuthorTool blogId={blog.id} />
           )}

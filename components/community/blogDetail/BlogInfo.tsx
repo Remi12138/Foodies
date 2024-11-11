@@ -4,18 +4,15 @@ import { AntDesign, Entypo } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
 import { getAuth } from "firebase/auth";
 import BlogAuthor from "@/components/community/blogDetail/BlogAuthor";
-import { UserPublicProfile } from "@/zustand/user";
 import { useCollectionStore } from "@/zustand/collections";
 import { updateFavoriteBlogCoverIds } from "@/utils/blogs/favorites";
 import { Blog, BlogCover } from "@/zustand/blog";
 
 function BlogInfo({
   blog,
-  authorPublicProfile,
   isInitiallyLiked,
 }: {
   blog: Blog;
-  authorPublicProfile: UserPublicProfile | null;
   isInitiallyLiked: boolean;
 }) {
   const { blogIds, setBlogIds, addBlogCover, removeBlogCover } =
@@ -41,9 +38,8 @@ function BlogInfo({
             post_title: blog.post.title,
             post_image_cover: blog.post.image_cover,
             post_likes_count: blog.likes_count,
-            author_id: blog.author_uid,
-            author_name: "",
-            author_avatar: "",
+            author_uid: blog.author_uid,
+            author: blog.author,
           } as BlogCover;
           addBlogCover(blogCover);
         }
@@ -56,7 +52,7 @@ function BlogInfo({
 
   return (
     <ThemedView style={styles.blogInfoContainer}>
-      {authorPublicProfile && <BlogAuthor author={authorPublicProfile} />}
+      <BlogAuthor blog={blog} />
       <ThemedView style={styles.toolContainer}>
         <TouchableOpacity style={styles.likeButton} onPress={toggleLike}>
           <AntDesign

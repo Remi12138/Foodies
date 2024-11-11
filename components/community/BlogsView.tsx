@@ -41,12 +41,12 @@ function Blogs() {
     return (
       <View style={styles.cardContainer}>
         <Link
-          href={`/community/blog?authorUid=${item.author_id}&blogId=${item.blog_id}&blogTitle=${item.post_title}`}
+          href={`/community/blog?authorUid=${item.author_uid}&blogId=${item.blog_id}&blogTitle=${item.post_title}`}
         >
           <BlogCard
             imageUrl={item.post_image_cover}
             title={item.post_title}
-            authorName={item.author_name}
+            authorName={item.author.name}
             likesCount={item.post_likes_count}
           />
         </Link>
