@@ -4,6 +4,9 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { View, StyleSheet, Image } from "react-native";
 import * as Notifications from "expo-notifications";
+import { useCollectionStore } from "@/zustand/collections";
+import { initBlogCollections } from "@/utils/blogs/favorites";
+import { initUserCollection } from "@/utils/users/init";
 
 // Set up notification handler for in-app notifications
 Notifications.setNotificationHandler({
@@ -18,6 +21,7 @@ export default function HomeScreen() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
+  const { setBlogIds, setBlogCovers } = useCollectionStore();
 
   useEffect(() => {
     // Show splash screen for 1 second
@@ -25,10 +29,14 @@ export default function HomeScreen() {
       setShowSplash(false);
     }, 1500);
 
-    // Check if the user is signed in.
+    // Initialize user and thier profile, collections.
     const session = onAuthStateChanged(FIREBASE_AUTH, (user) => {
       console.log("User:", user?.email);
       setUser(user);
+      if (user) {
+        initUserCollection(user.uid);
+        initBlogCollections(user.uid, setBlogIds, setBlogCovers);
+      }
       setLoading(false);
     });
 
@@ -46,20 +54,8 @@ export default function HomeScreen() {
     };
   }, []);
 
-  // Show splash screen for 1 second
-  if (showSplash) {
-    return (
-      <View style={styles.container}>
-        <Image
-          source={require("@/assets/images/foodies-entry.jpg")}
-          style={styles.fullScreenImage}
-        />
-      </View>
-    );
-  }
-
-  // Show loading screen if not finished loading after splash
-  if (loading) {
+  // Show splash screen during loading
+  if (showSplash || loading) {
     return (
       <View style={styles.container}>
         <Image
