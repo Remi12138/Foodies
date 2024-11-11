@@ -4,6 +4,8 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { View, StyleSheet, Image } from "react-native";
 import * as Notifications from "expo-notifications";
+import { useCollectionStore } from "@/zustand/collections";
+import { fetchFavoriteBlogs } from "@/utils/blogs/favorites";
 
 // Set up notification handler for in-app notifications
 Notifications.setNotificationHandler({
@@ -18,6 +20,12 @@ export default function HomeScreen() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
+  const { setBlogCovers } = useCollectionStore();
+
+  const fetchBlogCollections = async (userUid: string) => {
+    const blogFavorites = await fetchFavoriteBlogs(userUid);
+    if (blogFavorites) setBlogCovers(blogFavorites);
+  };
 
   useEffect(() => {
     // Show splash screen for 1 second
@@ -25,10 +33,11 @@ export default function HomeScreen() {
       setShowSplash(false);
     }, 1500);
 
-    // Check if the user is signed in.
+    // Initialize user and thier profile, collections.
     const session = onAuthStateChanged(FIREBASE_AUTH, (user) => {
       console.log("User:", user?.email);
       setUser(user);
+      if (user) fetchBlogCollections(user.uid);
       setLoading(false);
     });
 
@@ -46,7 +55,7 @@ export default function HomeScreen() {
     };
   }, []);
 
-  // Show splash screen for 1 second
+  // Show splash screen during loading
   if (showSplash || loading) {
     return (
       <View style={styles.container}>
