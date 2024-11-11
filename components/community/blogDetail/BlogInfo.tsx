@@ -5,7 +5,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { getAuth } from "firebase/auth";
 import BlogAuthor from "@/components/community/blogDetail/BlogAuthor";
 import { useCollectionStore } from "@/zustand/collections";
-import { updateFavoriteBlogCoverIds } from "@/utils/blogs/favorites";
+import { updateFavoriteBlogIdFromServer } from "@/utils/blogs/favorites";
 import { Blog, BlogCover } from "@/zustand/blog";
 
 function BlogInfo({
@@ -26,13 +26,17 @@ function BlogInfo({
         setIsLiked(!isLiked);
         if (isLiked) {
           const newBlogIds = blogIds.filter((id) => id !== blog.id);
-          updateFavoriteBlogCoverIds(currentUser.uid, newBlogIds);
           setBlogIds(newBlogIds);
+          // sync with server
+          updateFavoriteBlogIdFromServer(currentUser.uid, blog.id, "remove");
+          // remove blog cover from local
           removeBlogCover(blog.id);
         } else {
-          const newBlogIds = [...blogIds, blog.id];
-          updateFavoriteBlogCoverIds(currentUser.uid, newBlogIds);
+          const newBlogIds = [blog.id, ...blogIds];
           setBlogIds(newBlogIds);
+          // sync with server
+          updateFavoriteBlogIdFromServer(currentUser.uid, blog.id, "add");
+          // add blog cover from local
           const blogCover = {
             blog_id: blog.id,
             post_title: blog.post.title,
