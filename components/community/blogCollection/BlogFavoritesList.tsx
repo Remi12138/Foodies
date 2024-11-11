@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { FlatList, StyleSheet, Image } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -5,9 +6,15 @@ import { Link } from "expo-router";
 
 import { useCollectionStore } from "@/zustand/collections";
 import { BlogCover } from "@/zustand/blog";
+import { initBlogCollections } from "@/utils/blogs/favorites";
+import { getAuth } from "firebase/auth";
 
 function BlogFavoritesList() {
   const { blogCovers } = useCollectionStore();
+  const { setBlogIds, setBlogCovers } = useCollectionStore();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const currentUser = getAuth().currentUser;
 
   function renderItem({ item }: { item: BlogCover }) {
     return (
@@ -30,12 +37,22 @@ function BlogFavoritesList() {
     );
   }
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    if (currentUser) {
+      await initBlogCollections(currentUser.uid, setBlogIds, setBlogCovers);
+    }
+    setRefreshing(false);
+  };
+
   return (
     <FlatList
       data={blogCovers}
       renderItem={renderItem}
       keyExtractor={(item) => item.blog_id}
       contentContainerStyle={styles.container}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
     />
   );
 }
