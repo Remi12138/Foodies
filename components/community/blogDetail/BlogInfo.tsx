@@ -2,21 +2,24 @@ import { useState } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
-import { doc, updateDoc, arrayRemove, arrayUnion } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import BlogAuthor from "@/components/community/blogDetail/BlogAuthor";
 import { UserPublicProfile } from "@/zustand/user";
-import { FIREBASE_DB } from "@/firebaseConfig";
+import { useCollectionStore } from "@/zustand/collections";
+import { updateFavoriteBlogCoverIds } from "@/utils/blogs/favorites";
+import { Blog, BlogCover } from "@/zustand/blog";
 
 function BlogInfo({
-  blogId,
+  blog,
   authorPublicProfile,
   isInitiallyLiked,
 }: {
-  blogId: string;
+  blog: Blog;
   authorPublicProfile: UserPublicProfile | null;
   isInitiallyLiked: boolean;
 }) {
+  const { blogIds, setBlogIds, addBlogCover, removeBlogCover } =
+    useCollectionStore();
   const [isLiked, setIsLiked] = useState<boolean>(isInitiallyLiked);
   const currentUser = getAuth().currentUser;
 
@@ -24,18 +27,25 @@ function BlogInfo({
     if (currentUser) {
       try {
         setIsLiked(!isLiked);
-        const collectionRef = doc(
-          FIREBASE_DB,
-          `users/${currentUser.uid}/collections/blogs`
-        );
         if (isLiked) {
-          await updateDoc(collectionRef, {
-            favorites: arrayRemove(blogId),
-          });
+          const newBlogIds = blogIds.filter((id) => id !== blog.id);
+          updateFavoriteBlogCoverIds(currentUser.uid, newBlogIds);
+          setBlogIds(newBlogIds);
+          removeBlogCover(blog.id);
         } else {
-          await updateDoc(collectionRef, {
-            favorites: arrayUnion(blogId),
-          });
+          const newBlogIds = [...blogIds, blog.id];
+          updateFavoriteBlogCoverIds(currentUser.uid, newBlogIds);
+          setBlogIds(newBlogIds);
+          const blogCover = {
+            blog_id: blog.id,
+            post_title: blog.post.title,
+            post_image_cover: blog.post.image_cover,
+            post_likes_count: blog.likes_count,
+            author_id: "",
+            author_name: "",
+            author_avatar: "",
+          } as BlogCover;
+          addBlogCover(blogCover);
         }
       } catch (error) {
         setIsLiked(!isLiked);

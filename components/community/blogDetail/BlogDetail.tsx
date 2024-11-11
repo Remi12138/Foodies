@@ -39,8 +39,7 @@ function BlogDetail({
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const auth = getAuth();
-  const user = auth.currentUser;
+  const currentUser = getAuth().currentUser;
 
   useEffect(() => {
     const fetchAuthorProfile = async () => {
@@ -118,11 +117,11 @@ function BlogDetail({
         <ThemedView style={styles.contentContainer}>
           <ThemedText style={styles.title}>{blog.post.title}</ThemedText>
           <BlogInfo
-            blogId={blog.id}
+            blog={blog}
             authorPublicProfile={authorPulicProfile}
             isInitiallyLiked={isLiked}
           />
-          {user && user.uid === authorUid && (
+          {currentUser?.uid === authorUid && (
             <PostAuthorTool blogId={blog.id} />
           )}
           <ThemedText style={styles.content}>
