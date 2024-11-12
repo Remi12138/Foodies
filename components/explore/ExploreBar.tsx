@@ -32,7 +32,10 @@ const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
     <View style={styles.container}>
       <View style={styles.row}>
         <View style={styles.searchContainer}>
-          <Search openLocatorDialog={openLocatorDialog} />
+          <Search openLocatorDialog={openLocatorDialog}
+          restaurants={restaurants}
+          onFilter={onFilter}
+           />
         </View>
         <View style={styles.filterContainer}>
           <FilterBar restaurants={restaurants} onFilter={onFilter} />

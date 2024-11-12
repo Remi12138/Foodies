@@ -1,45 +1,51 @@
-// components/Search.tsx
-import React from "react";
-import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { View, TextInput, StyleSheet } from "react-native";
+import { Restaurant } from "@/zustand/restaurant";
 
-function Search({ openLocatorDialog }: { openLocatorDialog: () => void }) {
-  return (
-    <View style={styles.inputContainer}>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search..."
-        placeholderTextColor="#888888"
-      />
-      <TouchableOpacity
-        style={styles.locatorButton}
-        onPress={openLocatorDialog}
-      >
-        <Ionicons name="location-outline" size={24} color="#007aff" />
-      </TouchableOpacity>
-    </View>
-  );
+interface SearchProps {
+  openLocatorDialog: () => void;
+  restaurants: Restaurant[];
+  onFilter: (filteredData: Restaurant[]) => void;
 }
 
+const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilter }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+
+    const regex = new RegExp(term, "i");
+    const filteredData = restaurants.filter((restaurant) =>
+      restaurant.name.match(regex) ||
+      restaurant.location.address1.match(regex) ||
+      restaurant.alias.match(regex)
+    );
+
+    onFilter(filteredData);
+  };
+
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="Search by name, location, or alias..."
+        value={searchTerm}
+        onChangeText={handleSearch}
+      />
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#ffffff",
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    paddingHorizontal: 10,
-  },
-  searchInput: {
+  container: {
     flex: 1,
-    height: 40,
-    paddingHorizontal: 10,
-    backgroundColor: "#ffffff",
-    borderRadius: 8,
   },
-  locatorButton: {
-    marginLeft: 8,
+  input: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingLeft: 8,
   },
 });
 
