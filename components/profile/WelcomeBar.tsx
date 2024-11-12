@@ -3,14 +3,9 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { HelloWave } from "@/components/common/HelloWave";
 import { useUserStore } from "@/zustand/user";
-import { useEffect } from "react";
 
 export default function WelcomeBar() {
-  const { user, fetchUserProfile } = useUserStore();
-
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
+  const { user } = useUserStore();
 
   return (
     <ThemedView style={styles.titleContainer}>

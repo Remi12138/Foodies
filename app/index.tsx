@@ -7,6 +7,8 @@ import * as Notifications from "expo-notifications";
 import { useCollectionStore } from "@/zustand/collections";
 import { initBlogCollections } from "@/utils/blogs/favorites";
 import { initUserCollection } from "@/utils/users/init";
+import { useUserStore } from "@/zustand/user";
+import { fetchUserPublicProfile } from "@/utils/users/info";
 
 // Set up notification handler for in-app notifications
 Notifications.setNotificationHandler({
@@ -18,7 +20,7 @@ Notifications.setNotificationHandler({
 });
 
 export default function HomeScreen() {
-  const [user, setUser] = useState<User | null>(null);
+  const { user, setUser } = useUserStore();
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
   const { setBlogIds, setBlogCovers } = useCollectionStore();
@@ -30,10 +32,11 @@ export default function HomeScreen() {
     }, 1500);
 
     // Initialize user and thier profile, collections.
-    const session = onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      console.log("User:", user?.email);
-      setUser(user);
+    const session = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
       if (user) {
+        const userProfile = await fetchUserPublicProfile(user.uid);
+        setUser(userProfile);
+        console.log("User:", userProfile?.name, userProfile?.cid);
         initUserCollection(user.uid);
         initBlogCollections(user.uid, setBlogIds, setBlogCovers);
       }
