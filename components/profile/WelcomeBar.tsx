@@ -5,6 +5,7 @@ import { HelloWave } from "@/components/common/HelloWave";
 import { useUserStore } from "@/zustand/user";
 import { useState } from "react";
 import AvatarPickerModal from "./AvatarPickerModal";
+import UserCidInfo from "./UserCidInfo";
 
 export default function WelcomeBar() {
   const { user } = useUserStore();
@@ -31,11 +32,12 @@ export default function WelcomeBar() {
         />
       </TouchableOpacity>
       <View style={styles.userInfoContainer}>
-        <ThemedText style={styles.userNameText}>{user?.name}</ThemedText>
-        <ThemedText style={styles.userCidText}>@ {user?.cid}</ThemedText>
+        <View style={styles.nameAndWave}>
+          <ThemedText style={styles.userNameText}>{user?.name}</ThemedText>
+          <HelloWave />
+        </View>
+        <UserCidInfo userCid={user?.cid ?? ""} />
       </View>
-      <HelloWave />
-
       <AvatarPickerModal
         isVisible={isAvatarPickerVisible}
         onClose={closeAvatarPicker}
@@ -49,26 +51,28 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 12,
   },
   avatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 72,
+    height: 72,
+    borderRadius: 36,
     overflow: "hidden",
   },
   userInfoContainer: {
     paddingVertical: 8,
     flexDirection: "column",
+    position: "relative",
+  },
+  nameAndWave: {
+    height: 42,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
   userNameText: {
     fontFamily: "SpaceMonoB",
-    fontSize: 24,
-    paddingTop: 8,
-  },
-  userCidText: {
-    fontFamily: "SpaceMonoI",
-    fontSize: 16,
-    lineHeight: 20,
+    fontSize: 36,
+    lineHeight: 42,
   },
 });
