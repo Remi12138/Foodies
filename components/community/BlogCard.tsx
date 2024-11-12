@@ -2,15 +2,16 @@ import { Image, StyleSheet } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
+import { UserPublicProfile } from "@/zustand/user";
 function BlogCard({
   imageUrl,
   title,
-  authorName,
+  author,
   likesCount,
 }: {
   imageUrl: string;
   title: string;
-  authorName: string;
+  author: UserPublicProfile;
   likesCount: number;
 }) {
   return (
@@ -21,7 +22,17 @@ function BlogCard({
           {title}
         </ThemedText>
         <ThemedView style={styles.footerRow}>
-          <ThemedText style={styles.authorName}>{authorName}</ThemedText>
+          <ThemedView style={styles.authorContainer}>
+            <Image
+              source={
+                author?.avatar !== ""
+                  ? { uri: author?.avatar }
+                  : require("@/assets/images/avatar-placeholder.jpg")
+              }
+              style={styles.authorAvatar}
+            />
+            <ThemedText style={styles.authorText}>{author.name}</ThemedText>
+          </ThemedView>
           <ThemedView style={styles.likeContainer}>
             <ThemedText style={styles.likesIcon}>
               <Ionicons name="heart-outline" size={14} />
@@ -66,9 +77,20 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  authorName: {
+  authorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  authorText: {
+    fontFamily: "SpaceMono",
     fontSize: 12,
-    color: "#555",
+  },
+  authorAvatar: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    overflow: "hidden",
+    marginRight: 6,
   },
   likeContainer: {
     flexDirection: "row",

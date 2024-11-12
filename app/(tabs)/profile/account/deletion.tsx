@@ -8,31 +8,38 @@ import {
   ScrollView,
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
-import { useUserStore } from "@/zustand/user";
 import { router } from "expo-router";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { FIREBASE_AUTH } from "@/firebaseConfig";
+import { FIREBASE_AUTH, FIREBASE_DB } from "@/firebaseConfig";
 import {
   deleteUser,
   reauthenticateWithCredential,
   EmailAuthProvider,
 } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
+import { useUserStore } from "@/zustand/user";
 
 function DeletionScreen() {
-  const { user } = useUserStore();
+  const currentUser = FIREBASE_AUTH.currentUser;
+  const { setUser } = useUserStore();
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleDeleteAccount = async () => {
-    if (!user) return;
+    if (!currentUser || !currentUser.email) return;
     setLoading(true);
     try {
-      const credential = EmailAuthProvider.credential(user.email, password);
-      await reauthenticateWithCredential(
-        FIREBASE_AUTH.currentUser!,
-        credential
+      const credential = EmailAuthProvider.credential(
+        currentUser.email,
+        password
       );
-      await deleteUser(FIREBASE_AUTH.currentUser!);
+      await reauthenticateWithCredential(currentUser!, credential);
+      // remove user profiles from server
+      const userDocRef = doc(FIREBASE_DB, "users", currentUser.uid);
+      await updateDoc(userDocRef, { deletionRequested: true });
+      // remove user
+      await deleteUser(currentUser!);
+      setUser(null);
       alert("Your account has been permanently deleted.");
       router.replace("/(auth)/signin");
     } catch (error: any) {

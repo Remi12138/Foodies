@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { FIREBASE_AUTH } from "@/firebaseConfig";
 import {
-  updateProfile,
   reauthenticateWithCredential,
   EmailAuthProvider,
   updatePassword as firebaseUpdatePassword,
@@ -13,17 +12,9 @@ export type UserPublicProfile = {
   avatar: string;
 };
 
-export type UserProfile = {
-  uid: string;
-  name: string;
-  email: string;
-};
-
 type UserStore = {
-  user: UserProfile | null;
-  setUser: (user: UserProfile | null) => void;
-  fetchUserProfile: () => Promise<void>;
-  updateUserName: (name: string) => Promise<void>;
+  user: UserPublicProfile | null;
+  setUser: (user: UserPublicProfile | null) => void;
   verifyOldPassword: (oldPassword: string) => Promise<boolean>;
   updatePassword: (newPassword: string) => Promise<boolean>;
   logout: () => Promise<void>;
@@ -32,37 +23,6 @@ type UserStore = {
 export const useUserStore = create<UserStore>()((set) => ({
   user: null,
   setUser: (user) => set(() => ({ user })),
-  fetchUserProfile: async () => {
-    const currentUser = FIREBASE_AUTH.currentUser;
-    if (currentUser) {
-      try {
-        set(() => ({
-          user: {
-            uid: currentUser.uid,
-            name: currentUser.displayName || "",
-            email: currentUser.email || "",
-          },
-        }));
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-      }
-    }
-  },
-  updateUserName: async (name: string) => {
-    const auth = FIREBASE_AUTH;
-    if (auth.currentUser) {
-      try {
-        await updateProfile(auth.currentUser, {
-          displayName: name,
-        });
-        set((state) => ({
-          user: state.user ? { ...state.user, name } : state.user,
-        }));
-      } catch (error) {
-        console.error("Error updating user profile:", error);
-      }
-    }
-  },
   verifyOldPassword: async (oldPassword: string) => {
     const auth = FIREBASE_AUTH;
     if (auth.currentUser && auth.currentUser.email) {
