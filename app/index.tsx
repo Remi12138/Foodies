@@ -32,22 +32,22 @@ export default function HomeScreen() {
     }, 1500);
 
     // Initialize user and thier profile, collections.
-    const session = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
-      if (user) {
-        const userProfile = await fetchUserPublicProfile(user.uid);
+    const session = onAuthStateChanged(FIREBASE_AUTH, async (firebaseUser) => {
+      if (firebaseUser) {
+        const userProfile = await fetchUserPublicProfile(firebaseUser.uid);
         if (!userProfile) {
           console.log(
             "User profile not found and just created for user:",
-            user.uid
+            firebaseUser.uid
           );
-          const userNewProfile = await initUserProfile(user.uid);
+          const userNewProfile = await initUserProfile(firebaseUser.uid);
           setUser(userNewProfile);
         } else {
           setUser(userProfile);
           console.log("User:", userProfile?.name, userProfile?.cid);
         }
-        initUserCollection(user.uid);
-        initBlogCollections(user.uid, setBlogIds, setBlogCovers);
+        initUserCollection(firebaseUser.uid);
+        initBlogCollections(firebaseUser.uid, setBlogIds, setBlogCovers);
       }
       setLoading(false);
     });
