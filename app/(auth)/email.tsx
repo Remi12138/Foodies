@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useUserStore } from "@/zustand/user";
 import { router } from "expo-router";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { sendEmailVerification } from "firebase/auth";
@@ -10,12 +9,12 @@ import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 function EmailVerifyScreen() {
-  const { user } = useUserStore();
   const [loading, setLoading] = useState(false);
   const [verificationSent, setVerificationSent] = useState(false);
   const [countdown, setCountdown] = useState(30);
   const auth = FIREBASE_AUTH;
-  const userEmail = user?.email || "";
+  const currentUser = auth.currentUser;
+  const userEmail = currentUser?.email || "";
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -37,7 +36,7 @@ function EmailVerifyScreen() {
         alert("Verification link sent to your email.");
         setVerificationSent(true);
         setCountdown(60);
-      } else if (auth.currentUser?.emailVerified) {
+      } else if (currentUser?.emailVerified) {
         router.replace("/");
       }
     } catch (error: any) {

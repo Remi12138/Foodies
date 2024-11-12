@@ -1,6 +1,6 @@
 import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { Redirect } from "expo-router";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { View, StyleSheet, Image } from "react-native";
 import * as Notifications from "expo-notifications";
