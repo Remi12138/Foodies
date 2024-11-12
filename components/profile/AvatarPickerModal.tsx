@@ -1,4 +1,11 @@
-import { Modal, View, Image, Button, StyleSheet } from "react-native";
+import {
+  Modal,
+  View,
+  Image,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+} from "react-native";
 
 interface AvatarPickerModalProps {
   isVisible: boolean;
@@ -28,8 +35,14 @@ export default function AvatarPickerModal({
             }
             style={styles.modalAvatar}
           />
-          <Button title="Upload" onPress={() => {}} />
-          <Button title="Cancel" onPress={onClose} />
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.uploadButton} onPress={() => {}}>
+              <Text style={styles.uploadButtonText}>Upload</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </Modal>
@@ -44,16 +57,39 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   avatarPickerContainer: {
-    width: 300,
+    width: 320,
     padding: 20,
     backgroundColor: "white",
     borderRadius: 10,
     alignItems: "center",
   },
   modalAvatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 20,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    marginBottom: 35,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "90%",
+  },
+  uploadButton: {
+    backgroundColor: "black",
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    marginRight: 10,
+  },
+  uploadButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  cancelButton: {
+    backgroundColor: "#aaaaaa",
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+  },
+  cancelButtonText: {
+    color: "white",
   },
 });
