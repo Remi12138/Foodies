@@ -4,8 +4,10 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { usePostStore } from "@/zustand/post";
 import { createPostRecord } from "@/utils/blogs/posts";
 import { getAuth } from "firebase/auth";
+import { useUserStore } from "@/zustand/user";
 
 function PostBtnSubmit() {
+  const { user } = useUserStore();
   const { draft, resetDraft } = usePostStore();
   const currentUser = getAuth().currentUser;
 
@@ -17,8 +19,8 @@ function PostBtnSubmit() {
       images: draft.images,
     });
     try {
-      if (currentUser) {
-        await createPostRecord(draft, currentUser.uid);
+      if (currentUser && user) {
+        await createPostRecord(draft, currentUser.uid, user);
         alert("Post created successfully!");
         resetDraft();
       } else {

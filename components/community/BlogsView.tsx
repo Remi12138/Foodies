@@ -46,7 +46,7 @@ function Blogs() {
           <BlogCard
             imageUrl={item.post_image_cover}
             title={item.post_title}
-            authorName={item.author.name}
+            author={item.author}
             likesCount={item.post_likes_count}
           />
         </Link>
