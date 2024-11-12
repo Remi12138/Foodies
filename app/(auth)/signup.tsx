@@ -11,7 +11,6 @@ import {
 import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { router } from "expo-router";
-import { useUserStore } from "@/zustand/user";
 
 export default function SignUpScreen() {
   const [email, setEmail] = useState("");
@@ -20,8 +19,6 @@ export default function SignUpScreen() {
   const [loading, setLoading] = useState(false);
 
   const auth = FIREBASE_AUTH;
-  const { fetchUserProfile } = useUserStore();
-
   const handleSignUp = async () => {
     if (!email.includes("@")) {
       alert("Please enter a valid email.");
@@ -34,7 +31,6 @@ export default function SignUpScreen() {
     setLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      await fetchUserProfile();
       router.replace("/(auth)/email");
     } catch (error: any) {
       alert(error.message);
@@ -45,12 +41,12 @@ export default function SignUpScreen() {
 
   return (
     <ImageBackground
-      source={{ uri: "https://picsum.photos/id/57/200/300" }}
+      source={require("@/assets/images/signup-background.jpg")}
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
         <KeyboardAvoidingView behavior="padding" style={styles.keyboardView}>
-          <Text style={styles.title}>Become one of Foodies</Text>
+          <Text style={styles.title}>Become One of Foodies</Text>
           <TextInput
             style={styles.input}
             placeholder="Email"
@@ -109,7 +105,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     alignItems: "center",
     justifyContent: "center",
     padding: 32,
