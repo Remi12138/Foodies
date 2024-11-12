@@ -1,27 +1,46 @@
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { HelloWave } from "@/components/common/HelloWave";
 import { useUserStore } from "@/zustand/user";
+import { useState } from "react";
+import AvatarPickerModal from "./AvatarPickerModal";
 
 export default function WelcomeBar() {
   const { user } = useUserStore();
+  const [isAvatarPickerVisible, setAvatarPickerVisible] = useState(false);
+
+  const openAvatarPicker = () => {
+    setAvatarPickerVisible(true);
+  };
+
+  const closeAvatarPicker = () => {
+    setAvatarPickerVisible(false);
+  };
 
   return (
     <ThemedView style={styles.container}>
-      <Image
-        source={
-          user?.avatar !== ""
-            ? { uri: user?.avatar }
-            : require("@/assets/images/avatar-placeholder.jpg")
-        }
-        style={styles.avatar}
-      />
+      <TouchableOpacity onPress={openAvatarPicker}>
+        <Image
+          source={
+            user?.avatar !== ""
+              ? { uri: user?.avatar }
+              : require("@/assets/images/avatar-placeholder.jpg")
+          }
+          style={styles.avatar}
+        />
+      </TouchableOpacity>
       <View style={styles.userInfoContainer}>
         <ThemedText style={styles.userNameText}>{user?.name}</ThemedText>
         <ThemedText style={styles.userCidText}>@ {user?.cid}</ThemedText>
       </View>
       <HelloWave />
+
+      <AvatarPickerModal
+        isVisible={isAvatarPickerVisible}
+        onClose={closeAvatarPicker}
+        userAvatar={user?.avatar ?? ""}
+      />
     </ThemedView>
   );
 }
