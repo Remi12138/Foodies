@@ -9,11 +9,12 @@ import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 function EmailVerifyScreen() {
-  const [loading, setLoading] = useState(false);
-  const [verificationSent, setVerificationSent] = useState(false);
-  const [countdown, setCountdown] = useState(30);
-  const auth = FIREBASE_AUTH;
-  const currentUser = auth.currentUser;
+  const [loading, setLoading] = useState<boolean>(false);
+  const [sending, setSending] = useState<boolean>(false);
+  const [countdown, setCountdown] = useState<number>(60);
+  const [verificationSent, setVerificationSent] = useState<boolean>(false);
+
+  const currentUser = FIREBASE_AUTH.currentUser;
   const userEmail = currentUser?.email || "";
 
   useEffect(() => {
@@ -29,28 +30,28 @@ function EmailVerifyScreen() {
   }, [verificationSent, countdown]);
 
   const handleSendVerificationLink = async () => {
-    setLoading(true);
+    setSending(true);
     try {
-      if (auth.currentUser && !auth.currentUser.emailVerified) {
-        await sendEmailVerification(auth.currentUser);
-        alert("Verification link sent to your email.");
+      await currentUser?.reload();
+      if (currentUser && !currentUser.emailVerified) {
+        await sendEmailVerification(currentUser);
         setVerificationSent(true);
         setCountdown(60);
-      } else if (currentUser?.emailVerified) {
+      } else {
         router.replace("/");
       }
     } catch (error: any) {
       alert(error.message);
     } finally {
-      setLoading(false);
+      setSending(false);
     }
   };
 
   const handleDone = async () => {
     setLoading(true);
     try {
-      await auth.currentUser?.reload();
-      if (auth.currentUser?.emailVerified) {
+      await currentUser?.reload();
+      if (currentUser?.emailVerified) {
         router.replace("/");
       } else {
         alert(
@@ -72,7 +73,7 @@ function EmailVerifyScreen() {
   const buttonText = useThemeColor({ light: "#FFF", dark: "#000" }, "text");
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
       <ThemedView style={styles.container}>
         <ScrollView style={styles.contentContainer}>
           <ThemedText style={styles.message}>
@@ -89,11 +90,7 @@ function EmailVerifyScreen() {
                   type="default"
                   style={[styles.buttonText, { color: buttonText }]}
                 >
-                  {loading
-                    ? "Processing..."
-                    : countdown > 0
-                    ? `Done (${countdown}s)`
-                    : "Resend Verification Link"}
+                  {loading ? "Processing..." : `Done (${countdown}s)`}
                 </ThemedText>
               </TouchableOpacity>
             </>
@@ -101,13 +98,13 @@ function EmailVerifyScreen() {
             <TouchableOpacity
               style={[styles.button, { backgroundColor: buttonBackground }]}
               onPress={handleSendVerificationLink}
-              disabled={loading}
+              disabled={sending}
             >
               <ThemedText
                 type="default"
                 style={[styles.buttonText, { color: buttonText }]}
               >
-                {loading ? "Processing..." : "Send Verification Link"}
+                {sending ? "Sending..." : "Send Verification Link"}
               </ThemedText>
             </TouchableOpacity>
           )}
@@ -123,6 +120,13 @@ function EmailVerifyScreen() {
               Cancel
             </ThemedText>
           </TouchableOpacity>
+
+          <ThemedView style={styles.reminderContainer}>
+            <ThemedText style={styles.reminderText}>
+              * Didn't receive the email? Check your spam folder or request a
+              new one shortly.
+            </ThemedText>
+          </ThemedView>
         </ScrollView>
       </ThemedView>
     </SafeAreaView>
@@ -156,6 +160,13 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     fontWeight: "bold",
+  },
+  reminderContainer: {
+    marginTop: 32,
+  },
+  reminderText: {
+    fontSize: 14,
+    fontStyle: "italic",
   },
 });
 

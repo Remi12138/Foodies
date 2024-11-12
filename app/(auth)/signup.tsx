@@ -11,6 +11,7 @@ import {
 import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { router } from "expo-router";
+import { isValidEmail } from "@/utils/users/email";
 
 export default function SignUpScreen() {
   const [email, setEmail] = useState("");
@@ -20,12 +21,14 @@ export default function SignUpScreen() {
 
   const auth = FIREBASE_AUTH;
   const handleSignUp = async () => {
-    if (!email.includes("@")) {
+    if (!isValidEmail(email)) {
       alert("Please enter a valid email.");
       return;
     }
     if (password !== confirmPassword) {
       alert("Passwords do not match.");
+      setPassword("");
+      setConfirmPassword("");
       return;
     }
     setLoading(true);
@@ -63,6 +66,7 @@ export default function SignUpScreen() {
             placeholder="Password"
             placeholderTextColor="#FFFFFF"
             secureTextEntry
+            textContentType="oneTimeCode"
             value={password}
             onChangeText={(text) => setPassword(text)}
           />
@@ -71,18 +75,21 @@ export default function SignUpScreen() {
             placeholder="Confirm Password"
             placeholderTextColor="#FFFFFF"
             secureTextEntry
+            textContentType="oneTimeCode"
             value={confirmPassword}
             onChangeText={(text) => setConfirmPassword(text)}
           />
-          {loading ? (
-            <Text>Loading...</Text>
-          ) : (
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-                <Text style={styles.buttonText}>Sign Up</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleSignUp}
+              disabled={loading}
+            >
+              <Text style={styles.buttonText}>
+                {loading ? "One moment ..." : "Sign Up"}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </KeyboardAvoidingView>
         <TouchableOpacity
           style={styles.signUp}

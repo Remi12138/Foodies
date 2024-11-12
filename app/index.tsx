@@ -20,34 +20,43 @@ Notifications.setNotificationHandler({
 });
 
 export default function HomeScreen() {
-  const { user, setUser } = useUserStore();
+  const { setUser } = useUserStore();
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
+  const [userSignedIn, setUserSignedIn] = useState(false);
+  const [userVerified, setUserVerified] = useState(false);
   const { setBlogIds, setBlogCovers } = useCollectionStore();
 
   useEffect(() => {
-    // Show splash screen for 1 second
+    // Show splash screen for 1.5 seconds
     const splashTimeout = setTimeout(() => {
       setShowSplash(false);
     }, 1500);
 
-    // Initialize user and thier profile, collections.
+    // Initialize user and their profile, collections.
     const session = onAuthStateChanged(FIREBASE_AUTH, async (firebaseUser) => {
       if (firebaseUser) {
-        const userProfile = await fetchUserPublicProfile(firebaseUser.uid);
-        if (!userProfile) {
-          console.log(
-            "User profile not found and just created for user:",
-            firebaseUser.uid
-          );
-          const userNewProfile = await initUserProfile(firebaseUser.uid);
-          setUser(userNewProfile);
-        } else {
-          setUser(userProfile);
-          console.log("User:", userProfile?.name, userProfile?.cid);
+        setUserSignedIn(true);
+        setUserVerified(firebaseUser.emailVerified);
+        if (firebaseUser.emailVerified) {
+          const userProfile = await fetchUserPublicProfile(firebaseUser.uid);
+          if (!userProfile) {
+            console.log(
+              "User profile not found and just created for user:",
+              firebaseUser.uid
+            );
+            const userNewProfile = await initUserProfile(firebaseUser.uid);
+            setUser(userNewProfile);
+          } else {
+            setUser(userProfile);
+            console.log("User:", userProfile?.name, userProfile?.cid);
+          }
+          initUserCollection(firebaseUser.uid);
+          initBlogCollections(firebaseUser.uid, setBlogIds, setBlogCovers);
         }
-        initUserCollection(firebaseUser.uid);
-        initBlogCollections(firebaseUser.uid, setBlogIds, setBlogCovers);
+      } else {
+        setUserSignedIn(false);
+        setUserVerified(false);
       }
       setLoading(false);
     });
@@ -78,11 +87,14 @@ export default function HomeScreen() {
     );
   }
 
-  return user ? (
-    <Redirect href="/(tabs)/community" />
-  ) : (
-    <Redirect href="/(auth)/signin" />
-  );
+  if (userSignedIn) {
+    if (!userVerified) {
+      return <Redirect href="/(auth)/email" />;
+    }
+    return <Redirect href="/(tabs)/community" />;
+  }
+
+  return <Redirect href="/(auth)/signin" />;
 }
 
 const styles = StyleSheet.create({
