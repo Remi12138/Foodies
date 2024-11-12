@@ -1,17 +1,12 @@
 import { useState } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
-import BlogAuthor from "./BlogAuthor";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { Blog } from "@/zustand/blog";
-import { ThemedView } from "../../ThemedView";
-import {
-  getFirestore,
-  doc,
-  updateDoc,
-  arrayRemove,
-  arrayUnion,
-} from "firebase/firestore";
+import { ThemedView } from "@/components/ThemedView";
 import { getAuth } from "firebase/auth";
+import BlogAuthor from "@/components/community/blogDetail/BlogAuthor";
+import { useCollectionStore } from "@/zustand/collections";
+import { updateFavoriteBlogIdFromServer } from "@/utils/blogs/favorites";
+import { Blog, BlogCover } from "@/zustand/blog";
 
 function BlogInfo({
   blog,
@@ -20,24 +15,37 @@ function BlogInfo({
   blog: Blog;
   isInitiallyLiked: boolean;
 }) {
+  const { blogIds, setBlogIds, addBlogCover, removeBlogCover } =
+    useCollectionStore();
   const [isLiked, setIsLiked] = useState<boolean>(isInitiallyLiked);
-  const firestore = getFirestore();
-  const auth = getAuth();
-  const user = auth.currentUser;
+  const currentUser = getAuth().currentUser;
 
   const toggleLike = async () => {
-    if (user) {
+    if (currentUser) {
       try {
         setIsLiked(!isLiked);
-        const collectionRef = doc(firestore, `collections/${user.uid}`);
         if (isLiked) {
-          await updateDoc(collectionRef, {
-            blogs: arrayRemove(doc(firestore, `blogs/${blog.id}`)),
-          });
+          const newBlogIds = blogIds.filter((id) => id !== blog.id);
+          setBlogIds(newBlogIds);
+          // sync with server
+          updateFavoriteBlogIdFromServer(currentUser.uid, blog.id, "remove");
+          // remove blog cover from local
+          removeBlogCover(blog.id);
         } else {
-          await updateDoc(collectionRef, {
-            blogs: arrayUnion(doc(firestore, `blogs/${blog.id}`)),
-          });
+          const newBlogIds = [blog.id, ...blogIds];
+          setBlogIds(newBlogIds);
+          // sync with server
+          updateFavoriteBlogIdFromServer(currentUser.uid, blog.id, "add");
+          // add blog cover from local
+          const blogCover = {
+            blog_id: blog.id,
+            post_title: blog.post.title,
+            post_image_cover: blog.post.image_cover,
+            post_likes_count: blog.likes_count,
+            author_uid: blog.author_uid,
+            author: blog.author,
+          } as BlogCover;
+          addBlogCover(blogCover);
         }
       } catch (error) {
         setIsLiked(!isLiked);
@@ -48,7 +56,7 @@ function BlogInfo({
 
   return (
     <ThemedView style={styles.blogInfoContainer}>
-      <BlogAuthor author={blog.author} />
+      <BlogAuthor blog={blog} />
       <ThemedView style={styles.toolContainer}>
         <TouchableOpacity style={styles.likeButton} onPress={toggleLike}>
           <AntDesign
@@ -70,7 +78,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 16,
+    marginVertical: 8,
   },
   toolContainer: {
     flexDirection: "row",

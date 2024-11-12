@@ -13,7 +13,6 @@ import {
 import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { router } from "expo-router";
-import { useUserStore } from "@/zustand/user";
 
 export default function SignInScreen() {
   const [email, setEmail] = useState("");
@@ -21,17 +20,19 @@ export default function SignInScreen() {
   const [loading, setLoading] = useState(false);
 
   const auth = FIREBASE_AUTH;
-  const { fetchUserProfile } = useUserStore();
 
   const signIn = async () => {
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-      await fetchUserProfile();
-      if (response.user.emailVerified) {
-        router.replace("/");
+      if (response.user) {
+        if (response.user.emailVerified) {
+          router.replace("/");
+        } else {
+          router.replace("/(auth)/email");
+        }
       } else {
-        router.replace("/(auth)/email");
+        router.replace("/(auth)/signin");
       }
     } catch (error: any) {
       alert(error.message);
@@ -42,12 +43,12 @@ export default function SignInScreen() {
 
   return (
     <ImageBackground
-      source={{ uri: "https://picsum.photos/id/57/200/300" }}
+      source={require("@/assets/images/signin-background.jpg")}
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
         <KeyboardAvoidingView behavior="padding" style={styles.keyboardView}>
-          <Text style={styles.title}>Foodies</Text>
+          <Text style={styles.title}>Welcome Back, Foodies</Text>
           <TextInput
             style={styles.input}
             placeholder="Email"
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
     alignItems: "center",
     justifyContent: "center",
     padding: 32,

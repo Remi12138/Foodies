@@ -1,52 +1,48 @@
 import { useEffect, useState } from "react";
 import {
   ScrollView,
-  View,
   Image,
   StyleSheet,
   Dimensions,
   ActivityIndicator,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { useBlogStore, Blog } from "@/zustand/blog";
+import { Blog } from "@/zustand/blog";
 import { router } from "expo-router";
 import { GestureHandlerRootView, FlatList } from "react-native-gesture-handler";
 import { ThemedView } from "@/components/ThemedView";
 import BlogInfo from "./BlogInfo";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  DocumentReference,
-} from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+
+import PostAuthorTool from "@/components/community/post/postAuthor/PostAuthorTool";
+import { fetchPostRecord } from "@/utils/blogs/posts";
+import { checkIfBlogIsLikedLocal } from "@/utils/blogs/favorites";
+import { useCollectionStore } from "@/zustand/collections";
+import { formatBlogUpdatedTime } from "@/utils/blogs/info";
 
 const { width } = Dimensions.get("window");
 
-function BlogDetail({ blogId }: { blogId: string }) {
+function BlogDetail({
+  authorUid,
+  blogId,
+}: {
+  authorUid: string;
+  blogId: string;
+}) {
   const [blog, setBlog] = useState<Blog | null>(null);
+  const { blogIds } = useCollectionStore();
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const fetchBlog = useBlogStore((state) => state.fetchBlog);
-  const firestore = getFirestore();
-  const auth = getAuth();
-  const user = auth.currentUser;
+
+  const currentUser = getAuth().currentUser;
 
   useEffect(() => {
     const fetchBlogDetailsAndLikeStatus = async () => {
       try {
-        const blogPromise = fetchBlog(blogId);
-        let isBlogLiked = false;
-
-        if (user) {
-          isBlogLiked = await checkIfBlogIsLiked(user.uid);
-          if (isBlogLiked) {
-            setIsLiked(true);
-          }
-        }
-
-        const blog = await blogPromise;
+        const blog = await fetchPostRecord(authorUid, blogId);
         if (blog) {
+          setIsLiked(checkIfBlogIsLikedLocal(blogIds, blogId));
           setBlog(blog);
         } else {
           router.back();
@@ -58,20 +54,22 @@ function BlogDetail({ blogId }: { blogId: string }) {
     };
 
     fetchBlogDetailsAndLikeStatus();
-  }, [blogId, fetchBlog, user, firestore]);
+  }, []);
 
   if (!blog) {
     return (
-      <View style={styles.loadingContainer}>
+      <ThemedView style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000FF" />
-      </View>
+      </ThemedView>
     );
   }
 
-  const images = [blog.image_cover, ...blog.images];
+  const images = [blog.post.image_cover, ...blog.post.images];
+  const blogUpdatedTime = blog.updated_at as unknown as Timestamp;
+  const formattedUpdatedTime = formatBlogUpdatedTime(blogUpdatedTime);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={styles.gestureContainer}>
       <ScrollView contentContainerStyle={styles.container}>
         <ThemedView>
           <FlatList
@@ -102,41 +100,33 @@ function BlogDetail({ blogId }: { blogId: string }) {
             ))}
           </ThemedView>
         </ThemedView>
-        <View style={styles.contentContainer}>
-          <ThemedText style={styles.title}>{blog.title}</ThemedText>
+        <ThemedView style={styles.contentContainer}>
+          <ThemedText style={styles.title}>{blog.post.title}</ThemedText>
           <BlogInfo blog={blog} isInitiallyLiked={isLiked} />
+          {currentUser?.uid === authorUid && (
+            <PostAuthorTool blogId={blog.id} />
+          )}
           <ThemedText style={styles.content}>
             <ThemedText style={styles.firstLetter}>
-              {blog.content[0]}
+              {blog.post.content[0]}
             </ThemedText>
-            {blog.content.substring(1)}
+            {blog.post.content.substring(1)}
           </ThemedText>
-        </View>
+          <ThemedView>
+            <ThemedText style={styles.updatedTime}>
+              {formattedUpdatedTime}
+            </ThemedText>
+          </ThemedView>
+        </ThemedView>
       </ScrollView>
     </GestureHandlerRootView>
   );
-
-  async function checkIfBlogIsLiked(userId: string) {
-    const collectionRef = doc(firestore, `collections/${userId}`);
-    const collectionSnap = await getDoc(collectionRef);
-    if (collectionSnap.exists()) {
-      const collectionData = collectionSnap.data();
-      if (
-        collectionData &&
-        "blogs" in collectionData &&
-        Array.isArray(collectionData.blogs)
-      ) {
-        const blogReferences: DocumentReference[] = collectionData.blogs;
-        return blogReferences.some((ref) => ref.id === blogId);
-      }
-    }
-    return false;
-  }
 }
 
 const styles = StyleSheet.create({
+  gestureContainer: { flex: 1, backgroundColor: "#FFF" },
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: "#FFF",
   },
   loadingContainer: {
@@ -152,7 +142,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 16,
+    marginVertical: 12,
   },
   dot: {
     width: 8,
@@ -161,23 +151,31 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   contentContainer: {
-    padding: 16,
+    paddingHorizontal: 16,
   },
   title: {
-    fontSize: 24,
+    fontFamily: "Times New Roman",
     fontWeight: "bold",
-    marginBottom: 8,
-    textAlign: "center",
+    fontSize: 24,
+    textAlign: "left",
   },
   content: {
+    fontFamily: "Times New Roman",
     fontSize: 16,
-    lineHeight: 24,
     textAlign: "justify",
+    paddingVertical: 8,
   },
   firstLetter: {
     fontSize: 28,
     fontWeight: "bold",
     textTransform: "uppercase",
+  },
+  updatedTime: {
+    fontFamily: "Times New Roman",
+    fontStyle: "italic",
+    fontSize: 14,
+    textAlign: "right",
+    marginTop: 8,
   },
 });
 

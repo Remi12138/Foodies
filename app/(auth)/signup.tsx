@@ -11,7 +11,7 @@ import {
 import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { router } from "expo-router";
-import { useUserStore } from "@/zustand/user";
+import { isValidEmail } from "@/utils/users/email";
 
 export default function SignUpScreen() {
   const [email, setEmail] = useState("");
@@ -20,21 +20,20 @@ export default function SignUpScreen() {
   const [loading, setLoading] = useState(false);
 
   const auth = FIREBASE_AUTH;
-  const { fetchUserProfile } = useUserStore();
-
   const handleSignUp = async () => {
-    if (!email.includes("@")) {
+    if (!isValidEmail(email)) {
       alert("Please enter a valid email.");
       return;
     }
     if (password !== confirmPassword) {
       alert("Passwords do not match.");
+      setPassword("");
+      setConfirmPassword("");
       return;
     }
     setLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      await fetchUserProfile();
       router.replace("/(auth)/email");
     } catch (error: any) {
       alert(error.message);
@@ -45,12 +44,12 @@ export default function SignUpScreen() {
 
   return (
     <ImageBackground
-      source={{ uri: "https://picsum.photos/id/57/200/300" }}
+      source={require("@/assets/images/signup-background.jpg")}
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
         <KeyboardAvoidingView behavior="padding" style={styles.keyboardView}>
-          <Text style={styles.title}>Become one of Foodies</Text>
+          <Text style={styles.title}>Become One of Foodies</Text>
           <TextInput
             style={styles.input}
             placeholder="Email"
@@ -67,6 +66,7 @@ export default function SignUpScreen() {
             placeholder="Password"
             placeholderTextColor="#FFFFFF"
             secureTextEntry
+            textContentType="oneTimeCode"
             value={password}
             onChangeText={(text) => setPassword(text)}
           />
@@ -75,18 +75,21 @@ export default function SignUpScreen() {
             placeholder="Confirm Password"
             placeholderTextColor="#FFFFFF"
             secureTextEntry
+            textContentType="oneTimeCode"
             value={confirmPassword}
             onChangeText={(text) => setConfirmPassword(text)}
           />
-          {loading ? (
-            <Text>Loading...</Text>
-          ) : (
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-                <Text style={styles.buttonText}>Sign Up</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleSignUp}
+              disabled={loading}
+            >
+              <Text style={styles.buttonText}>
+                {loading ? "One moment ..." : "Sign Up"}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </KeyboardAvoidingView>
         <TouchableOpacity
           style={styles.signUp}
@@ -109,7 +112,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     alignItems: "center",
     justifyContent: "center",
     padding: 32,

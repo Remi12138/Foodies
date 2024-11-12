@@ -1,26 +1,44 @@
-import { Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { Image, StyleSheet } from "react-native";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
-import { ThemedView } from "../ThemedView";
-
+import { UserPublicProfile } from "@/zustand/user";
 function BlogCard({
   imageUrl,
   title,
   author,
+  likesCount,
 }: {
   imageUrl: string;
   title: string;
-  author: string;
+  author: UserPublicProfile;
+  likesCount: number;
 }) {
   return (
     <ThemedView style={styles.card}>
       <Image source={{ uri: imageUrl }} style={styles.image} />
       <ThemedView style={styles.contentContainer}>
-        <Text style={styles.title}>{title}</Text>
+        <ThemedText style={styles.title} numberOfLines={2} ellipsizeMode="tail">
+          {title}
+        </ThemedText>
         <ThemedView style={styles.footerRow}>
-          <Text style={styles.author}>by {author}</Text>
-          <TouchableOpacity>
-            <Ionicons name="heart-outline" size={24} color="red" />
-          </TouchableOpacity>
+          <ThemedView style={styles.authorContainer}>
+            <Image
+              source={
+                author?.avatar !== ""
+                  ? { uri: author?.avatar }
+                  : require("@/assets/images/avatar-placeholder.jpg")
+              }
+              style={styles.authorAvatar}
+            />
+            <ThemedText style={styles.authorText}>{author.name}</ThemedText>
+          </ThemedView>
+          <ThemedView style={styles.likeContainer}>
+            <ThemedText style={styles.likesIcon}>
+              <Ionicons name="heart-outline" size={14} />
+            </ThemedText>
+            <ThemedText style={styles.likesCount}>{likesCount}</ThemedText>
+          </ThemedView>
         </ThemedView>
       </ThemedView>
     </ThemedView>
@@ -43,23 +61,46 @@ const styles = StyleSheet.create({
     aspectRatio: 1 / 1,
   },
   contentContainer: {
-    padding: 10,
+    padding: 6,
     flex: 1,
     justifyContent: "space-between",
   },
   title: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
-    marginBottom: 10,
-    flex: 1, // allows title to take proportional space if more space is available
+    lineHeight: 18,
+    height: 48,
+    overflow: "hidden",
   },
   footerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-  author: {
-    fontSize: 14,
+  authorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  authorText: {
+    fontFamily: "SpaceMono",
+    fontSize: 12,
+  },
+  authorAvatar: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    overflow: "hidden",
+    marginRight: 6,
+  },
+  likeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  likesIcon: {
+    marginRight: 4,
+  },
+  likesCount: {
+    fontSize: 12,
     color: "#555",
   },
 });

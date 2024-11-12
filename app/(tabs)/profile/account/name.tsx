@@ -11,15 +11,27 @@ import { ThemedView } from "@/components/ThemedView";
 import { useUserStore } from "@/zustand/user";
 import { router } from "expo-router";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import {
+  fetchUserPublicProfile,
+  updateUserPublicProfileName,
+} from "@/utils/users/info";
+import { getAuth } from "firebase/auth";
 
 export default function EditNameScreen() {
-  const { user, updateUserName } = useUserStore();
+  const currentUser = getAuth().currentUser;
+  const { user, setUser } = useUserStore();
   const [name, setName] = useState(user?.name || "");
   const [loading, setLoading] = useState(false);
 
   const handleSave = async () => {
     setLoading(true);
-    await updateUserName(name);
+    if (currentUser) {
+      await updateUserPublicProfileName(currentUser.uid, name);
+      const updatedUser = await fetchUserPublicProfile(currentUser.uid);
+      if (updatedUser) {
+        setUser(updatedUser);
+      }
+    }
     setLoading(false);
     router.navigate("/profile");
   };

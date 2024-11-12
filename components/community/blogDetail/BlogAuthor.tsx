@@ -1,17 +1,33 @@
-import { TouchableOpacity, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet, Image } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { UserPublicProfile } from "@/zustand/user";
+import { getAuth } from "firebase/auth";
+import { Blog } from "@/zustand/blog";
 
-function BlogAuthor({ author }: { author: UserPublicProfile }) {
+function BlogAuthor({ blog }: { blog: Blog }) {
+  const currentUser = getAuth().currentUser;
   return (
     <ThemedView style={styles.container}>
-      <ThemedText style={styles.authorText}>
-        {author.first_name} {author.last_name}
-      </ThemedText>
-      <TouchableOpacity style={styles.followButton}>
-        <ThemedText style={styles.followButtonText}>Follow</ThemedText>
-      </TouchableOpacity>
+      <ThemedView style={styles.container}>
+        <Image
+          source={
+            blog.author?.avatar !== ""
+              ? { uri: blog.author?.avatar }
+              : require("@/assets/images/avatar-placeholder.jpg")
+          }
+          style={styles.avatar}
+        />
+        <ThemedText style={styles.authorText}>{blog.author.name}</ThemedText>
+      </ThemedView>
+      {currentUser && currentUser.uid !== blog.author_uid ? (
+        <TouchableOpacity style={styles.followButton}>
+          <ThemedText style={styles.followButtonText}>Follow</ThemedText>
+        </TouchableOpacity>
+      ) : (
+        <ThemedView style={{ marginLeft: 5 }}>
+          <ThemedText>(Me)</ThemedText>
+        </ThemedView>
+      )}
     </ThemedView>
   );
 }
@@ -22,7 +38,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   authorText: {
+    fontFamily: "SpaceMono",
     fontSize: 20,
+    lineHeight: 32,
+  },
+  avatar: {
+    width: 32,
+    height: 32,
+    marginRight: 8,
+    borderRadius: 16,
+    overflow: "hidden",
   },
   followButton: {
     backgroundColor: "#000",
