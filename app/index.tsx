@@ -6,7 +6,7 @@ import { View, StyleSheet, Image } from "react-native";
 import * as Notifications from "expo-notifications";
 import { useCollectionStore } from "@/zustand/collections";
 import { initBlogCollections } from "@/utils/blogs/favorites";
-import { initUserCollection } from "@/utils/users/init";
+import { initUserCollection, initUserProfile } from "@/utils/users/init";
 import { useUserStore } from "@/zustand/user";
 import { fetchUserPublicProfile } from "@/utils/users/info";
 
@@ -35,8 +35,17 @@ export default function HomeScreen() {
     const session = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
       if (user) {
         const userProfile = await fetchUserPublicProfile(user.uid);
-        setUser(userProfile);
-        console.log("User:", userProfile?.name, userProfile?.cid);
+        if (!userProfile) {
+          console.log(
+            "User profile not found and just created for user:",
+            user.uid
+          );
+          const userNewProfile = await initUserProfile(user.uid);
+          setUser(userNewProfile);
+        } else {
+          setUser(userProfile);
+          console.log("User:", userProfile?.name, userProfile?.cid);
+        }
         initUserCollection(user.uid);
         initBlogCollections(user.uid, setBlogIds, setBlogCovers);
       }
