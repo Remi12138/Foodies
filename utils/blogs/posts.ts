@@ -1,6 +1,7 @@
 import { FIREBASE_DB } from "@/firebaseConfig";
 import { Blog, BlogCover } from "@/zustand/blog";
 import { Post } from "@/zustand/post";
+import { UserPublicProfile } from "@/zustand/user";
 import {
   collection,
   addDoc,
@@ -35,7 +36,11 @@ async function fetchPostRecord(
   }
 }
 
-async function createPostRecord(draft: Post, authorUid: string) {
+async function createPostRecord(
+  draft: Post,
+  authorUid: string,
+  author: UserPublicProfile
+) {
   const current_time = new Date();
   let draftBlog = {
     post: draft,
@@ -44,11 +49,7 @@ async function createPostRecord(draft: Post, authorUid: string) {
     created_at: current_time,
     updated_at: current_time,
     author_uid: authorUid,
-    author: {
-      cid: "",
-      name: "Anonymous",
-      avatar: "",
-    },
+    author: author,
   } as Blog;
 
   try {
