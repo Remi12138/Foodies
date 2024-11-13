@@ -4,6 +4,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import firebase from "firebase/compat";
 import analytics = firebase.analytics;
 import {number} from "prop-types";
+import axios from "axios";
 type Position = {
     height: number;
     width: number;
@@ -38,6 +39,7 @@ export type Diet = {
     total_fat: number;
     total_carbs: number;
     total_fibers: number;
+    advice: string;
 };
 
 type DietStore = {
@@ -46,8 +48,10 @@ type DietStore = {
     loadDiets: () => void;
     removeDiet: (id: number) => void;
     editDiet: (id: number, title: string, date: Date) => void;
+    updateDietAdvice: (id: number, newAdvice: string) => void;
 };
 
+const ChatGPT_KEY = "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";
 const ID_INDEX_KEY = 'IDindex';
 let IDindex: number | null = null;
 const initializeIDindex = async () => {
@@ -62,12 +66,62 @@ const saveIDindex = async (index: number) => {
     await AsyncStorage.setItem(ID_INDEX_KEY, index.toString());
 };
 
+// Function to call ChatGPT API
+const getAdvice = async (total_calories: number,
+                         total_proteins: number,
+                         total_fat: number,
+                         total_carbs: number,
+                         total_fibers: number,
+                         retries: number = 0): Promise<string> => {
+    const maxRetries = 3;
+    try {
+        const response = await axios.post(
+            'https://api.openai.com/v1/chat/completions',
+            {
+                model: "gpt-3.5-turbo",
+                messages: [
+                    {
+                        role: "user",
+                        content: `Provide a concise, point-by-point analysis and advice 
+                                  for this meal in an app-friendly tone. Style like 
+                                  "Your meal is nutritious but a bit high in calories
+                                  (or 'Your meal is nutritious and  has a good amount of protein'). 
+                                  The food composition is well-balanced to ensure sufficient protein, 
+                                  but it could use more fiber."
+                                  Limit the response to 40 words:
+                                  Calories: ${total_calories} Cal;
+                                  Proteins: ${total_proteins}g;
+                                  Fat: ${total_fat}g;
+                                  Carbs: ${total_carbs}g;
+                                  Fibers: ${total_fibers}g.`
+                    }
+                ],
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${ChatGPT_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        console.log(response.data.choices[0].message.content);
+        return response.data.choices[0].message.content;
+    } catch (error) {
+        if (error.response && error.response.status === 429 && retries < maxRetries) {
+            console.warn(`Rate limit hit; retrying in 3 seconds... Attempt ${retries + 1}`);
+            await new Promise(resolve => setTimeout(resolve, 3000)); // wait for 3 seconds
+            return getAdvice(total_calories, total_proteins, total_fat, total_carbs, total_fibers, retries + 1);
+        } else {
+            console.error("Error fetching advice:", error);
+            return "";
+        }
+    }
+};
 
 const useDietStore = create<DietStore>()(
     persist<DietStore>(
         (set, get) => ({
             diets: [],
-            // Todo: compute total value, value in detail screen
             addDiet: async (imgUri, imgHash, title, analysis, date) => {
                 try {
                     if (IDindex === null) {
@@ -147,6 +201,8 @@ const useDietStore = create<DietStore>()(
                         };
                     });
 
+                    const advice = await getAdvice(totalCalories, totalProteins, totalFat, totalCarbs, totalFibers);
+
                     const newDiet: Diet = {
                         id: IDindex!,
                         imgUri,
@@ -160,6 +216,7 @@ const useDietStore = create<DietStore>()(
                         total_fat: totalFat,
                         total_carbs: totalCarbs,
                         total_fibers: totalFibers,
+                        advice: advice,
                     };
 
                     console.log("IDindex: ", IDindex);
@@ -191,6 +248,13 @@ const useDietStore = create<DietStore>()(
                 );
                 set({ diets: updatedDiets });
                 await AsyncStorage.setItem('diets', JSON.stringify(updatedDiets));
+            },
+            updateDietAdvice: (id, newAdvice) => {
+                const updatedDiets = get().diets.map(diet =>
+                    diet.id === id ? { ...diet, advice: newAdvice } : diet
+                );
+                set({ diets: updatedDiets });
+                AsyncStorage.setItem('diets', JSON.stringify(updatedDiets));
             },
         }),
         {

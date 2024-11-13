@@ -21,8 +21,6 @@ import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as ImageManipulator from 'expo-image-manipulator';
 import CryptoJS from 'crypto-js';
-import {Simulate} from "react-dom/test-utils";
-import compositionEnd = Simulate.compositionEnd;
 
 const MAX_SIZE_MB = 2;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024; // 2MB in bytes
@@ -219,24 +217,6 @@ const UploadDietScreen: React.FC = () => {
             const imgHash = await generateImageHash(imgUri);
             // Check if the image hash already exists
             const existingDiet = useDietStore.getState().diets.find(diet => diet.imgHash === imgHash);
-            // if (existingDiet) {
-            //     console.log("imgUri already exists in DietStore");
-            //     analysisData = existingDiet.analysis;
-            //     newDiet = existingDiet;
-            // } else {
-            //     console.log("new imgUri");
-            //     setAnalyzeLoading(true);
-            //     analysisData = await analyzeImage(imgUri); // Call analyzeImage with the image URI
-            //     newDiet = await addDiet(imgUri, imgHash, title, analysisData);
-            //     setAnalyzeLoading(false);
-            // }
-            // navigation.reset({
-            //     index: 1,
-            //     routes: [
-            //         { name: "index" },
-            //         { name: "detaildiet", params: { newDiet: { ...newDiet, date: newDiet.date.toISOString() } } }
-            //     ],
-            // });
             if (existingDiet) {
                 const existingDietWithDate = {
                     ...existingDiet,
@@ -266,8 +246,6 @@ const UploadDietScreen: React.FC = () => {
                         },
                     ]
                 );
-                // analysisData = existingDiet.analysis;
-                // newDiet = existingDiet;
             } else {
                 console.log("new imgUri");
                 setAnalyzeLoading(true);
@@ -366,27 +344,6 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#f5f5f5',
     },
-    // imagePicker: {
-    //     height: 200,
-    //     backgroundColor: '#e0e0e0',
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     borderRadius: 10,
-    //     marginBottom: 20,
-    // },
-    // imagePlaceholder: {
-    //     color: '#777',
-    //     fontSize: 16,
-    // },
-    // input: {
-    //     height: 50,
-    //     borderColor: '#ccc',
-    //     borderWidth: 1,
-    //     borderRadius: 8,
-    //     marginBottom: 20,
-    //     paddingHorizontal: 10,
-    //     backgroundColor: '#fff',
-    // },
     datePickerButton: {
         marginBottom: 20,
         paddingVertical: 10,
