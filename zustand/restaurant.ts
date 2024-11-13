@@ -1,52 +1,50 @@
 import { create } from "zustand";
 import dummyRestaurants from "@/dummy/restaurants.json";
 
-export type Restaurant = {
-  id: string; 
-  alias: string; 
-  name: string; 
-  imageUrl: string; 
-  isClosed: boolean; 
-  url: string; 
-  reviewCount: number; 
-  categories: { alias: string; title: string }[]; 
-  rating: number; 
+interface BusinessHours {
+  open: {
+    is_overnight: boolean;
+    start: string;
+    end: string;
+    day: number;
+  }[];
+  hours_type: string;
+  is_open_now: boolean;
+}
+
+export interface Restaurant {
+  id: string;
+  name: string;
+  imageUrl: string;
+  categories: { title: string }[];
+  price: string;
+  rating: number;
+  reviewCount: number;
   coordinates: {
     latitude: number;
     longitude: number;
-  }; 
-  transactions: string[]; 
-  price:string;
+  };
   location: {
-    address1: string;
-    address2?: string | null;
-    address3?: string;
+    address1: string | null;
+    address2: string | null;
+    address3: string;
     city: string;
     zipCode: string;
     country: string;
     state: string;
     displayAddress: string[];
-  }; 
-  phone: string; 
-  displayPhone: string; 
-  distance: number; 
-  businessHours?: {
-    open: {
-      isOvernight: boolean;
-      start: string; 
-      end: string; 
-      day: number; 
-    hoursType: string; 
-    isOpenNow: boolean; 
-  }[];
-  }; 
+  };
+  displayPhone: string;
+  businessHours: BusinessHours[];
+  distance: number;
+  url: string;
   attributes?: {
-    businessTempClosed?: boolean | null;
-    menuUrl?: string; 
-    open24Hours?: boolean | null;
-    waitlistReservation?: boolean | null;
-  }; 
-};
+    businessTempClosed: boolean | null;
+    menuUrl: string;
+    open24Hours: boolean | null;
+    waitlistReservation: boolean | null;
+  };
+}
 
 
 type RestaurantStore = {
@@ -83,10 +81,8 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
     const transformToRestaurant = (place: any): Restaurant => {
       return {
         id: place.id,
-        alias: place.alias,
         name: place.name,
         imageUrl: place.image_url,
-        isClosed: place.is_closed,
         url: place.url,
         price:place.price,
         reviewCount: place.review_count,
@@ -99,9 +95,8 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
           latitude: place.coordinates.latitude,
           longitude: place.coordinates.longitude,
         },
-        transactions: place.transactions || [],
         location: {
-          address1: place.location.address1,
+          address1: place.location.address1 || null,
           address2: place.location.address2 || null,
           address3: place.location.address3 || "",
           city: place.location.city,
@@ -110,19 +105,18 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
           state: place.location.state,
           displayAddress: place.location.display_address,
         },
-        phone: place.phone,
         displayPhone: place.display_phone,
         distance: place.distance,
-        businessHours: place.hours
-          ? place.hours.map((hours: any) => ({
+        businessHours: place.business_hours
+          ? place.business_hours.map((hours: any) => ({
               open: hours.open.map((timeSlot: any) => ({
                 isOvernight: timeSlot.is_overnight,
                 start: timeSlot.start,
                 end: timeSlot.end,
                 day: timeSlot.day,
               })),
-              hoursType: hours.hours_type,
-              isOpenNow: hours.is_open_now,
+              hours_type: hours.hours_type,
+              is_open_now: hours.is_open_now,
             }))
           : [],
         attributes: {
@@ -164,25 +158,19 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
     const transformToRestaurant = (place: any): Restaurant => {
       return {
         id: place.id,
-        alias: place.alias,
         name: place.name,
         imageUrl: place.image_url,
-        isClosed: place.is_closed,
-        url: place.url,
-        price:place.price,
-        reviewCount: place.review_count,
-        categories: place.categories.map((category: any) => ({
-          alias: category.alias,
-          title: category.title,
-        })),
+        categories: place.categories.map((cat: any) => ({ title: cat.title })),
+        price: place.price,
         rating: place.rating,
+        reviewCount: place.review_count,
         coordinates: {
           latitude: place.coordinates.latitude,
           longitude: place.coordinates.longitude,
         },
-        transactions: place.transactions || [],
+        distance: place.distance,
         location: {
-          address1: place.location.address1,
+          address1: place.location.address1 || null,
           address2: place.location.address2 || null,
           address3: place.location.address3 || "",
           city: place.location.city,
@@ -191,27 +179,20 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
           state: place.location.state,
           displayAddress: place.location.display_address,
         },
-        phone: place.phone,
         displayPhone: place.display_phone,
-        distance: place.distance,
-        businessHours: place.hours
-          ? place.hours.map((hours: any) => ({
+        businessHours: place.business_hours
+          ? place.business_hours.map((hours: any) => ({
               open: hours.open.map((timeSlot: any) => ({
-                isOvernight: timeSlot.is_overnight,
+                is_overnight: timeSlot.is_overnight,
                 start: timeSlot.start,
                 end: timeSlot.end,
                 day: timeSlot.day,
               })),
-              hoursType: hours.hours_type,
-              isOpenNow: hours.is_open_now,
+              hours_type: hours.hours_type,
+              is_open_now: hours.is_open_now,
             }))
           : [],
-        attributes: {
-          businessTempClosed: place.attributes?.business_temp_closed || null,
-          menuUrl: place.attributes?.menu_url || "Menu URL not available",
-          open24Hours: place.attributes?.open24_hours || null,
-          waitlistReservation: place.attributes?.waitlist_reservation || null,
-        },
+        url: place.url,
       };
     };
     return new Promise((resolve) => {

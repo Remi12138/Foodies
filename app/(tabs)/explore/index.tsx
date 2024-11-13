@@ -17,6 +17,7 @@ import RestaurantsView from "@/components/explore/RestaurantsView";
 import {Restaurant,useRestaurantStore } from "@/zustand/restaurant";
 import RestaurantsMapView from "@/components/explore/RestaurantsMapView";
 import { useLocation } from "@/zustand/location";
+import {router} from "expo-router";
 
 interface FilterBarProps {
   restaurants: Restaurant[];
@@ -98,9 +99,9 @@ export default function ExploreScreen() {
             style={styles.loadingIndicator}
           />
         ) : isMapView ? (
-          <RestaurantsMapView data={filteredRestaurants} />
+          <RestaurantsMapView data={filteredRestaurants} router={router}/>
         ) : (
-          <RestaurantsView data={filteredRestaurants}  />
+          <RestaurantsView data={filteredRestaurants} router={router} />
         )}
       </ThemedView>
     </SafeAreaView>

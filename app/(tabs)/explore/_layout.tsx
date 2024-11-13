@@ -13,9 +13,14 @@ export default function ExploreLayout() {
         },
       }}
     >
+
       <Stack.Screen
         name="index"
         options={{ headerShown: false, headerTitle: "Explore" }}
+      />
+      <Stack.Screen
+        name="[key]"
+        options={{ headerTitle: "Restaurant Info" }}
       />
     </Stack>
   );
