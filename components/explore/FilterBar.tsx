@@ -18,10 +18,9 @@ interface FilterBarProps {
 const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedSort, setSelectedSort] = useState('price');
-  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]); 
   const [isAscending, setIsAscending] = useState<boolean>(true);
 
-  // Update the sort options to Price, Distance, and Rating
   const sortOptions = ['Price', 'Distance', 'Rating'];
   const filters = [
     { label: 'Pizza', icon: 'pizza' },
@@ -42,28 +41,39 @@ const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
     setSelectedSort(option.toLowerCase());
   };
 
-  const handleFilterPress = (category: string | null) => {
-    setSelectedFilter(category);
-    if (category) {
-      const regex = new RegExp(category, 'i');
-      const filteredData = restaurants.filter((restaurant) =>
-        restaurant.categories.some((cat) => regex.test(cat.title ?? ''))
-      );
-      onFilter(filteredData);
-    } else {
-      onFilter(restaurants);
-    }
+
+  const handleFilterPress = (category: string) => {
+    setSelectedFilters((prevFilters) => {
+      if (prevFilters.includes(category)) {
+     
+        return prevFilters.filter((filter) => filter !== category);
+      } else {
+       
+        return [...prevFilters, category];
+      }
+    });
   };
 
   const handleClear = () => {
     setSelectedSort('price');
-    setSelectedFilter(null);
+    setSelectedFilters([]);
     setIsAscending(true);
+    onFilter(restaurants); 
   };
 
   const handleApply = () => {
     toggleModal();
-    handleFilterPress(selectedFilter);
+    let filteredData = [...restaurants];
+
+    if (selectedFilters.length > 0) {
+      filteredData = filteredData.filter((restaurant) =>
+        selectedFilters.some((filter) =>
+          restaurant.categories.some((cat) => new RegExp(filter, 'i').test(cat.title))
+        )
+      );
+    }
+
+    onFilter(filteredData);
   };
 
   useEffect(() => {
@@ -135,19 +145,31 @@ const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
           <Text style={styles.sectionTitle}>Categories</Text>
           <View style={styles.optionsContainer}>
             <TouchableOpacity
-              style={[styles.categoryButton, selectedFilter === null && styles.selectedCategory]}
-              onPress={() => handleFilterPress(null)}
+              style={[styles.categoryButton, selectedFilters.length === 0 && styles.selectedCategory]}
+              onPress={() => setSelectedFilters([])}
             >
-              <Text style={[styles.categoryText, selectedFilter === null && styles.selectedCategoryText]}>All</Text>
+              <Text style={[styles.categoryText, selectedFilters.length === 0 && styles.selectedCategoryText]}>All</Text>
             </TouchableOpacity>
             {filters.map((filter) => (
               <TouchableOpacity
                 key={filter.label}
-                style={[styles.categoryButton, selectedFilter === filter.label && styles.selectedCategory]}
+                style={[
+                  styles.categoryButton,
+                  selectedFilters.includes(filter.label) && styles.selectedCategory,
+                ]}
                 onPress={() => handleFilterPress(filter.label)}
               >
-                <Icon name={filter.icon} size={20} color={selectedFilter === filter.label ? '#fff' : '#000'} />
-                <Text style={[styles.categoryText, selectedFilter === filter.label && styles.selectedCategoryText]}>
+                <Icon
+                  name={filter.icon}
+                  size={20}
+                  color={selectedFilters.includes(filter.label) ? '#fff' : '#000'}
+                />
+                <Text
+                  style={[
+                    styles.categoryText,
+                    selectedFilters.includes(filter.label) && styles.selectedCategoryText,
+                  ]}
+                >
                   {filter.label}
                 </Text>
               </TouchableOpacity>
@@ -177,7 +199,7 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     padding: 8,
-    backgroundColor: '#FFD580',
+    backgroundColor: '#F4511E',
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
@@ -215,7 +237,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F0F0',
   },
   selectedOption: {
-    backgroundColor: '#FFB74D',
+    backgroundColor: '#F4511E',
   },
   optionText: {
     fontSize: 14,
@@ -231,14 +253,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 20,
     margin: 4,
-    backgroundColor: '#FFD580',
+    backgroundColor: '#F0F0F0',
   },
   selectedCategory: {
-    backgroundColor: '#FFB74D',
+    backgroundColor: '#F4511E',
   },
   categoryText: {
     fontSize: 14,
-    color: '#8B4513',
+    color: '#333',
     marginLeft: 5,
   },
   selectedCategoryText: {
@@ -262,7 +284,7 @@ const styles = StyleSheet.create({
   applyButton: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#F4511E',
     borderRadius: 5,
   },
   applyButtonText: {
@@ -272,3 +294,6 @@ const styles = StyleSheet.create({
 });
 
 export default FilterBar;
+
+
+

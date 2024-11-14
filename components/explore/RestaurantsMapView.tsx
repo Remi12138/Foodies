@@ -1,115 +1,14 @@
-// import { useEffect, useState } from "react";
-// import { StyleSheet, View, Button } from "react-native";
-// import MapView, { Marker, MapType } from "react-native-maps";
-// import { Restaurant } from "@/zustand/restaurant";
-// import { useLocation } from "@/zustand/location";
-
-// type Marker = {
-//   key: string;
-//   latitude: number;
-//   longitude: number;
-//   title?: string;
-//   description?: string;
-// };
-
-// interface RestaurantsViewProps {
-//   data: Restaurant[];
-//   router: any;
-// }
-
-// function extractLocations(restaurants: Restaurant[]): Marker[] {
-//   return restaurants.map((restaurant, index) => ({
-//     key: index.toString(),
-//     latitude: restaurant.coordinates.latitude,
-//     longitude: restaurant.coordinates.longitude,
-//     title: restaurant.name,
-//     description: `${restaurant.categories[0].alias} • ${restaurant.rating} ⭐`,
-//   }));
-// }
-
-// function RestaurantsMapView({ data }: { data: Restaurant[] }) {
-//   const [mapType, setMapType] = useState<MapType>("standard");
-//   const [markers, setMarkers] = useState<Marker[]>([]);
-//   const { userLocation, fetchLocation } = useLocation();
- 
-//   console.log(data); 
-//   useEffect(() => {
-//     fetchLocation(); 
-//   }, [fetchLocation]);
-
-//   useEffect(() => {
-//     setMarkers(extractLocations(data));
-//   }, [data]); 
-//   // setMarkers(extractLocations(data));
-//   const center = { latitude: userLocation.latitude, longitude: userLocation.longitude }; // Central United States
-//   //const markers = extractLocations(data);
-//   //console.log(data);
-//   const toggleMapType = () => {
-//     setMapType((prevMapType) =>
-//       prevMapType === "standard" ? "satellite" : "standard"
-//     );
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <MapView
-//         style={styles.map}
-//         initialRegion={{
-//           latitude: center.latitude,
-//           longitude: center.longitude,
-//           latitudeDelta: 25,
-//           longitudeDelta: 40,
-//         }}
-//         mapType={mapType}
-//       >
-//         {markers.map((marker) => (
-//           <Marker
-//             key={marker.key}
-//             coordinate={{
-//               latitude: marker.latitude,
-//               longitude: marker.longitude,
-//             }}
-//             title={marker.title}
-//             description={marker.description}
-//           />
-//         ))}
-//       </MapView>
-//       <View style={styles.buttonContainer}>
-//         <Button title={mapType.toString()} onPress={toggleMapType} />
-//       </View>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#ffffff",
-//   },
-//   map: {
-//     ...StyleSheet.absoluteFillObject,
-//   },
-//   buttonContainer: {
-//     position: "absolute",
-//     width: "25%",
-//     bottom: 20,
-//     right: 10,
-//     backgroundColor: "rgba(255, 255, 255, 0.7)",
-//   },
-// });
-
-// export default RestaurantsMapView;
-
 import React, { useState, useEffect } from "react";
 import { View, Button, StyleSheet } from "react-native";
-import MapView, { Marker, MapType } from "react-native-maps";
+import MapView, { Marker, MapType, Region } from "react-native-maps";
 import { useLocation } from "@/zustand/location";
 import { Restaurant } from "@/zustand/restaurant";
+import { useRouter } from "expo-router";
 
 interface RestaurantsMapViewProps {
   data: Restaurant[];
-  router: any;
 }
+
 type Marker = {
   key: string;
   latitude: number;
@@ -117,45 +16,60 @@ type Marker = {
   title?: string;
   description?: string;
 };
+
+// 提取餐厅位置数据为Marker格式
 function extractLocations(restaurants: Restaurant[]): Marker[] {
-  return restaurants.map((restaurant, index) => ({
-    key: index.toString(),
-    latitude: restaurant.coordinates.latitude,
-    longitude: restaurant.coordinates.longitude,
-    title: restaurant.name,
-    description: `${restaurant.categories[0].title} • ${restaurant.rating} ⭐`,
-  }));
+  return restaurants
+    .filter(
+      (restaurant) =>
+        restaurant.coordinates &&
+        restaurant.coordinates.latitude !== undefined &&
+        restaurant.coordinates.longitude !== undefined
+    )
+    .map((restaurant, index) => ({
+      key: index.toString(),
+      latitude: Number(restaurant.coordinates.latitude),
+      longitude: Number(restaurant.coordinates.longitude),
+      title: restaurant.name,
+      description: `${restaurant.categories[0].title} • ${restaurant.rating} ⭐`,
+    }));
 }
 
-import { useRouter } from "expo-router"; // Import useRouter from expo-router
+// 计算餐厅的中心位置
+function calculateCenter(restaurants: Restaurant[]): { latitude: number; longitude: number } {
+  if (restaurants.length === 0) {
+    // 设置默认中心位置为旧金山
+    return { latitude: 37.7749, longitude: -122.4194 };
+  }
 
-interface RestaurantsMapViewProps {
-  data: Restaurant[];
+  const totalLat = restaurants.reduce((sum, restaurant) => sum + Number(restaurant.coordinates.latitude), 0);
+  const totalLon = restaurants.reduce((sum, restaurant) => sum + Number(restaurant.coordinates.longitude), 0);
+
+  return {
+    latitude: totalLat / restaurants.length,
+    longitude: totalLon / restaurants.length,
+  };
 }
 
 function RestaurantsMapView({ data }: RestaurantsMapViewProps) {
   const [mapType, setMapType] = useState<MapType>("standard");
   const [markers, setMarkers] = useState<Marker[]>([]);
-  const { userLocation, fetchLocation } = useLocation();
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
 
   useEffect(() => {
-    fetchLocation();
-  }, [fetchLocation]);
+    const validMarkers = extractLocations(data);
+    setMarkers(validMarkers);
 
-  useEffect(() => {
-    setMarkers(extractLocations(data));
+    // 记录日志以确认中心点计算是否有效
+    const center = calculateCenter(data);
+    console.log("Center location for map:", center);
   }, [data]);
 
-  const center = {
-    latitude: userLocation.latitude,
-    longitude: userLocation.longitude,
-  };
+  // 计算中心位置并提供默认值
+  const center = data.length ? calculateCenter(data) : { latitude: 37.7749, longitude: -122.4194 };
 
   const toggleMapType = () => {
-    setMapType((prevMapType) =>
-      prevMapType === "standard" ? "satellite" : "standard"
-    );
+    setMapType((prevMapType) => (prevMapType === "standard" ? "satellite" : "standard"));
   };
 
   return (
@@ -165,10 +79,11 @@ function RestaurantsMapView({ data }: RestaurantsMapViewProps) {
         initialRegion={{
           latitude: center.latitude,
           longitude: center.longitude,
-          latitudeDelta: 25,
-          longitudeDelta: 40,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
         }}
         mapType={mapType}
+        showsUserLocation={true} // 显示用户当前位置
       >
         {markers.map((marker) => (
           <Marker
@@ -179,7 +94,7 @@ function RestaurantsMapView({ data }: RestaurantsMapViewProps) {
             }}
             title={marker.title}
             description={marker.description}
-            onPress={() => router.push(`/explore/${marker.title}`)} // Navigate to the dynamic route
+            onPress={() => router.push(`/explore/${marker.title}`)} // 跳转到动态路由
           />
         ))}
       </MapView>

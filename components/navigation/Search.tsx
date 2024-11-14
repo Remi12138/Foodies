@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, TextInput, StyleSheet, TouchableOpacity, FlatList, Text, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { useLocation } from "@/zustand/location"; // 导入 useLocation
+import { useLocation } from "@/zustand/location"; 
 
 interface SearchProps {
   restaurants: any[];
@@ -9,11 +9,11 @@ interface SearchProps {
 }
 
 const Search: React.FC<SearchProps> = ({ restaurants, onFilter }) => {
-  const { setLocation } = useLocation(); // 从 useLocation 中获取 setLocation
+  const { setLocation } = useLocation(); 
   const [searchTerm, setSearchTerm] = useState("");
-  const [location, setLocationName] = useState("Los Angeles, CA"); // 设置默认地址
-  const [showDefaultLocationBox, setShowDefaultLocationBox] = useState(true); // 控制默认地址框的显示
-  const [showLocationInput, setShowLocationInput] = useState(false); // 控制地址输入框的显示
+  const [location, setLocationName] = useState("Los Angeles, CA"); 
+  const [showDefaultLocationBox, setShowDefaultLocationBox] = useState(false); 
+  const [showLocationInput, setShowLocationInput] = useState(false); 
   const [recentLocations, setRecentLocations] = useState<string[]>([
     "Los Angeles, CA",
     "Durham, NC",
@@ -24,7 +24,6 @@ const Search: React.FC<SearchProps> = ({ restaurants, onFilter }) => {
     "Morrisville, NC",
   ]);
 
-  // 搜索逻辑
   const handleSearch = (term: string) => {
     setSearchTerm(term);
     const regex = new RegExp(term, "i");
@@ -46,14 +45,13 @@ const Search: React.FC<SearchProps> = ({ restaurants, onFilter }) => {
     onFilter(filteredData);
   };
 
-  // 获取地址的坐标
   const fetchCoordinatesFromAddress = async (address: string) => {
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
     
     try {
       const response = await fetch(url, {
         headers: {
-          "User-Agent": "YourAppName/1.0 (your-email@example.com)", // 设置适当的 User-Agent
+          "User-Agent": "YourAppName/1.0 (your-email@example.com)", 
         },
       });
   
@@ -75,34 +73,34 @@ const Search: React.FC<SearchProps> = ({ restaurants, onFilter }) => {
     }
   };
 
-  // 处理地址输入框提交
+
   const handleLocationSubmit = async () => {
     const coordinates = await fetchCoordinatesFromAddress(location);
     if (coordinates) {
-      setLocation(coordinates); // 更新全局的用户位置
+      setLocation(coordinates); 
       if (!recentLocations.includes(location)) {
-        setRecentLocations([location, ...recentLocations].slice(0, 7)); // 更新最近地址列表
+        setRecentLocations([location, ...recentLocations].slice(0, 7)); 
       }
-      setShowLocationInput(false); // 关闭地址输入框
-      Keyboard.dismiss(); // 关闭键盘
+      setShowLocationInput(false); 
+      Keyboard.dismiss(); 
     }
   };
 
-  // 选择最近输入的地址
+
   const handleRecentLocationSelect = (selectedLocation: string) => {
     setLocationName(selectedLocation);
     handleLocationSubmit();
   };
 
   const handleDismiss = () => {
-    setShowDefaultLocationBox(false); // 隐藏默认地址框
-    setShowLocationInput(false); // 点击其他区域时隐藏地址输入框
-    Keyboard.dismiss(); // 关闭键盘
+    setShowDefaultLocationBox(false); 
+    setShowLocationInput(false); 
+    Keyboard.dismiss(); 
   };
 
   const handleDefaultLocationBoxPress = () => {
-    setShowDefaultLocationBox(false); // 隐藏默认地址框
-    setShowLocationInput(true); // 显示地址输入框和最近搜索
+    setShowDefaultLocationBox(false); 
+    setShowLocationInput(true); 
   };
 
   return (
@@ -114,31 +112,28 @@ const Search: React.FC<SearchProps> = ({ restaurants, onFilter }) => {
           value={searchTerm}
           onChangeText={handleSearch}
           onFocus={() => {
-            setShowDefaultLocationBox(true); // 聚焦时显示默认地址框
-            setShowLocationInput(false); // 隐藏地址输入框
+            setShowDefaultLocationBox(true); 
+            setShowLocationInput(false); 
           }}
         />
 
-        {/* 默认地址框 */}
         {showDefaultLocationBox && (
           <TouchableOpacity onPress={handleDefaultLocationBoxPress} style={styles.locationBox}>
-            <FontAwesome name="map-marker" size={16} color="#007aff" />
+            <FontAwesome name="map-marker" size={16} color='#F4511E' />
             <Text style={styles.locationText}>{location}</Text>
           </TouchableOpacity>
         )}
 
-        {/* 地址输入框 */}
         {showLocationInput && (
           <TextInput
             style={styles.locationInput}
             placeholder="Enter location..."
             value={location}
             onChangeText={setLocationName}
-            onSubmitEditing={handleLocationSubmit} // 用户按下“回车”键提交地址
+            onSubmitEditing={handleLocationSubmit} 
           />
         )}
 
-        {/* 最近地址提示栏 */}
         {showLocationInput && (
           <View style={styles.recentLocationContainer}>
             <FlatList
@@ -146,7 +141,7 @@ const Search: React.FC<SearchProps> = ({ restaurants, onFilter }) => {
               keyExtractor={(item) => item}
               renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => handleRecentLocationSelect(item)} style={styles.locationItem}>
-                  <FontAwesome name="location-arrow" size={20} color="#007aff" style={styles.locationIcon} />
+                  <FontAwesome name="location-arrow" size={20} color='#F4511E' style={styles.locationIcon} />
                   <Text style={styles.locationText}>{item}</Text>
                 </TouchableOpacity>
               )}
