@@ -92,8 +92,10 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     margin: 10,
+    marginTop: 50, // Add this line to move the cards downwards
     maxWidth: (Dimensions.get("window").width - 40) / 2, // Adjust the width of the card
   },
 });
+
 
 export default Blogs;
