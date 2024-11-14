@@ -28,7 +28,7 @@ const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024; // 2MB in bytes
 const UploadDietScreen: React.FC = () => {
     const [imgUri, setImgUri] = useState<string | null>(null);
     const [title, setTitle] = useState<string>('');
-    const [date, setDate] = useState<Date>(new Date());
+    const [date, setDate] = useState<string>(new Date().toISOString());
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
     const { addDiet } = useDietStore();
     const [loading, setLoading] = useState(false);
@@ -82,7 +82,7 @@ const UploadDietScreen: React.FC = () => {
 
             if (response.status === 200) {
                 console.log("Data:", response.data);
-                response.data.items.forEach((item, index) => {
+                response.data.items.forEach((item: { food: any[]; }, index: number) => {
                     console.log(`Food item #${index + 1}:`);
                     let foodOption = item.food[0];
                     console.log(`    Name: ${foodOption.food_info.display_name}`);
@@ -220,7 +220,7 @@ const UploadDietScreen: React.FC = () => {
             if (existingDiet) {
                 const existingDietWithDate = {
                     ...existingDiet,
-                    date: existingDiet.date ? new Date(existingDiet.date) : new Date(date),
+                    date: existingDiet.date,
                 };
                 console.log("imgUri already exists in DietStore");
                 Alert.alert(
@@ -238,7 +238,7 @@ const UploadDietScreen: React.FC = () => {
                                             params: {
                                                 newDiet: {
                                                     ...existingDietWithDate,
-                                                    date: existingDietWithDate.date.toISOString(),
+                                                    date: existingDietWithDate.date,
                                                 } } }
                                     ],
                                 });
@@ -258,7 +258,7 @@ const UploadDietScreen: React.FC = () => {
                     index: 1,
                     routes: [
                         { name: "index" },
-                        { name: "AnalysisPreview", params: { newDiet: { ...newDiet, date: newDiet.date.toISOString() } } }
+                        { name: "AnalysisPreview", params: { newDiet: { ...newDiet } } }
                     ],
                 });
             }
@@ -270,7 +270,7 @@ const UploadDietScreen: React.FC = () => {
     const onDateChange = (event: any, selectedDate?: Date) => {
         setShowDatePicker(false);
         if (selectedDate) {
-            setDate(selectedDate);
+            setDate(selectedDate.toISOString());
         }
     };
 
@@ -291,16 +291,16 @@ const UploadDietScreen: React.FC = () => {
                 <TextInput
                     style={styles.input}
                     placeholder="Select date"
-                    value={date.toLocaleDateString()}
+                    value={new Date(date).toLocaleDateString()}
                     editable={false}
                 />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
-                <Text style={styles.dateText}>Select Date: {date.toLocaleDateString()}</Text>
+                <Text style={styles.dateText}>Select Date: {new Date(date).toLocaleDateString()}</Text>
             </TouchableOpacity>
             {showDatePicker && (
                 <DateTimePicker
-                    value={date}
+                    value={new Date(date)}
                     mode="date"
                     display={Platform.OS === 'ios' ? 'inline' : 'default'}
                     onChange={onDateChange}

@@ -17,7 +17,7 @@ const EditDietScreen: React.FC = () => {
     const [showDatePicker, setShowDatePicker] = useState(false);
 
     const handleSave = () => {
-        editDiet(dietId, title, date);
+        editDiet(dietId, title, date.toISOString());
         navigation.goBack();
     };
 

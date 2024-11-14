@@ -7,12 +7,12 @@ type Receipt = {
     imgUri: string;
     title: string;
     amount: number;
-    date: Date;
+    date: string;
 };
 
 type ReceiptStore = {
     receipts: Receipt[];
-    addReceipt: (imgUri: string, title: string, amount: number, date: Date) => void;
+    addReceipt: (imgUri: string, title: string, amount: number, date: string) => void;
     loadReceipts: () => void;
     removeReceipt: (id: string) => void;
     updateReceipt: (id: string, updatedData: Partial<Omit<Receipt, 'id'>>) => void;

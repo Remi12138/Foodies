@@ -16,6 +16,7 @@ import * as Notifications from 'expo-notifications';
 import { useReceiptStore } from '@/zustand/receipt';
 import { router } from 'expo-router';
 import DateTimePicker from "@react-native-community/datetimepicker";
+import {useNavigation} from "@react-navigation/native";
 
 const UploadReceiptScreen: React.FC = () => {
     const [imgUri, setImgUri] = useState<string | null>(null);
@@ -24,9 +25,10 @@ const UploadReceiptScreen: React.FC = () => {
     const [days, setDays] = useState<string>('0');
     const [hours, setHours] = useState<string>('0');
     const [minutes, setMinutes] = useState<string>('0');
-    const [date, setDate] = useState<Date>(new Date());
+    const [date, setDate] = useState<string>(new Date().toISOString());
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
     const { addReceipt } = useReceiptStore();
+    const navigation = useNavigation();
 
     useEffect(() => {
         const requestNotificationsPermissions = async () => {
@@ -45,7 +47,8 @@ const UploadReceiptScreen: React.FC = () => {
             (parseFloat(minutes) * 60 * 1000);
 
         if (isNaN(delayInMs) || delayInMs === 0) {
-            Alert.alert('Missing Scheduled Time', 'Please set a valid notification time.');
+            // Alert.alert('No Notification Scheduled', 'Looks like you didn’t set a notification time. You can always add one later if needed!');
+            Alert.alert('No Notification Scheduled', 'Looks like you didn’t set a notification time. You can always add one later if needed!');
             return;
         }
 
@@ -58,7 +61,7 @@ const UploadReceiptScreen: React.FC = () => {
             content: {
                 title: "Receipt Reminder 📋",
                 body: `Hey! It's time to double-check your bank for the transaction titled "${title}" for $${amount}. Make sure the amount is accurate!`,
-                icon: require("@/assets/images/notification-icon.png"),
+                // icon: require("@/assets/images/notification-icon.png"),
             },
             trigger: { seconds: delayInMs / 1000 },
         });
@@ -104,7 +107,7 @@ const UploadReceiptScreen: React.FC = () => {
     const onDateChange = (event: any, selectedDate?: Date) => {
         setShowDatePicker(false);
         if (selectedDate) {
-            setDate(selectedDate);
+            setDate(selectedDate.toISOString());
         }
     };
 
@@ -120,11 +123,18 @@ const UploadReceiptScreen: React.FC = () => {
         setImgUri(null);
         setTitle('');
         setAmount('');
-        setDate(new Date());
+        setDate(new Date().toISOString());
         setDays('0');
         setHours('0');
         setMinutes('0');
-        router.navigate("/record/MyReceipts");
+        // router.navigate("/record/MyReceipts");
+        navigation.reset({
+            index: 1,
+            routes: [
+                { name: "index" },
+                { name: "MyReceipts" }
+            ],
+        });
     };
 
     return (
@@ -157,11 +167,11 @@ const UploadReceiptScreen: React.FC = () => {
                 <Text style={styles.currencySymbol}>$</Text>
             </View>
             <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
-                <Text style={styles.dateText}>Select Date: {date.toLocaleDateString()}</Text>
+                <Text style={styles.dateText}>Select Date: {new Date(date).toLocaleDateString()}</Text>
             </TouchableOpacity>
             {showDatePicker && (
                 <DateTimePicker
-                    value={date}
+                    value={new Date(date)}
                     mode="date"
                     display={Platform.OS === 'ios' ? 'inline' : 'default'}
                     // display={'default'}

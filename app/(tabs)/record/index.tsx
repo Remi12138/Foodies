@@ -22,31 +22,6 @@ const RecordScreen: React.FC = () => {
                     <HelloWave emoji=" 🍱 " />
                 </ThemedView>
             </ThemedView>
-            {/* Top navigation bar */}
-
-            {/*<View style={styles.tabBar}>*/}
-            {/*    <TouchableOpacity*/}
-            {/*        style={[styles.tabButton, activeTab === 'MyDiets' && styles.activeTabButton]}*/}
-            {/*        onPress={() => setActiveTab('MyDiets')}*/}
-            {/*    >*/}
-            {/*        <Text style={[styles.tabText, activeTab === 'MyDiets' && styles.activeTabText]}>*/}
-            {/*            Diet*/}
-            {/*        </Text>*/}
-            {/*    </TouchableOpacity>*/}
-            {/*    <TouchableOpacity*/}
-            {/*        style={[styles.tabButton, activeTab === 'MyReceipts' && styles.activeTabButton]}*/}
-            {/*        onPress={() => setActiveTab('MyReceipts')}*/}
-            {/*    >*/}
-            {/*        <Text style={[styles.tabText, activeTab === 'MyReceipts' && styles.activeTabText]}>*/}
-            {/*            Receipt*/}
-            {/*        </Text>*/}
-            {/*    </TouchableOpacity>*/}
-            {/*</View>*/}
-
-            {/* Render content based on active tab */}
-            {/*<View style={styles.contentContainer}>*/}
-            {/*    {activeTab === 'MyDiets' ? <DietListScreen /> : <ReceiptBlogScreen />}*/}
-            {/*</View>*/}
 
             <SwitchTab activeTab={activeTab} onTabChange={handleTabChange} />
             <View style={styles.contentContainer}>

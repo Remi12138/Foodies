@@ -26,14 +26,13 @@ type Food = {
     position: Position;
 };
 
-// todo: change date to string
 export type Diet = {
     id: number;
     imgUri: string;
     imgHash: string; //consistent for the same image content
     title: string;
     analysis: any;
-    date: Date;
+    date: string;
     foodOptions: Food[];
     total_calories: number;
     total_proteins: number;
@@ -45,10 +44,10 @@ export type Diet = {
 
 type DietStore = {
     diets: Diet[];
-    addDiet: (imgUri: string, imgHash: string, title: string, analysis: any, date: Date ) => Promise<Diet>;
+    addDiet: (imgUri: string, imgHash: string, title: string, analysis: any, date: string ) => Promise<Diet>;
     loadDiets: () => void;
     removeDiet: (id: number) => void;
-    editDiet: (id: number, title: string, date: Date) => void;
+    editDiet: (id: number, title: string, date: string) => void;
     updateDietAdvice: (id: number, newAdvice: string) => void;
 };
 

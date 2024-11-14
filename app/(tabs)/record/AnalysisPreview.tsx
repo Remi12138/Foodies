@@ -95,6 +95,7 @@ const AnalysisPreviewScreen: React.FC = () => {
             setAdviceIcon(icon);
             updateDietAdvice(newDiet.id, content);
         } catch (error) {
+            // @ts-ignore
             if (error.response && error.response.status === 429 && retries < maxRetries) {
                 await new Promise(resolve => setTimeout(resolve, 3000));
                 return getAdvice(retries + 1);
@@ -117,6 +118,8 @@ const AnalysisPreviewScreen: React.FC = () => {
         }
     }, [newDiet.advice]);
 
+    // @ts-ignore
+    // @ts-ignore
     return (
         <ScrollView style={styles.container}>
             <View style={styles.imageContainer}>
