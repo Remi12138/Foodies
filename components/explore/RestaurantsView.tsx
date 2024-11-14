@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingVertical: 10,
     paddingHorizontal: 10,
+    marginTop: 60, // 添加 marginTop 以向下移动列表
   },
   cardContainer: {
     marginBottom: 10,

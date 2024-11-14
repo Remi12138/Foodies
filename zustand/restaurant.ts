@@ -25,7 +25,7 @@ export interface Restaurant {
     longitude: number;
   };
   location: {
-    address1: string | null;
+    address1: string;
     address2: string | null;
     address3: string;
     city: string;
