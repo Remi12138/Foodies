@@ -1,32 +1,38 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, FlatList, RefreshControl } from "react-native";
+import { StyleSheet, FlatList, RefreshControl, TouchableOpacity } from "react-native";
 import { Restaurant, useRestaurantStore } from "@/zustand/restaurant";
 import RestaurantCard from "./RestaurantCard";
 import React from "react";
 import { useLocation } from "@/zustand/location";
+import { useRouter } from "expo-router"; // 导入 useRouter 钩子
 
+interface RestaurantsViewProps {
+  data: Restaurant[];
+}
 
-function Restaurants({ data}: { data: Restaurant[] }) {
+function RestaurantsView({ data }: RestaurantsViewProps) {
   const [refreshing, setRefreshing] = useState(false);
   const { userLocation, fetchLocation } = useLocation();
-  
+  const router = useRouter(); // 初始化 router
 
- const fetchFakeRestaurants = useRestaurantStore(
+  const fetchFakeRestaurants = useRestaurantStore(
     (state) => state.fetchFakeRestaurants
-  );
-  const renderRestaurantCard = ({ item }: { item: Restaurant }) => (
-    <RestaurantCard item={item} />
   );
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await fetchLocation();
-    console.log("userLocation", userLocation);
-    //await fetchRestaurants(userLocation);
     await fetchFakeRestaurants();
     setRefreshing(false);
   };
 
+  const renderRestaurantCard = ({ item }: { item: Restaurant }) => (
+    <TouchableOpacity
+      style={styles.cardContainer}
+      onPress={() => router.push(`/explore/${item.name}`)} // 导航到餐厅详情页面
+    >
+      <RestaurantCard item={item} />
+    </TouchableOpacity>
+  );
 
   return (
     <FlatList
@@ -45,7 +51,11 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingVertical: 10,
     paddingHorizontal: 10,
+    marginTop: 60, // 添加 marginTop 以向下移动列表
+  },
+  cardContainer: {
+    marginBottom: 10,
   },
 });
 
-export default Restaurants;
+export default RestaurantsView;

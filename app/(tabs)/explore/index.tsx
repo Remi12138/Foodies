@@ -8,20 +8,17 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ActivityIndicator,
+  View,
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 
 import ExploreBar from "@/components/explore/ExploreBar";
 import RestaurantsView from "@/components/explore/RestaurantsView";
-import {Restaurant,useRestaurantStore } from "@/zustand/restaurant";
+import { Restaurant, useRestaurantStore } from "@/zustand/restaurant";
 import RestaurantsMapView from "@/components/explore/RestaurantsMapView";
 import { useLocation } from "@/zustand/location";
-
-interface FilterBarProps {
-  restaurants: Restaurant[];
-  onFilter: (filteredData: Restaurant[]) => void;
-}
+import { router } from "expo-router";
 
 export default function ExploreScreen() {
   const [isMapView, setIsMapView] = useState(false);
@@ -40,15 +37,12 @@ export default function ExploreScreen() {
   useEffect(() => {
     console.log("Fetching restaurants...");
     handleGetRestaurants();
-    // handleGetLocation();
   }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       console.log("Updated userLocation in component:", userLocation);
       if (userLocation.latitude && userLocation.longitude) { 
-        //await fetchRestaurants(userLocation); 
-       // setFilteredRestaurants(restaurants);
         await fetchFakeRestaurants(); 
         setFilteredRestaurants(restaurants);
       }
@@ -56,22 +50,19 @@ export default function ExploreScreen() {
     fetchData();
   }, [userLocation]);
 
-  // Retrieve restaurants from Zustand store
   const restaurants = useRestaurantStore((state) => state.restaurants);
   const [filteredRestaurants, setFilteredRestaurants] = useState(restaurants);
 
   async function handleGetRestaurants() {
-    // Show loading indicator
     setLoading(true);
     await fetchLocation();
     if (userLocation.latitude && userLocation.longitude) {
-      //await fetchRestaurants(userLocation);
       await fetchFakeRestaurants();
     }
     console.log("userLocation", userLocation);
-    // console.log(restaurants);
     setLoading(false);
   }
+
   const handleFilter = (filteredData: Restaurant[]) => {
     setFilteredRestaurants(filteredData);
   };
@@ -89,8 +80,13 @@ export default function ExploreScreen() {
           </ThemedText>
         </TouchableOpacity>
       </ThemedView>
-      <ThemedView style={{ flex: 1 }}>
-        <ExploreBar restaurants={restaurants} onFilter={handleFilter} />
+      
+      <ThemedView style={{ flex: 1, paddingTop: 60 }}>
+        {/* 使用绝对定位将 ExploreBar 覆盖在内容顶部 */}
+        <View style={styles.exploreBarContainer}>
+          <ExploreBar restaurants={restaurants} onFilter={handleFilter} />
+        </View>
+
         {loading ? (
           <ActivityIndicator
             size="large"
@@ -98,9 +94,9 @@ export default function ExploreScreen() {
             style={styles.loadingIndicator}
           />
         ) : isMapView ? (
-          <RestaurantsMapView data={filteredRestaurants} />
+          <RestaurantsMapView data={filteredRestaurants} router={router} />
         ) : (
-          <RestaurantsView data={filteredRestaurants}  />
+          <RestaurantsView data={filteredRestaurants} router={router} />
         )}
       </ThemedView>
     </SafeAreaView>
@@ -128,4 +124,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  exploreBarContainer: {
+    position: "absolute",
+    top: -5, // 将 exploreBar 放在 titleContainer 下面
+    left: 0,
+    right: 0,
+    zIndex: 1, // 确保 ExploreBar 在顶部
+    paddingHorizontal: 10,
+    paddingVertical: 0,
+    backgroundColor: "#ffffff", // 设置背景色以覆盖下方内容
+  },
 });
+
+
