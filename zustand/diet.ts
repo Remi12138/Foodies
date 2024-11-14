@@ -26,6 +26,7 @@ type Food = {
     position: Position;
 };
 
+// todo: change date to string
 export type Diet = {
     id: number;
     imgUri: string;
@@ -82,13 +83,23 @@ const getAdvice = async (total_calories: number,
                 messages: [
                     {
                         role: "user",
-                        content: `Provide a concise, point-by-point analysis and advice 
-                                  for this meal in an app-friendly tone. Style like 
+                        content: `Provide a concise, point-by-point analysis and advice
+                                  for this meal in an app-friendly tone. Style like
                                   "Your meal is nutritious but a bit high in calories
-                                  (or 'Your meal is nutritious and  has a good amount of protein'). 
-                                  The food composition is well-balanced to ensure sufficient protein, 
+                                  (or 'Your meal is nutritious and  has a good amount of protein').
+                                  The food composition is well-balanced to ensure sufficient protein,
                                   but it could use more fiber."
-                                  Limit the response to 40 words:
+                                  Limit the response to 40 words.
+                                  Include a grade (A, B, or C) based on the nutritional balance:
+                                  A = well-balanced, low excess;
+                                  B = moderate, needs slight improvement;
+                                  C = needs significant improvement.
+                                  Also, suggest a suitable icon, like "🔥" for high calories, "🌿" for low fiber, etc.
+                                  Response format:
+                                  Advice: [Your advice here];
+                                  Grade: [A, B, or C];
+                                  Icon: [Icon here].
+                                  
                                   Calories: ${total_calories} Cal;
                                   Proteins: ${total_proteins}g;
                                   Fat: ${total_fat}g;
