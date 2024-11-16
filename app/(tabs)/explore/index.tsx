@@ -24,7 +24,7 @@ export default function ExploreScreen() {
   const [isMapView, setIsMapView] = useState(false);
   const [loading, setLoading] = useState(true);
   const fetchRestaurants = useRestaurantStore(
-    (state) => state.fetchFakeRestaurants
+    (state) => state.fetchRestaurants
   );
   const fetchFakeRestaurants = useRestaurantStore(
     (state) => state.fetchFakeRestaurants
@@ -43,7 +43,7 @@ export default function ExploreScreen() {
     const fetchData = async () => {
       console.log("Updated userLocation in component:", userLocation);
       if (userLocation.latitude && userLocation.longitude) { 
-        await fetchFakeRestaurants(); 
+        await fetchRestaurants(userLocation); 
         setFilteredRestaurants(restaurants);
       }
     };
@@ -57,7 +57,7 @@ export default function ExploreScreen() {
     setLoading(true);
     await fetchLocation();
     if (userLocation.latitude && userLocation.longitude) {
-      await fetchFakeRestaurants();
+      await fetchRestaurants(userLocation);
     }
     console.log("userLocation", userLocation);
     setLoading(false);
