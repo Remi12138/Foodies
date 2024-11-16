@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, FlatList, RefreshControl, TouchableOpacity } from "react-native";
+import { StyleSheet, FlatList, RefreshControl, TouchableOpacity, View, Text } from "react-native";
 import { Restaurant, useRestaurantStore } from "@/zustand/restaurant";
 import RestaurantCard from "./RestaurantCard";
 import React from "react";
@@ -15,15 +15,32 @@ function RestaurantsView({ data }: RestaurantsViewProps) {
   const { userLocation, fetchLocation } = useLocation();
   const router = useRouter(); // 初始化 router
 
+  useEffect(() => {
+    fetchLocation();
+  }, [fetchLocation]);
+
   const fetchFakeRestaurants = useRestaurantStore(
     (state) => state.fetchFakeRestaurants
   );
+  const fetchRestaurants = useRestaurantStore(
+    (state) => state.fetchRestaurants
+  );
+
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await fetchFakeRestaurants();
+   // await fetchFakeRestaurants();
+   await fetchRestaurants(userLocation);
     setRefreshing(false);
   };
+
+  if (!userLocation) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>User location not available</Text>
+      </View>
+    );
+  }
 
   const renderRestaurantCard = ({ item }: { item: Restaurant }) => (
     <TouchableOpacity
@@ -55,6 +72,15 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     marginBottom: 10,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorText: {
+    fontSize: 18,
+    color: "red",
   },
 });
 
