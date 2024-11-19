@@ -25,7 +25,6 @@ const AnalysisPreviewScreen: React.FC = () => {
     const maxNutrientValue = Math.max(newDiet.total_proteins, newDiet.total_fat, newDiet.total_carbs, newDiet.total_fibers);
 
     const parseAdviceResponse = (content: string) => {
-        // Adjusted regular expressions to capture content more reliably
         const adviceMatch = content.match(/Advice:\s*(.+?)(?=\s*Grade:|\s*Icon:|$)/s);
         const gradeMatch = content.match(/Grade:\s*([ABC])/);
         const iconMatch = content.match(/Icon:\s*(.+)/);
