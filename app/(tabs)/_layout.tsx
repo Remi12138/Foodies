@@ -47,13 +47,14 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="people"
+        name="record"
         options={{
-          title: "People",
+          title: "Record",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "chatbubbles" : "chatbubbles-outline"}
-              color={color}
+              // name={focused ? 'fast-food' : 'fast-food-outline'}
+                name={focused ? 'receipt' : 'receipt-outline'}
+                color={color}
             />
           ),
         }}
