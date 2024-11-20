@@ -8,20 +8,23 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
+import { useUserStore } from "@/zustand/user";
+import { FIREBASE_AUTH } from "@/firebaseConfig";
+import { uploadAvatar } from "@/utils/users/avatar";
 
 interface AvatarPickerModalProps {
   isVisible: boolean;
   onClose: () => void;
-  userAvatar: string;
 }
 
 export default function AvatarPickerModal({
   isVisible,
   onClose,
-  userAvatar,
 }: AvatarPickerModalProps) {
-  const [oldAvatar, setOldAvatar] = useState(userAvatar);
-  const [selectedAvatar, setSelectedAvatar] = useState(userAvatar);
+  const { user } = useUserStore();
+  const currentUser = FIREBASE_AUTH.currentUser;
+  const [oldAvatar, setOldAvatar] = useState(user?.avatar ?? "");
+  const [selectedAvatar, setSelectedAvatar] = useState(user?.avatar ?? "");
   const [isImagePicked, setIsImagePicked] = useState(false);
 
   const pickImageFromAlbum = async () => {
@@ -43,9 +46,15 @@ export default function AvatarPickerModal({
   function saveImage() {
     console.log("Image URI: ", selectedAvatar);
     // Add logic to upload the image to Firestore here
+    if (currentUser === null || currentUser.uid === null) {
+      console.error("No user is logged in");
+      return;
+    }
+    console.log("Image will save to: ", currentUser.uid);
+    uploadAvatar(selectedAvatar, currentUser.uid);
   }
 
-  function closeAvatarPicker() {
+  function cancelAvatarPicker() {
     setIsImagePicked(false);
     setSelectedAvatar(oldAvatar);
     onClose();
@@ -56,7 +65,7 @@ export default function AvatarPickerModal({
       visible={isVisible}
       transparent={true}
       animationType="slide"
-      onRequestClose={closeAvatarPicker}
+      onRequestClose={onClose}
     >
       <View style={styles.modalContainer}>
         <View style={styles.avatarPickerContainer}>
@@ -86,7 +95,7 @@ export default function AvatarPickerModal({
             )}
             <TouchableOpacity
               style={[styles.button, styles.cancelButton]}
-              onPress={closeAvatarPicker}
+              onPress={cancelAvatarPicker}
             >
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>

@@ -41,7 +41,6 @@ export default function WelcomeBar() {
       <AvatarPickerModal
         isVisible={isAvatarPickerVisible}
         onClose={closeAvatarPicker}
-        userAvatar={user?.avatar ?? ""}
       />
     </ThemedView>
   );

@@ -1,9 +1,11 @@
 import { FIREBASE_STORAGE } from "@/firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-async function uploadAvatar(avatar: string) {
+async function uploadAvatar(avatar: string, userUid: string) {
+  let downloadURL = "";
+
   try {
-    const avatarRef = ref(FIREBASE_STORAGE, `avatars/${Date.now()}.jpg`);
+    const avatarRef = ref(FIREBASE_STORAGE, `avatars/${userUid}/avatar.jpg`);
     // Convert the image URI to a blob
     const response = await fetch(avatar);
     const blob = await response.blob();
@@ -12,11 +14,12 @@ async function uploadAvatar(avatar: string) {
     await uploadBytes(avatarRef, blob);
 
     // Get the public URL of the uploaded file
-    const downloadURL = await getDownloadURL(avatarRef);
-
+    downloadURL = await getDownloadURL(avatarRef);
     console.log("Image uploaded successfully: ", downloadURL);
   } catch (error) {
     console.error("Error uploading avatar: ", error);
+  } finally {
+    return downloadURL;
   }
 }
 
