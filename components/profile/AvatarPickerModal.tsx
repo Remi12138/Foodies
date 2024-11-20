@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
 import { useState } from "react";
 import { useUserStore } from "@/zustand/user";
 import { FIREBASE_AUTH } from "@/firebaseConfig";
@@ -26,25 +27,28 @@ export default function AvatarPickerModal({
   const [selectedAvatar, setSelectedAvatar] = useState(user?.avatar ?? "");
   const [isImagePicked, setIsImagePicked] = useState(false);
 
-  const pickImageFromAlbum = async () => {
+  async function pickImageFromAlbum() {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 0.2,
+      quality: 1,
     });
 
     if (!result.canceled) {
       if (result.assets && result.assets.length > 0) {
-        setSelectedAvatar(result.assets[0].uri);
+        const manipulatedImage = await ImageManipulator.manipulateAsync(
+          result.assets[0].uri,
+          [{ resize: { width: 128, height: 128 } }],
+          { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+        );
+        setSelectedAvatar(manipulatedImage.uri);
         setIsImagePicked(true);
       }
     }
-  };
+  }
 
   async function saveImage() {
-    console.log("Image URI: ", selectedAvatar);
-    // Add logic to upload the image to Firestore here
     if (currentUser === null || currentUser.uid === null) {
       console.error("No user is logged in");
       return;
@@ -52,11 +56,11 @@ export default function AvatarPickerModal({
     const avartUri = await uploadAvatar(selectedAvatar, currentUser.uid);
     if (avartUri !== "") {
       updateAvatar(avartUri);
-      setIsImagePicked(false);
-      onClose();
     } else {
       console.error("Error uploading avatar");
     }
+    setIsImagePicked(false);
+    onClose();
   }
 
   function cancelAvatarPicker() {
