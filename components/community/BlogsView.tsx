@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import {
-  View,
   StyleSheet,
   FlatList,
   Dimensions,
   RefreshControl,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import { Link } from "expo-router";
 
@@ -39,18 +39,17 @@ function Blogs() {
 
   function renderBlogCard({ item }: { item: BlogCover }) {
     return (
-      <View style={styles.cardContainer}>
+      <ThemedView style={styles.cardContainer}>
         <Link
           href={`/community/blog?authorUid=${item.author_uid}&blogId=${item.blog_id}&blogTitle=${item.post_title}`}
+          style={{ flex: 1 }}
+          asChild
         >
-          <BlogCard
-            imageUrl={item.post_image_cover}
-            title={item.post_title}
-            author={item.author}
-            likesCount={item.post_likes_count}
-          />
+          <Pressable>
+            <BlogCard item={item} />
+          </Pressable>
         </Link>
-      </View>
+      </ThemedView>
     );
   }
 
@@ -68,7 +67,6 @@ function Blogs() {
       renderItem={renderBlogCard}
       keyExtractor={(item) => item.blog_id}
       numColumns={2}
-      contentContainerStyle={styles.listContainer}
       columnWrapperStyle={styles.row}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -78,9 +76,6 @@ function Blogs() {
 }
 
 const styles = StyleSheet.create({
-  listContainer: {
-    paddingHorizontal: 10,
-  },
   row: {
     justifyContent: "space-between",
   },
@@ -91,11 +86,10 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     flex: 1,
-    margin: 10,
-    marginTop: 50, // Add this line to move the cards downwards
-    maxWidth: (Dimensions.get("window").width - 40) / 2, // Adjust the width of the card
+    padding: 10,
+    height: (Dimensions.get("window").width / 2) * 1.3,
+    maxWidth: Dimensions.get("window").width / 2,
   },
 });
-
 
 export default Blogs;

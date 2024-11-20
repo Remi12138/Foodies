@@ -35,7 +35,7 @@ export default function CommunityScreen() {
         </TouchableOpacity>
       </ThemedView>
       <ThemedView style={{ flex: 1 }}>
-        <CommunityBar />
+        {/* <CommunityBar /> */}
         <Blogs />
       </ThemedView>
     </SafeAreaView>
