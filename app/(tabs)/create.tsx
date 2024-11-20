@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   },
   modalFab: {
     position: "absolute",
-    bottom: Platform.OS === "ios" ? 25 : 9,
+    bottom: Platform.OS === "ios" ? 22 : 9,
     alignSelf: "center",
     width: 45,
     height: 45,
