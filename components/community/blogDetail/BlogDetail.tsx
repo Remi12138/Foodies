@@ -154,13 +154,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   title: {
-    fontFamily: "Times New Roman",
+    fontFamily: "Lora",
     fontWeight: "bold",
     fontSize: 24,
     textAlign: "left",
   },
   content: {
-    fontFamily: "Times New Roman",
+    fontFamily: "Lora",
     fontSize: 16,
     textAlign: "justify",
     paddingVertical: 8,
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   updatedTime: {
-    fontFamily: "Times New Roman",
+    fontFamily: "Lora",
     fontStyle: "italic",
     fontSize: 14,
     textAlign: "right",
