@@ -155,18 +155,18 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.6)", // You can adjust the opacity value for more or less darkness
   },
   fab: {
-    bottom: -5,
+    bottom: -3,
     backgroundColor: "#D1382C",
-    width: 45,
-    height: 45,
-    borderRadius: 30,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,
   },
   modalFab: {
     position: "absolute",
-    bottom: Platform.OS === "android" ? 8 : 25,
+    bottom: 25,
     alignSelf: "center",
     width: 45,
     height: 45,

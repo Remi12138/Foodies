@@ -21,8 +21,8 @@ export default function TabLayout() {
           tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
           headerShown: false,
           tabBarStyle: {
-            paddingBottom: Platform.OS === "android" ? 10 : 0,
-            height: Platform.OS === "android" ? 60 : 50,
+            paddingBottom: Platform.OS === "android" ? 10 : 20,
+            height: Platform.OS === "android" ? 60 : 70,
           },
         }}
       >
