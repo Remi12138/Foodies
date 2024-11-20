@@ -6,6 +6,8 @@ import {
   Text,
   StyleSheet,
 } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { useState } from "react";
 
 interface AvatarPickerModalProps {
   isVisible: boolean;
@@ -18,28 +20,74 @@ export default function AvatarPickerModal({
   onClose,
   userAvatar,
 }: AvatarPickerModalProps) {
+  const [oldAvatar, setOldAvatar] = useState(userAvatar);
+  const [selectedAvatar, setSelectedAvatar] = useState(userAvatar);
+  const [isImagePicked, setIsImagePicked] = useState(false);
+
+  const pickImageFromAlbum = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.2,
+    });
+
+    if (!result.canceled) {
+      if (result.assets && result.assets.length > 0) {
+        setSelectedAvatar(result.assets[0].uri);
+        setIsImagePicked(true);
+      }
+    }
+  };
+
+  function saveImage() {
+    console.log("Image URI: ", selectedAvatar);
+    // Add logic to upload the image to Firestore here
+  }
+
+  function closeAvatarPicker() {
+    setIsImagePicked(false);
+    setSelectedAvatar(oldAvatar);
+    onClose();
+  }
+
   return (
     <Modal
       visible={isVisible}
       transparent={true}
       animationType="slide"
-      onRequestClose={onClose}
+      onRequestClose={closeAvatarPicker}
     >
       <View style={styles.modalContainer}>
         <View style={styles.avatarPickerContainer}>
           <Image
             source={
-              userAvatar !== ""
-                ? { uri: userAvatar }
+              selectedAvatar !== ""
+                ? { uri: selectedAvatar }
                 : require("@/assets/images/avatar-placeholder.jpg")
             }
             style={styles.modalAvatar}
           />
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.uploadButton} onPress={() => {}}>
-              <Text style={styles.uploadButtonText}>Upload</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+            {isImagePicked ? (
+              <TouchableOpacity
+                style={[styles.button, styles.uploadButton]}
+                onPress={saveImage}
+              >
+                <Text style={styles.uploadButtonText}>Save</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[styles.button, styles.uploadButton]}
+                onPress={pickImageFromAlbum}
+              >
+                <Text style={styles.uploadButtonText}>New Avatar</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              style={[styles.button, styles.cancelButton]}
+              onPress={closeAvatarPicker}
+            >
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
           </View>
@@ -72,22 +120,23 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "90%",
+    width: "100%",
+  },
+  button: {
+    flex: 1,
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    alignItems: "center",
   },
   uploadButton: {
-    backgroundColor: "black",
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    marginRight: 10,
+    backgroundColor: "#000",
   },
   uploadButtonText: {
     color: "white",
     fontWeight: "bold",
   },
   cancelButton: {
-    backgroundColor: "#aaaaaa",
-    paddingVertical: 10,
-    paddingHorizontal: 30,
+    backgroundColor: "#FF6347",
   },
   cancelButtonText: {
     color: "white",
