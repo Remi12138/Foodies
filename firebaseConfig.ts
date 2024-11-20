@@ -14,7 +14,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyD_ept_U2lfvhw4bWy7KaQ06-egt8YZL38",
   authDomain: "tapteam-foodies.firebaseapp.com",
   projectId: "tapteam-foodies",
-  storageBucket: "tapteam-foodies.appspot.com",
+  storageBucket: "tapteam-foodies.firebasestorage.app",
   messagingSenderId: "263000789674",
   appId: "1:263000789674:web:f0997aefadb59d8c42b6d3",
   measurementId: "G-YHEZ2XY5BT",
