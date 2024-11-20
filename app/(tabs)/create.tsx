@@ -166,14 +166,15 @@ const styles = StyleSheet.create({
   },
   modalFab: {
     position: "absolute",
-    bottom: 25,
+    bottom: Platform.OS === "android" ? 8 : 25,
     alignSelf: "center",
     width: 45,
     height: 45,
-    borderRadius: 30,
+    borderRadius: 23,
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,
+    backgroundColor: "#A9A9A9",
   },
   button: {
     position: "absolute",
