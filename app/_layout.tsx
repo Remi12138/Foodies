@@ -17,6 +17,10 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
+    Lora: require("@/assets/fonts/Lora-Regular.ttf"),
+    LoraI: require("@/assets/fonts/Lora-Italic.ttf"),
+    LoraB: require("@/assets/fonts/Lora-Bold.ttf"),
+    LoraBI: require("@/assets/fonts/Lora-BoldItalic.ttf"),
     SpaceMono: require("@/assets/fonts/SpaceMono-Regular.ttf"),
     SpaceMonoI: require("@/assets/fonts/SpaceMono-Italic.ttf"),
     SpaceMonoB: require("@/assets/fonts/SpaceMono-Bold.ttf"),

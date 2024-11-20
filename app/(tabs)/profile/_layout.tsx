@@ -4,8 +4,8 @@ export default function ProfileLayout() {
   return (
     <Stack
       screenOptions={{
-        // headerShown: false,
-        // headerTitle: "Me",
+        headerShown: false,
+        headerTitle: "Me",
         headerStyle: {
           backgroundColor: "#F4511E",
         },
