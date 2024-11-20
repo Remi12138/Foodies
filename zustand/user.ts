@@ -15,6 +15,7 @@ export type UserPublicProfile = {
 type UserStore = {
   user: UserPublicProfile | null;
   setUser: (user: UserPublicProfile | null) => void;
+  updateAvatar: (avatar: string) => void;
   verifyOldPassword: (oldPassword: string) => Promise<boolean>;
   updatePassword: (newPassword: string) => Promise<boolean>;
   logout: () => Promise<void>;
@@ -23,6 +24,19 @@ type UserStore = {
 export const useUserStore = create<UserStore>()((set) => ({
   user: null,
   setUser: (user) => set(() => ({ user })),
+  updateAvatar: (avatar: string) => {
+    set((state) => {
+      if (state.user) {
+        return {
+          user: {
+            ...state.user,
+            avatar,
+          },
+        };
+      }
+      return state;
+    });
+  },
   verifyOldPassword: async (oldPassword: string) => {
     const auth = FIREBASE_AUTH;
     if (auth.currentUser && auth.currentUser.email) {

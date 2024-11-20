@@ -21,9 +21,8 @@ export default function AvatarPickerModal({
   isVisible,
   onClose,
 }: AvatarPickerModalProps) {
-  const { user } = useUserStore();
+  const { user, updateAvatar } = useUserStore();
   const currentUser = FIREBASE_AUTH.currentUser;
-  const [oldAvatar, setOldAvatar] = useState(user?.avatar ?? "");
   const [selectedAvatar, setSelectedAvatar] = useState(user?.avatar ?? "");
   const [isImagePicked, setIsImagePicked] = useState(false);
 
@@ -43,20 +42,26 @@ export default function AvatarPickerModal({
     }
   };
 
-  function saveImage() {
+  async function saveImage() {
     console.log("Image URI: ", selectedAvatar);
     // Add logic to upload the image to Firestore here
     if (currentUser === null || currentUser.uid === null) {
       console.error("No user is logged in");
       return;
     }
-    console.log("Image will save to: ", currentUser.uid);
-    uploadAvatar(selectedAvatar, currentUser.uid);
+    const avartUri = await uploadAvatar(selectedAvatar, currentUser.uid);
+    if (avartUri !== "") {
+      updateAvatar(avartUri);
+      setIsImagePicked(false);
+      onClose();
+    } else {
+      console.error("Error uploading avatar");
+    }
   }
 
   function cancelAvatarPicker() {
     setIsImagePicked(false);
-    setSelectedAvatar(oldAvatar);
+    setSelectedAvatar(user?.avatar ?? "");
     onClose();
   }
 
