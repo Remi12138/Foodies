@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     width: "100%",
-    height: 90,
+    height: 85,
     padding: 6,
     justifyContent: "space-between",
   },

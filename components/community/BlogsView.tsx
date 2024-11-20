@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     padding: 10,
-    height: (Dimensions.get("window").width / 2) * 1.3,
+    height: (Dimensions.get("window").width / 2) * 1.5,
     maxWidth: Dimensions.get("window").width / 2,
   },
 });
