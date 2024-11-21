@@ -76,7 +76,7 @@ function PostImagePicker() {
     return (
       <View style={styles.imageWrapper}>
         <TouchableOpacity
-          onLongPress={() => openModal(item)}
+          onPress={() => openModal(item)}
           delayPressIn={150}
           activeOpacity={1}
         >
@@ -151,12 +151,14 @@ function PostImagePicker() {
             source={{ uri: currentImage || "" }}
             style={styles.fullScreenImage}
           />
-          <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.deleteButton} onPress={deleteImage}>
-            <Text style={styles.deleteButtonText}>Delete</Text>
-          </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.deleteButton} onPress={deleteImage}>
+              <Text style={styles.deleteButtonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </GestureHandlerRootView>
@@ -217,10 +219,15 @@ const styles = StyleSheet.create({
     height: height,
     resizeMode: "contain",
   },
-  closeButton: {
+  buttonContainer: {
     position: "absolute",
-    top: 40,
-    right: 20,
+    bottom: 40,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "80%",
+    paddingHorizontal: 20,
+  },
+  closeButton: {
     backgroundColor: "#000",
     padding: 10,
     borderRadius: 5,
@@ -231,9 +238,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   deleteButton: {
-    position: "absolute",
-    bottom: 40,
-    right: 20,
     backgroundColor: "#FF0000",
     padding: 10,
     borderRadius: 5,
