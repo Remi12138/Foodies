@@ -5,6 +5,7 @@ import { usePostStore } from "@/zustand/post";
 import { createPostRecord } from "@/utils/blogs/posts";
 import { getAuth } from "firebase/auth";
 import { useUserStore } from "@/zustand/user";
+import { router } from "expo-router";
 
 function PostBtnSubmit() {
   const { user } = useUserStore();
@@ -23,6 +24,7 @@ function PostBtnSubmit() {
         await createPostRecord(draft, currentUser.uid, user);
         alert("Post created successfully!");
         resetDraft();
+        router.replace("/(tabs)/community");
       } else {
         alert("User not logged in");
       }
