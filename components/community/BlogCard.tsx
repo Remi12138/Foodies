@@ -3,8 +3,19 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import { BlogCover } from "@/zustand/blog";
+import { useCollectionStore } from "@/zustand/collections";
+import { useEffect, useState } from "react";
+import { checkIfBlogIsLikedLocal } from "@/utils/blogs/favorites";
 
 function BlogCard({ item }: { item: BlogCover }) {
+  const { blogIds } = useCollectionStore();
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+
+  // Check if the blog is liked by the user
+  useEffect(() => {
+    setIsLiked(checkIfBlogIsLikedLocal(blogIds, item.blog_id));
+  }, [blogIds]);
+
   return (
     <ThemedView style={styles.card}>
       <ThemedView style={{ flex: 1 }}>
@@ -34,7 +45,11 @@ function BlogCard({ item }: { item: BlogCover }) {
           </ThemedView>
           <ThemedView style={styles.likeContainer}>
             <ThemedText style={styles.likesIcon}>
-              <Ionicons name="heart-outline" size={14} />
+              <Ionicons
+                name={isLiked ? "heart" : "heart-outline"}
+                size={14}
+                color={isLiked ? "#D1382C" : "#000"}
+              />
             </ThemedText>
             <ThemedText style={styles.likesCount}>
               {item.post_likes_count}

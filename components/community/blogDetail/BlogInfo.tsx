@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
 import BlogAuthor from "@/components/community/blogDetail/BlogAuthor";
 import { useCollectionStore } from "@/zustand/collections";
@@ -60,8 +60,8 @@ function BlogInfo({
       <BlogAuthor blog={blog} />
       <ThemedView style={styles.toolContainer}>
         <TouchableOpacity style={styles.likeButton} onPress={toggleLike}>
-          <AntDesign
-            name={isLiked ? "heart" : "hearto"}
+          <Ionicons
+            name={isLiked ? "heart" : "heart-outline"}
             size={24}
             color={isLiked ? "#D1382C" : "#000"}
           />
@@ -70,7 +70,7 @@ function BlogInfo({
           <ThemedText>{blog.likes_count}</ThemedText>
         </ThemedView>
         <TouchableOpacity style={styles.shareButton}>
-          <Entypo name="share" size={24} color="#000" />
+          <Ionicons name="share-social-outline" size={24} color="#000" />
         </TouchableOpacity>
       </ThemedView>
     </ThemedView>

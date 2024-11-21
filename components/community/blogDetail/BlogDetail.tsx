@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   ScrollView,
-  Image,
   StyleSheet,
   Dimensions,
   ActivityIndicator,
@@ -9,11 +8,10 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import { Blog } from "@/zustand/blog";
 import { router } from "expo-router";
-import { GestureHandlerRootView, FlatList } from "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ThemedView } from "@/components/ThemedView";
 import BlogInfo from "./BlogInfo";
 import { Timestamp } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 
 import PostAuthorTool from "@/components/community/post/postAuthor/PostAuthorTool";
 import { fetchPostRecord } from "@/utils/blogs/posts";
@@ -21,6 +19,7 @@ import { checkIfBlogIsLikedLocal } from "@/utils/blogs/favorites";
 import { useCollectionStore } from "@/zustand/collections";
 import { formatBlogUpdatedTime } from "@/utils/blogs/info";
 import BlogImageModal from "./BlogImageModal";
+import { FIREBASE_AUTH } from "@/firebaseConfig";
 
 const { width } = Dimensions.get("window");
 
@@ -35,7 +34,7 @@ function BlogDetail({
   const { blogIds } = useCollectionStore();
   const [isLiked, setIsLiked] = useState<boolean>(false);
 
-  const currentUser = getAuth().currentUser;
+  const currentUser = FIREBASE_AUTH.currentUser;
 
   useEffect(() => {
     const fetchBlogDetailsAndLikeStatus = async () => {
