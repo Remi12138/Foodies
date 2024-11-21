@@ -24,7 +24,6 @@ function PostBtnDeletion({ blogId }: { blogId: string }) {
       if (currentUser) {
         await destroyPostRecord(currentUser.uid, blogId);
         router.replace("/community");
-        console.log(`Post with ID: ${blogId} destroyed`);
       } else {
         alert("User not logged in");
       }

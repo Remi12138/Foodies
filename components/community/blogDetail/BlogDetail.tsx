@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   ScrollView,
-  Image,
   StyleSheet,
   Dimensions,
   ActivityIndicator,
@@ -9,17 +8,18 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import { Blog } from "@/zustand/blog";
 import { router } from "expo-router";
-import { GestureHandlerRootView, FlatList } from "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ThemedView } from "@/components/ThemedView";
 import BlogInfo from "./BlogInfo";
 import { Timestamp } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 
 import PostAuthorTool from "@/components/community/post/postAuthor/PostAuthorTool";
 import { fetchPostRecord } from "@/utils/blogs/posts";
 import { checkIfBlogIsLikedLocal } from "@/utils/blogs/favorites";
 import { useCollectionStore } from "@/zustand/collections";
 import { formatBlogUpdatedTime } from "@/utils/blogs/info";
+import BlogImageModal from "./BlogImageModal";
+import { FIREBASE_AUTH } from "@/firebaseConfig";
 
 const { width } = Dimensions.get("window");
 
@@ -33,9 +33,8 @@ function BlogDetail({
   const [blog, setBlog] = useState<Blog | null>(null);
   const { blogIds } = useCollectionStore();
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const currentUser = getAuth().currentUser;
+  const currentUser = FIREBASE_AUTH.currentUser;
 
   useEffect(() => {
     const fetchBlogDetailsAndLikeStatus = async () => {
@@ -64,7 +63,7 @@ function BlogDetail({
     );
   }
 
-  const images = [blog.post.image_cover, ...blog.post.images];
+  const images = [...blog.post.images];
   const blogUpdatedTime = blog.updated_at as unknown as Timestamp;
   const formattedUpdatedTime = formatBlogUpdatedTime(blogUpdatedTime);
 
@@ -72,33 +71,7 @@ function BlogDetail({
     <GestureHandlerRootView style={styles.gestureContainer}>
       <ScrollView contentContainerStyle={styles.container}>
         <ThemedView>
-          <FlatList
-            data={images}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item }) => (
-              <Image source={{ uri: item }} style={styles.sliderImage} />
-            )}
-            onMomentumScrollEnd={(event) => {
-              const newIndex = Math.round(
-                event.nativeEvent.contentOffset.x / width
-              );
-              setCurrentIndex(newIndex);
-            }}
-          />
-          <ThemedView style={styles.paginationContainerCloser}>
-            {images.map((_, index) => (
-              <ThemedView
-                key={index}
-                style={[
-                  styles.dot,
-                  { opacity: currentIndex === index ? 1 : 0.4 },
-                ]}
-              />
-            ))}
-          </ThemedView>
+          <BlogImageModal images={images} />
         </ThemedView>
         <ThemedView style={styles.contentContainer}>
           <ThemedText style={styles.title}>{blog.post.title}</ThemedText>
@@ -138,18 +111,7 @@ const styles = StyleSheet.create({
     width,
     height: Dimensions.get("window").height / 2.5,
   },
-  paginationContainerCloser: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 12,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    backgroundColor: "#000",
-    marginHorizontal: 4,
-  },
+
   contentContainer: {
     paddingHorizontal: 16,
   },

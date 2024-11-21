@@ -4,7 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export type Post = {
   title: string;
   content: string;
-  image_cover: string;
   images: string[];
 };
 
@@ -12,7 +11,6 @@ type PostStore = {
   draft: Post;
   setTitle: (title: string) => void;
   setContent: (content: string) => void;
-  setImageCover: (imageCover: string) => void;
   addImage: (image: string) => void;
   removeImage: (index: number) => void;
   setImages: (images: string[]) => void;
@@ -24,7 +22,6 @@ type PostStore = {
 const defaultDraft: Post = {
   title: "",
   content: "",
-  image_cover: "https://picsum.photos/id/4/200",
   images: [],
 };
 
@@ -33,15 +30,11 @@ export const usePostStore = create<PostStore>()((set) => ({
   setTitle: (title) => set((state) => ({ draft: { ...state.draft, title } })),
   setContent: (content) =>
     set((state) => ({ draft: { ...state.draft, content } })),
-  setImageCover: (imageCover) =>
-    set((state) => ({ draft: { ...state.draft, image_cover: imageCover } })),
   addImage: (image) =>
     set((state) => ({
       draft: {
         ...state.draft,
         images: [...state.draft.images, image],
-        image_cover:
-          state.draft.images.length === 0 ? image : state.draft.image_cover,
       },
     })),
   removeImage: (index) =>
@@ -51,10 +44,6 @@ export const usePostStore = create<PostStore>()((set) => ({
         draft: {
           ...state.draft,
           images: updatedImages,
-          image_cover:
-            index === 0 && updatedImages.length > 0
-              ? updatedImages[0]
-              : state.draft.image_cover,
         },
       };
     }),
