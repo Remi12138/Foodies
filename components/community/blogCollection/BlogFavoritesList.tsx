@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FlatList, StyleSheet, Image } from "react-native";
+import { FlatList, StyleSheet, Image, Pressable } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Link } from "expo-router";
@@ -22,17 +22,23 @@ function BlogFavoritesList() {
       <ThemedView style={styles.rowContainer}>
         <Link
           href={`/community/blog?authorUid=${item.author_uid}&blogId=${item.blog_id}&blogTitle=${item.post_title}`}
+          asChild
         >
-          <ThemedView style={styles.card}>
-            <Image
-              source={{ uri: item.post_image_cover }}
-              style={styles.image}
-            />
-            <ThemedView style={styles.textContainer}>
-              <ThemedText style={styles.title}>{item.post_title}</ThemedText>
-              {/* <ThemedText style={styles.rate}>Rate: {item.rate}</ThemedText> */}
+          <Pressable>
+            <ThemedView style={styles.card}>
+              <Image
+                source={{ uri: item.post_image_cover }}
+                style={styles.image}
+              />
+              <ThemedView style={styles.textContainer}>
+                <ThemedText style={styles.title}>{item.post_title}</ThemedText>
+                <ThemedText style={styles.name}>{item.author.name}</ThemedText>
+                <ThemedText style={styles.name}>
+                  Liked by {item.post_likes_count} people.
+                </ThemedText>
+              </ThemedView>
             </ThemedView>
-          </ThemedView>
+          </Pressable>
         </Link>
       </ThemedView>
     );
@@ -67,6 +73,8 @@ function BlogFavoritesList() {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    flex: 1,
+    backgroundColor: "#FFF",
   },
   rowContainer: {
     width: "100%",
@@ -77,6 +85,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: 8,
     elevation: 5,
+    borderWidth: 1,
   },
   image: {
     width: 100,
@@ -92,10 +101,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 4,
   },
-  rate: {
-    fontSize: 16,
-  },
-  date: {
+  name: {
     fontSize: 14,
   },
 });
