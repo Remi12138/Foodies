@@ -26,7 +26,6 @@ function PostBtnSubmit() {
     try {
       if (currentUser && user) {
         await createPostRecord(draft, currentUser.uid, user);
-        alert("Post created successfully!");
         resetDraft();
         router.replace("/(tabs)/community");
       } else {
