@@ -43,6 +43,7 @@ function BlogImageModal({ images }: BlogImageModalProps) {
         renderItem={({ item }) => (
           <TouchableOpacity
             onLongPress={() => openModal(item)}
+            onPress={() => openModal(item)}
             delayPressIn={150} // Prevents showing press effect immediately
             activeOpacity={1} // Avoids image blink effect when swiping
           >
@@ -112,8 +113,10 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: "absolute",
-    top: 40,
-    right: 20,
+    width: 100,
+    bottom: 40,
+    alignSelf: "center",
+    alignItems: "center",
     backgroundColor: "#000",
     padding: 10,
   },
