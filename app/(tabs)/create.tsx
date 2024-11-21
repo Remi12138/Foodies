@@ -116,7 +116,6 @@ export default function CreateModal() {
                     toggleMenu();
                     router.push("/record/AddDiet");
                   }
-                  console.log("hander for", buttonLabels[index]);
                 }}
               >
                 <ThemedView style={styles.optionButton}>

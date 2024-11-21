@@ -10,6 +10,7 @@ import {
   getDoc,
   setDoc,
 } from "firebase/firestore";
+import { uploadPostImages } from "./images";
 
 async function fetchPostRecord(
   authorUid: string,
@@ -58,6 +59,23 @@ async function createPostRecord(
       `users/${authorUid}/blogs`
     );
     const blog = await addDoc(blogsCollectionRef, draftBlog);
+    const postCoverURLs = await uploadPostImages(
+      draft.images,
+      authorUid,
+      blog.id
+    );
+
+    // Update the post images URL in the blog record
+    draftBlog.post.images = postCoverURLs;
+    setDoc(
+      doc(FIREBASE_DB, `users/${authorUid}/blogs/${blog.id}`),
+      {
+        ...draftBlog,
+      },
+      { merge: true }
+    );
+
+    // Create a blog cover record
     if (blog && draftBlog.is_public) {
       draftBlog.id = blog.id;
       createBlogCoverRecord(draftBlog);
@@ -80,7 +98,7 @@ async function destroyPostRecord(userUid: string, blogId: string) {
 async function createBlogCoverRecord(blog: Blog) {
   let blogCoverData = {
     post_title: blog.post.title,
-    post_image_cover: blog.post.image_cover,
+    post_image_cover: blog.post.images[0],
     post_likes_count: blog.likes_count,
     author_uid: blog.author_uid,
     author: blog.author,
