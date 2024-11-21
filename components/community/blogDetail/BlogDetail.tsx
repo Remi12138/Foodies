@@ -20,6 +20,7 @@ import { fetchPostRecord } from "@/utils/blogs/posts";
 import { checkIfBlogIsLikedLocal } from "@/utils/blogs/favorites";
 import { useCollectionStore } from "@/zustand/collections";
 import { formatBlogUpdatedTime } from "@/utils/blogs/info";
+import BlogImageModal from "./BlogImageModal";
 
 const { width } = Dimensions.get("window");
 
@@ -33,7 +34,6 @@ function BlogDetail({
   const [blog, setBlog] = useState<Blog | null>(null);
   const { blogIds } = useCollectionStore();
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   const currentUser = getAuth().currentUser;
 
@@ -72,33 +72,7 @@ function BlogDetail({
     <GestureHandlerRootView style={styles.gestureContainer}>
       <ScrollView contentContainerStyle={styles.container}>
         <ThemedView>
-          <FlatList
-            data={images}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item }) => (
-              <Image source={{ uri: item }} style={styles.sliderImage} />
-            )}
-            onMomentumScrollEnd={(event) => {
-              const newIndex = Math.round(
-                event.nativeEvent.contentOffset.x / width
-              );
-              setCurrentIndex(newIndex);
-            }}
-          />
-          <ThemedView style={styles.paginationContainerCloser}>
-            {images.map((_, index) => (
-              <ThemedView
-                key={index}
-                style={[
-                  styles.dot,
-                  { opacity: currentIndex === index ? 1 : 0.4 },
-                ]}
-              />
-            ))}
-          </ThemedView>
+          <BlogImageModal images={images} />
         </ThemedView>
         <ThemedView style={styles.contentContainer}>
           <ThemedText style={styles.title}>{blog.post.title}</ThemedText>
@@ -138,18 +112,7 @@ const styles = StyleSheet.create({
     width,
     height: Dimensions.get("window").height / 2.5,
   },
-  paginationContainerCloser: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 12,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    backgroundColor: "#000",
-    marginHorizontal: 4,
-  },
+
   contentContainer: {
     paddingHorizontal: 16,
   },
