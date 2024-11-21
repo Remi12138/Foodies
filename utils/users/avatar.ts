@@ -6,7 +6,7 @@ async function uploadAvatar(avatar: string, userUid: string) {
   let downloadURL = "";
 
   try {
-    const avatarRef = ref(FIREBASE_STORAGE, `avatars/${userUid}/avatar.jpg`);
+    const avatarRef = ref(FIREBASE_STORAGE, `avatars/${userUid}/avatar.png`);
     // Convert the image URI to a blob
     const response = await fetch(avatar);
     const blob = await response.blob();
@@ -19,7 +19,6 @@ async function uploadAvatar(avatar: string, userUid: string) {
 
     // Update the user's avatar URI in Firestore
     updateAvatarURIFromDB(downloadURL, userUid);
-    console.log("Image uploaded successfully: ", downloadURL);
   } catch (error) {
     console.error("Error uploading avatar: ", error);
   } finally {
