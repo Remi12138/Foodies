@@ -7,6 +7,7 @@ import * as ImagePicker from "expo-image-picker";
 import DraggableFlatList, {
   RenderItemParams,
 } from "react-native-draggable-flatlist";
+import * as ImageManipulator from "expo-image-manipulator";
 import { usePostStore } from "@/zustand/post";
 
 type DraftImage = string;
@@ -24,7 +25,7 @@ function PostImagePicker() {
     loadDraftFromStorage();
   }, []);
 
-  const pickImages = async () => {
+  async function pickImages() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       alert("Sorry, we need camera roll permissions to make this work!");
@@ -39,13 +40,21 @@ function PostImagePicker() {
 
     if (!result.canceled) {
       const selectedImages = result.assets?.map((asset) => asset.uri) || [];
-      selectedImages.forEach((image, index) => {
-        addImage(image);
-      });
-
+      for (const image of selectedImages) {
+        const manipulatedImage = await ImageManipulator.manipulateAsync(
+          image,
+          [{ resize: { width: 256 } }],
+          {
+            compress: 0.7,
+            format: ImageManipulator.SaveFormat.PNG,
+            base64: true,
+          }
+        );
+        addImage(manipulatedImage.uri);
+      }
       await saveDraftToStorage();
     }
-  };
+  }
 
   function renderItem({ item, drag }: RenderItemParams<DraftImage>) {
     const index = draft.images.indexOf(item);

@@ -7,7 +7,7 @@ async function uploadPostImages(
   blogId: string
 ) {
   const uploadPostImagesPromises = images.map((image, index) => {
-    const path = `blogs/${userUid}/${blogId}/post_${index}.jpg`;
+    const path = `blogs/${userUid}/${blogId}/post_${index}.png`;
     return uploadPostImage(image, path);
   });
 
