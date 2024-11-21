@@ -33,7 +33,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
     { label: "Salad", icon: "leaf" },
     { label: "Halal", icon: "silverware" },
     { label: "Pakistani", icon: "silverware-fork-knife" },
-    { label: "Italian", icon: "spaghetti" },
+    { label: "Italian", icon: "pasta" },
     { label: "Seafood", icon: "fish" },
     { label: "Desserts", icon: "cake" },
     { label: "BBQ", icon: "grill" },

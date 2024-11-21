@@ -17,7 +17,6 @@ type Marker = {
   description?: string;
 };
 
-// 提取餐厅位置数据为Marker格式
 function extractLocations(restaurants: Restaurant[]): Marker[] {
   return restaurants
     .filter(
@@ -60,12 +59,10 @@ function RestaurantsMapView({ data }: RestaurantsMapViewProps) {
     const validMarkers = extractLocations(data);
     setMarkers(validMarkers);
 
-    // 记录日志以确认中心点计算是否有效
     const center = calculateCenter(data);
     console.log("Center location for map:", center);
   }, [data]);
 
-  // 计算中心位置并提供默认值
   const center = data.length ? calculateCenter(data) : { latitude: 37.7749, longitude: -122.4194 };
 
   const toggleMapType = () => {
