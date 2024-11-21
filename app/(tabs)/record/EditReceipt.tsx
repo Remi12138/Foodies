@@ -39,6 +39,11 @@ const EditReceiptScreen: React.FC = () => {
             return;
         }
 
+        if (delayInMs < 0) {
+            Alert.alert('Invalid Time', 'Please set a time in the future.');
+            return;
+        }
+
         await Notifications.scheduleNotificationAsync({
             content: {
                 title: "Receipt Reminder 📋",

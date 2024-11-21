@@ -25,6 +25,10 @@ import CryptoJS from 'crypto-js';
 const MAX_SIZE_MB = 2;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024; // 2MB in bytes
 
+const apiKey = "vmg48AzN.7kadZgKHh9vPLjofJzyc2w21lRVSaVTg";
+const url = "https://vision.foodvisor.io/api/1.0/en/analysis/";
+
+
 const UploadDietScreen: React.FC = () => {
     const [imgUri, setImgUri] = useState<string | null>(null);
     const [title, setTitle] = useState<string>('');
@@ -52,12 +56,12 @@ const UploadDietScreen: React.FC = () => {
         }
     };
 
-    // Todo: response.status === 4xx, return?
     // Call api, return data
+    // 200: Analysis successful.
+    // 400: Request malformed.  403: Access forbidden.
+    // 404: Requested resource does not exist.
+    // 429: Maximum calls reached, or rate limit exceeded.
     const analyzeImage = async (imageUri: string) => {
-        const apiKey = "vmg48AzN.7kadZgKHh9vPLjofJzyc2w21lRVSaVTg";
-        const url = "https://vision.foodvisor.io/api/1.0/en/analysis/";
-
         try {
             // Load the image as bytes
             const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {
@@ -76,12 +80,22 @@ const UploadDietScreen: React.FC = () => {
                 "Authorization": `Api-Key ${apiKey}`,
                 "Content-Type": "multipart/form-data",
             };
-
+            setAnalyzeLoading(true);
             const response = await axios.post(url, formData, { headers });
             // const response = await axios.post(url, body, { headers });
+            setAnalyzeLoading(false);
 
             if (response.status === 200) {
                 console.log("Data:", response.data);
+                if (response.data.items.length == 0 ) {
+                    console.warn("No items detected in the img.");
+                    Alert.alert(
+                        "No Food Detected",
+                        "There is no food detected in the image. Try another image!",
+                        [{ text: "OK" }]
+                    );
+                    throw new Error("No food detected");
+                }
                 response.data.items.forEach((item: { food: any[]; }, index: number) => {
                     console.log(`Food item #${index + 1}:`);
                     let foodOption = item.food[0];
@@ -107,9 +121,19 @@ const UploadDietScreen: React.FC = () => {
                 });
 
                 return response.data;
+            }  else if (response.status >= 400 && response.status < 500) {
+                // Notify the user of the 4xx error
+                Alert.alert(
+                    "Client Error",
+                    `Cannot get image analysis from API: ${response.statusText} (${response.status})`,
+                    [{ text: "OK" }]
+                );
+                console.warn(`Client error: ${response.status} - ${response.statusText}`);
+                throw new Error("Client error. Cannot get image analysis from API.");
             }
         } catch (error) {
-            console.error("something went wrong: ", error);
+            console.error("Something went wrong when calling API: ", error);
+            throw error;
         }
     };
 
@@ -134,7 +158,6 @@ const UploadDietScreen: React.FC = () => {
     // downloadImage("https://cdn.foodvisor.io/img/vision/examples/1.jpg");
 
 
-    // Todo: cancel button not checked
     // Options: select images from camera, album, or cancel
     const selectImage = async () => {
 
@@ -145,7 +168,7 @@ const UploadDietScreen: React.FC = () => {
         ]);
     };
 
-    // Todo: compress not work
+
     // pick img from camera/album, ask for authority, compress->setImgUri
     const pickImage = async (source: 'camera' | 'library') => {
         let result;
@@ -184,6 +207,7 @@ const UploadDietScreen: React.FC = () => {
             // console.log("select img uri:", result.assets[0].uri);
             let compressedImageUri = result.assets[0].uri;
             let imageSize = await getImageSize(compressedImageUri);
+            console.log("imageSize:", imageSize);
 
             // Keep resizing/compressing until it's under 2MB
             while (imageSize > MAX_SIZE_BYTES) {
@@ -195,6 +219,7 @@ const UploadDietScreen: React.FC = () => {
 
                 compressedImageUri = manipulatedImage.uri;
                 imageSize = await getImageSize(compressedImageUri);
+                console.log("After compress imageSize:", imageSize);
             }
 
             setImgUri(compressedImageUri); // Set the final compressed image URI
@@ -248,10 +273,10 @@ const UploadDietScreen: React.FC = () => {
                 );
             } else {
                 console.log("new imgUri");
-                setAnalyzeLoading(true);
+                // setAnalyzeLoading(true);
                 analysisData = await analyzeImage(imgUri); // Call analyzeImage with the image URI
+                // setAnalyzeLoading(false);
                 newDiet = await addDiet(imgUri, imgHash, title, analysisData, date);
-                setAnalyzeLoading(false);
 
                 // Navigate without alert if new image
                 navigation.reset({

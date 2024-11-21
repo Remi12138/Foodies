@@ -80,6 +80,7 @@ const UploadReceiptScreen: React.FC = () => {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             quality: 1,
+            // aspect: [3, 4],
         });
 
         if (!result.canceled) {
