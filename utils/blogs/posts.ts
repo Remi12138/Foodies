@@ -65,8 +65,7 @@ async function createPostRecord(
       blog.id
     );
 
-    // Update the post cover URL in the blog record
-    draftBlog.post.image_cover = postCoverURLs[0];
+    // Update the post images URL in the blog record
     draftBlog.post.images = postCoverURLs;
     setDoc(
       doc(FIREBASE_DB, `users/${authorUid}/blogs/${blog.id}`),
@@ -99,7 +98,7 @@ async function destroyPostRecord(userUid: string, blogId: string) {
 async function createBlogCoverRecord(blog: Blog) {
   let blogCoverData = {
     post_title: blog.post.title,
-    post_image_cover: blog.post.image_cover,
+    post_image_cover: blog.post.images[0],
     post_likes_count: blog.likes_count,
     author_uid: blog.author_uid,
     author: blog.author,

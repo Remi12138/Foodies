@@ -16,7 +16,6 @@ function PostBtnSubmit() {
     console.log({
       title: draft.title,
       content: draft.content,
-      cover: draft.image_cover,
       images: draft.images,
     });
     try {

@@ -14,7 +14,6 @@ type DraftImage = string;
 function PostImagePicker() {
   const {
     draft,
-    setImageCover,
     addImage,
     setImages,
     loadDraftFromStorage,
@@ -41,9 +40,6 @@ function PostImagePicker() {
     if (!result.canceled) {
       const selectedImages = result.assets?.map((asset) => asset.uri) || [];
       selectedImages.forEach((image, index) => {
-        if (draft.images.length === 0 && index === 0) {
-          setImageCover(image); // Set the first image as the cover image if none exists
-        }
         addImage(image);
       });
 
@@ -51,7 +47,7 @@ function PostImagePicker() {
     }
   };
 
-  const renderItem = ({ item, drag }: RenderItemParams<DraftImage>) => {
+  function renderItem({ item, drag }: RenderItemParams<DraftImage>) {
     const index = draft.images.indexOf(item);
     const label =
       index === 0 ? "Cover" : `${index + 1}${getOrdinalSuffix(index + 1)}`;
@@ -63,14 +59,14 @@ function PostImagePicker() {
         <Text style={styles.imageLabel}>{label}</Text>
       </View>
     );
-  };
+  }
 
-  const getOrdinalSuffix = (number: number) => {
+  function getOrdinalSuffix(number: number) {
     if (number === 1) return "st";
     if (number === 2) return "nd";
     if (number === 3) return "rd";
     return "th";
-  };
+  }
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -82,7 +78,6 @@ function PostImagePicker() {
           horizontal
           onDragEnd={({ data }) => {
             setImages(data);
-            setImageCover(data[0]);
             saveDraftToStorage();
           }}
           ListFooterComponent={
