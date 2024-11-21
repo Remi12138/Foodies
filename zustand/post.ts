@@ -25,7 +25,7 @@ const defaultDraft: Post = {
   title: "",
   content: "",
   images: [],
-  rtt_yelp_id: "EvJqRISUz3IqSfIW0lygDg",
+  rtt_yelp_id: "",
 };
 
 export const usePostStore = create<PostStore>()((set) => ({
