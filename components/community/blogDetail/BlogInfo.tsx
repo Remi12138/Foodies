@@ -40,7 +40,7 @@ function BlogInfo({
           const blogCover = {
             blog_id: blog.id,
             post_title: blog.post.title,
-            post_image_cover: blog.post.image_cover,
+            post_image_cover: blog.post.images[0],
             post_likes_count: blog.likes_count,
             author_uid: blog.author_uid,
             author: blog.author,
