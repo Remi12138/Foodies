@@ -1,13 +1,24 @@
 import { FIREBASE_STORAGE } from "@/firebaseConfig";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
-async function uploadPostCover(image: string, userUid: string, blogId: string) {
+async function uploadPostImages(
+  images: string[],
+  userUid: string,
+  blogId: string
+) {
+  const uploadPromises = images.map((image, index) => {
+    const path = `blogs/${userUid}/${blogId}/post_${index}.jpg`;
+    return uploadPostImage(image, path);
+  });
+
+  const downloadURLs = await Promise.all(uploadPromises);
+  return downloadURLs;
+}
+
+async function uploadPostImage(image: string, path: string) {
   let downloadURL = "";
   try {
-    const postCoverRef = ref(
-      FIREBASE_STORAGE,
-      `blogs/${userUid}/${blogId}/cover.jpg`
-    );
+    const postCoverRef = ref(FIREBASE_STORAGE, path);
     // Convert the image URI to a blob
     const response = await fetch(image);
     const blob = await response.blob();
@@ -25,4 +36,4 @@ async function uploadPostCover(image: string, userUid: string, blogId: string) {
   }
 }
 
-export { uploadPostCover };
+export { uploadPostImages };

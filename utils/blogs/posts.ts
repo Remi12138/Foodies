@@ -10,7 +10,7 @@ import {
   getDoc,
   setDoc,
 } from "firebase/firestore";
-import { uploadPostCover } from "./images";
+import { uploadPostImages } from "./images";
 
 async function fetchPostRecord(
   authorUid: string,
@@ -59,14 +59,15 @@ async function createPostRecord(
       `users/${authorUid}/blogs`
     );
     const blog = await addDoc(blogsCollectionRef, draftBlog);
-    const postCoverURL = await uploadPostCover(
-      draft.image_cover,
+    const postCoverURLs = await uploadPostImages(
+      draft.images,
       authorUid,
       blog.id
     );
 
     // Update the post cover URL in the blog record
-    draftBlog.post.image_cover = postCoverURL;
+    draftBlog.post.image_cover = postCoverURLs[0];
+    draftBlog.post.images = postCoverURLs;
     setDoc(
       doc(FIREBASE_DB, `users/${authorUid}/blogs/${blog.id}`),
       {
