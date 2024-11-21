@@ -65,7 +65,7 @@ function PostCreate() {
           />
           <TextInput
             style={styles.rttInput}
-            placeholder="EvJqRISUz3IqSfIW0lygDg"
+            placeholder={draft.rtt_yelp_id}
             value={draft.rtt_yelp_id}
             onChangeText={handleRttYelpIdChange}
           />
