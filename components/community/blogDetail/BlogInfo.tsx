@@ -2,11 +2,12 @@ import { useState } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
-import { getAuth } from "firebase/auth";
 import BlogAuthor from "@/components/community/blogDetail/BlogAuthor";
 import { useCollectionStore } from "@/zustand/collections";
 import { updateFavoriteBlogIdFromServer } from "@/utils/blogs/favorites";
 import { Blog, BlogCover } from "@/zustand/blog";
+import { FIREBASE_AUTH } from "@/firebaseConfig";
+import { ThemedText } from "@/components/ThemedText";
 
 function BlogInfo({
   blog,
@@ -18,7 +19,7 @@ function BlogInfo({
   const { blogIds, setBlogIds, addBlogCover, removeBlogCover } =
     useCollectionStore();
   const [isLiked, setIsLiked] = useState<boolean>(isInitiallyLiked);
-  const currentUser = getAuth().currentUser;
+  const currentUser = FIREBASE_AUTH.currentUser;
 
   const toggleLike = async () => {
     if (currentUser) {
@@ -65,6 +66,9 @@ function BlogInfo({
             color={isLiked ? "#D1382C" : "#000"}
           />
         </TouchableOpacity>
+        <ThemedView style={styles.likecount}>
+          <ThemedText>{blog.likes_count}</ThemedText>
+        </ThemedView>
         <TouchableOpacity style={styles.shareButton}>
           <Entypo name="share" size={24} color="#000" />
         </TouchableOpacity>
@@ -86,6 +90,8 @@ const styles = StyleSheet.create({
   },
   likeButton: {
     padding: 8,
+  },
+  likecount: {
     marginRight: 8,
   },
   shareButton: {
