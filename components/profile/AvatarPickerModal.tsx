@@ -39,8 +39,8 @@ export default function AvatarPickerModal({
       if (result.assets && result.assets.length > 0) {
         const manipulatedImage = await ImageManipulator.manipulateAsync(
           result.assets[0].uri,
-          [{ resize: { width: 64, height: 64 } }],
-          { compress: 0.5, format: ImageManipulator.SaveFormat.PNG }
+          [{ resize: { width: 256, height: 256 } }],
+          { compress: 1, format: ImageManipulator.SaveFormat.PNG }
         );
         setSelectedAvatar(manipulatedImage.uri);
         setIsImagePicked(true);
