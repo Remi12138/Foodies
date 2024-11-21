@@ -7,6 +7,7 @@ import { getAuth } from "firebase/auth";
 import { useUserStore } from "@/zustand/user";
 import { router } from "expo-router";
 import { useState } from "react";
+import { draftValidate } from "@/utils/blogs/form";
 
 function PostBtnSubmit() {
   const { user } = useUserStore();
@@ -15,6 +16,12 @@ function PostBtnSubmit() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleCreateBlog = async () => {
+    const formMsg = draftValidate(draft);
+    if (formMsg !== "validated") {
+      alert(formMsg);
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       if (currentUser && user) {
