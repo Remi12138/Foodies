@@ -13,11 +13,6 @@ function PostBtnSubmit() {
   const currentUser = getAuth().currentUser;
 
   const handleCreateBlog = async () => {
-    console.log({
-      title: draft.title,
-      content: draft.content,
-      images: draft.images,
-    });
     try {
       if (currentUser && user) {
         await createPostRecord(draft, currentUser.uid, user);

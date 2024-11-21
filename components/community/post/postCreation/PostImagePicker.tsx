@@ -76,8 +76,9 @@ function PostImagePicker() {
     return (
       <View style={styles.imageWrapper}>
         <TouchableOpacity
-          onPress={() => openModal(item)}
-          delayPressIn={150}
+          onPress={() => handleImagePress(item)}
+          onLongPress={drag}
+          delayLongPress={150}
           activeOpacity={1}
         >
           <Image source={{ uri: item }} style={styles.image} />
@@ -93,6 +94,14 @@ function PostImagePicker() {
     if (number === 3) return "rd";
     return "th";
   }
+
+  const handleImagePress = (image: string) => {
+    if (currentImage === image) {
+      openModal(image);
+    } else {
+      setCurrentImage(image);
+    }
+  };
 
   const openModal = (image: string) => {
     setCurrentImage(image);
@@ -147,16 +156,18 @@ function PostImagePicker() {
 
       <Modal visible={isModalVisible} transparent={true} animationType="fade">
         <View style={styles.modalBackground}>
-          <Image
-            source={{ uri: currentImage || "" }}
-            style={styles.fullScreenImage}
-          />
+          {currentImage && (
+            <Image
+              source={{ uri: currentImage }}
+              style={styles.fullScreenImage}
+            />
+          )}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
             <TouchableOpacity style={styles.deleteButton} onPress={deleteImage}>
               <Text style={styles.deleteButtonText}>Delete</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+              <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -230,7 +241,6 @@ const styles = StyleSheet.create({
   closeButton: {
     backgroundColor: "#000",
     padding: 10,
-    borderRadius: 5,
   },
   closeButtonText: {
     color: "#FFF",
@@ -240,7 +250,6 @@ const styles = StyleSheet.create({
   deleteButton: {
     backgroundColor: "#FF0000",
     padding: 10,
-    borderRadius: 5,
   },
   deleteButtonText: {
     color: "#FFF",
