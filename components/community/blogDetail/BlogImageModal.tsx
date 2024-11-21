@@ -67,10 +67,12 @@ function BlogImageModal({ images }: BlogImageModalProps) {
 
       <Modal visible={isModalVisible} transparent={true} animationType="fade">
         <View style={styles.modalBackground}>
-          <Image
-            source={{ uri: currentImage || "" }}
-            style={styles.fullScreenImage}
-          />
+          {currentImage && (
+            <Image
+              source={{ uri: currentImage }}
+              style={styles.fullScreenImage}
+            />
+          )}
           <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
             <ThemedText style={styles.closeButtonText}>Close</ThemedText>
           </TouchableOpacity>
