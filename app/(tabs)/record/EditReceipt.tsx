@@ -65,12 +65,15 @@ const EditReceiptScreen: React.FC = () => {
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.label}>Edit Title</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Title"
-                value={title}
-                onChangeText={(text) => setTitle(text)}
-            />
+            <View style={styles.amountContainer}>
+                <TextInput
+                    style={[styles.input, styles.amountInput]}
+                    placeholder="Title"
+                    value={title}
+                    onChangeText={(text) => setTitle(text)}
+                />
+                <Text style={styles.currencySymbol}>  </Text>
+            </View>
             <Text style={styles.label}>Edit Amount</Text>
             <View style={styles.amountContainer}>
                 <TextInput

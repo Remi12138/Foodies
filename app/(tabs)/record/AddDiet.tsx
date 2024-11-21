@@ -317,10 +317,10 @@ const UploadDietScreen: React.FC = () => {
                         {loading ? (
                             <>
                                 <ActivityIndicator size="large" color="#0000ff" />
-                                <Text>Compressing Image...</Text>
+                                <Text style={styles.selectText}>Compressing Image...</Text>
                             </>
                         ) : (
-                            <Text>Select Image</Text>
+                            <Text style={styles.selectText}>Select Image</Text>
                         )}
                     </View>
                 )}
@@ -328,10 +328,10 @@ const UploadDietScreen: React.FC = () => {
 
             <Button title="Start Analyze" onPress={handleAnalyze} />
             {analyzeLoading && (
-                <>
+                <View style={styles.loadingContainer}>
+                    <Text style={styles.loadingText}>Analyzing...</Text>
                     <ActivityIndicator size="small" color="#0000ff" />
-                    <Text>Analyzing...</Text>
-                </>
+                </View>
             )}
         </View>
     );
@@ -386,6 +386,21 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 8,
+    },
+    selectText: {
+        color: '#555',
+        fontSize: 16,
+    },
+    loadingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+    },
+    loadingText: {
+        // marginLeft: 10,
+        fontSize: 18,
+        color: '#000',
     },
 });
 

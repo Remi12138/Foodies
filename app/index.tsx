@@ -9,6 +9,8 @@ import { initBlogCollections } from "@/utils/blogs/favorites";
 import { initUserCollection, initUserProfile } from "@/utils/users/init";
 import { useUserStore } from "@/zustand/user";
 import { fetchUserPublicProfile } from "@/utils/users/info";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import OnboardingScreen from "./OnboardingScreen";
 
 // Set up notification handler for in-app notifications
 Notifications.setNotificationHandler({
@@ -26,8 +28,18 @@ export default function HomeScreen() {
   const [userSignedIn, setUserSignedIn] = useState(false);
   const [userVerified, setUserVerified] = useState(false);
   const { setBlogIds, setBlogCovers } = useCollectionStore();
+  const [showOnboarding, setShowOnboarding] = useState(true);
 
   useEffect(() => {
+    const checkOnboarding = async () => {
+      const hasSeenOnboarding = await AsyncStorage.getItem("hasSeenOnboarding");
+      if (!hasSeenOnboarding) {
+        setShowOnboarding(true);
+      }
+    };
+
+    checkOnboarding();
+
     // Show splash screen for 1.5 seconds
     const splashTimeout = setTimeout(() => {
       setShowSplash(false);
@@ -42,8 +54,8 @@ export default function HomeScreen() {
           const userProfile = await fetchUserPublicProfile(firebaseUser.uid);
           if (!userProfile) {
             console.log(
-              "User profile not found and just created for user:",
-              firebaseUser.uid
+                "User profile not found and just created for user:",
+                firebaseUser.uid
             );
             const userNewProfile = await initUserProfile(firebaseUser.uid);
             setUser(userNewProfile);
@@ -63,9 +75,9 @@ export default function HomeScreen() {
 
     // Listen for incoming notifications
     const notificationListener = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        console.log("Notification received:", notification);
-      }
+        (notification) => {
+          console.log("Notification received:", notification);
+        }
     );
 
     return () => {
@@ -78,12 +90,23 @@ export default function HomeScreen() {
   // Show splash screen during loading
   if (showSplash || loading) {
     return (
-      <View style={styles.container}>
-        <Image
-          source={require("@/assets/images/foodies-entry.jpg")}
-          style={styles.fullScreenImage}
+        <View style={styles.container}>
+          <Image
+              source={require("@/assets/images/foodies-entry.jpg")}
+              style={styles.fullScreenImage}
+          />
+        </View>
+    );
+  }
+
+  if (showOnboarding) {
+    return (
+        <OnboardingScreen
+            onDone={async () => {
+              await AsyncStorage.setItem("hasSeenOnboarding", "true");
+              setShowOnboarding(false);
+            }}
         />
-      </View>
     );
   }
 

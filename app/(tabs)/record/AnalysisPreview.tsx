@@ -34,10 +34,10 @@ const AnalysisPreviewScreen: React.FC = () => {
         const grade = gradeMatch ? gradeMatch[1].trim() : "N/A";
         const icon = iconMatch ? iconMatch[1].trim() : "🍽️";
 
-        console.log("Advice:", content);
-        console.log("Parsed Advice:", advice);
-        console.log("Parsed Grade:", grade);
-        console.log("Parsed Icon:", icon);
+        // console.log("Advice:", content);
+        // console.log("Parsed Advice:", advice);
+        // console.log("Parsed Grade:", grade);
+        // console.log("Parsed Icon:", icon);
 
         return { advice, grade, icon };
     };

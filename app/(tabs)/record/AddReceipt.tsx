@@ -166,9 +166,12 @@ const UploadReceiptScreen: React.FC = () => {
                 />
                 <Text style={styles.currencySymbol}>$</Text>
             </View>
-            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
-                <Text style={styles.dateText}>Select Date: {new Date(date).toLocaleDateString()}</Text>
-            </TouchableOpacity>
+            <View style={styles.amountContainer}>
+                <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
+                    <Text style={styles.dateText}>Select Date: {new Date(date).toLocaleDateString()}</Text>
+                </TouchableOpacity>
+                <Text style={styles.currencySymbol}>  </Text>
+            </View>
             {showDatePicker && (
                 <DateTimePicker
                     value={new Date(date)}
@@ -268,6 +271,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     datePickerButton: {
+        flex: 1,
         marginBottom: 20,
         paddingVertical: 12,
         backgroundColor: '#F4511E',
