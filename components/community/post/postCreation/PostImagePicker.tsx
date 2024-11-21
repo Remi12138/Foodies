@@ -1,5 +1,13 @@
-import { useEffect } from "react";
-import { StyleSheet, TouchableOpacity, Image, Text, View } from "react-native";
+import { useState, useEffect } from "react";
+import {
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Text,
+  View,
+  Dimensions,
+} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
@@ -9,6 +17,8 @@ import DraggableFlatList, {
 } from "react-native-draggable-flatlist";
 import * as ImageManipulator from "expo-image-manipulator";
 import { usePostStore } from "@/zustand/post";
+
+const { width, height } = Dimensions.get("window");
 
 type DraftImage = string;
 
@@ -20,6 +30,9 @@ function PostImagePicker() {
     loadDraftFromStorage,
     saveDraftToStorage,
   } = usePostStore();
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
 
   useEffect(() => {
     loadDraftFromStorage();
@@ -62,7 +75,11 @@ function PostImagePicker() {
       index === 0 ? "Cover" : `${index + 1}${getOrdinalSuffix(index + 1)}`;
     return (
       <View style={styles.imageWrapper}>
-        <TouchableOpacity onLongPress={drag}>
+        <TouchableOpacity
+          onLongPress={() => openModal(item)}
+          delayPressIn={150}
+          activeOpacity={1}
+        >
           <Image source={{ uri: item }} style={styles.image} />
         </TouchableOpacity>
         <Text style={styles.imageLabel}>{label}</Text>
@@ -76,6 +93,25 @@ function PostImagePicker() {
     if (number === 3) return "rd";
     return "th";
   }
+
+  const openModal = (image: string) => {
+    setCurrentImage(image);
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+    setCurrentImage(null);
+  };
+
+  const deleteImage = () => {
+    if (currentImage) {
+      const updatedImages = draft.images.filter((img) => img !== currentImage);
+      setImages(updatedImages);
+      saveDraftToStorage();
+      closeModal();
+    }
+  };
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -108,6 +144,21 @@ function PostImagePicker() {
           }
         />
       </ThemedView>
+
+      <Modal visible={isModalVisible} transparent={true} animationType="fade">
+        <View style={styles.modalBackground}>
+          <Image
+            source={{ uri: currentImage || "" }}
+            style={styles.fullScreenImage}
+          />
+          <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.deleteButton} onPress={deleteImage}>
+            <Text style={styles.deleteButtonText}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </GestureHandlerRootView>
   );
 }
@@ -154,6 +205,43 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 2,
     overflow: "hidden",
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+  },
+  fullScreenImage: {
+    width: width,
+    height: height,
+    resizeMode: "contain",
+  },
+  closeButton: {
+    position: "absolute",
+    top: 40,
+    right: 20,
+    backgroundColor: "#000",
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  deleteButton: {
+    position: "absolute",
+    bottom: 40,
+    right: 20,
+    backgroundColor: "#FF0000",
+    padding: 10,
+    borderRadius: 5,
+  },
+  deleteButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 
