@@ -26,7 +26,6 @@ export default function ExploreScreen() {
   const [loading, setLoading] = useState(true);
   const fetchRestaurants = useRestaurantStore(
     (state) => state.fetchRestaurants
-    (state) => state.fetchRestaurants
   );
   const fetchFakeRestaurants = useRestaurantStore(
     (state) => state.fetchFakeRestaurants

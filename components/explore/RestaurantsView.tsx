@@ -4,7 +4,7 @@ import { Restaurant, useRestaurantStore } from "@/zustand/restaurant";
 import RestaurantCard from "./RestaurantCard";
 import React from "react";
 import { useLocation } from "@/zustand/location";
-import { useRouter } from "expo-router"; // 导入 useRouter 钩子
+import { useRouter } from "expo-router"; 
 
 interface RestaurantsViewProps {
   data: Restaurant[];
@@ -13,7 +13,7 @@ interface RestaurantsViewProps {
 function RestaurantsView({ data }: RestaurantsViewProps) {
   const [refreshing, setRefreshing] = useState(false);
   const { userLocation, fetchLocation } = useLocation();
-  const router = useRouter(); // 初始化 router
+  const router = useRouter(); 
 
   useEffect(() => {
     fetchLocation();
@@ -45,7 +45,7 @@ function RestaurantsView({ data }: RestaurantsViewProps) {
   const renderRestaurantCard = ({ item }: { item: Restaurant }) => (
     <TouchableOpacity
       style={styles.cardContainer}
-      onPress={() => router.push(`/explore/${item.name}`)} // 导航到餐厅详情页面
+      onPress={() => router.push(`/explore/${item.name}`)} 
     >
       <RestaurantCard item={item} />
     </TouchableOpacity>
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingVertical: 10,
     paddingHorizontal: 10,
-    marginTop: 60, // 添加 marginTop 以向下移动列表
+    marginTop: 60,
   },
   cardContainer: {
     marginBottom: 10,

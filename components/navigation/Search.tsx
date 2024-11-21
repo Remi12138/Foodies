@@ -12,6 +12,7 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import { Restaurant } from "@/zustand/restaurant";
 import { useLocation } from "@/zustand/location"; 
+import * as Location from 'expo-location';
 
 const fetchCoordinatesFromAddress = async (address: string) => {
   const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
@@ -23,9 +24,7 @@ const fetchCoordinatesFromAddress = async (address: string) => {
       const location = data[0];
       console.log("Latitude:", location.lat, "Longitude:", location.lon);
       return { latitude: parseFloat(location.lat), longitude: parseFloat(location.lon) };
-    } else {
-      throw new Error("No results found for this address.");
-    }
+    } 
   } catch (error) {
     console.error("Error fetching coordinates:", error);
   }
@@ -48,7 +47,7 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
     "Raleigh, NC",
     "San Francisco, CA",
   ]); 
-  const { userLocation, setLocation: setUserLocation, fetchLocation } = useLocation(); 
+  const { userLocation, setLocation: setUserLocation } = useLocation(); 
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -75,37 +74,52 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
         setUserLocation({
           latitude: coordinates.latitude,
           longitude: coordinates.longitude,
-        }); // 更新用户位置
+        }); 
         console.log("User location updated:", coordinates);
 
         if (!recentLocations.includes(location)) {
-          setRecentLocations([location, ...recentLocations].slice(0, 5)); // 更新最近地址列表
+          setRecentLocations([location, ...recentLocations].slice(0, 5)); // Update recent locations list
         }
 
-        setIsModalVisible(false); // 关闭 Modal
-        Keyboard.dismiss(); // 关闭键盘
-      } else {
-        console.error("Could not fetch coordinates for the provided address.");
-      }
+        setIsModalVisible(false); 
+        Keyboard.dismiss(); 
+      } 
     } catch (error) {
       console.error("Error occurred while fetching location:", error);
     }
   };
 
-  const handleRecentLocationSelect = (selectedLocation: string) => {
+  const handleRecentLocationSelect = async (selectedLocation: string) => {
     setLocation(selectedLocation);
-    handleLocationSubmit(); 
+    //await handleLocationSubmit();
   };
 
   const handleUseSystemLocation = async () => {
     try {
-      await fetchLocation(); 
-      setIsModalVisible(false); 
-      console.log("System location used:", userLocation);
+      // Request permission to access location
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.error('Permission to access location was denied');
+        return;
+      }
+  
+      // Fetch the current position
+      const location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+  
+      // Update the user's location in the Zustand store
+      setUserLocation({ latitude, longitude });
+  
+      console.log('System location used:', { latitude, longitude });
+  
+      // Close the modal
+      setIsModalVisible(false);
     } catch (error) {
-      console.error("Error fetching system location:", error);
+      console.error('Failed to fetch system location:', error);
     }
   };
+  
+  
 
   return (
     <View style={styles.container}>
@@ -278,6 +292,5 @@ const styles = StyleSheet.create({
     color: "#007aff",
   },
 });
-
 
 export default Search;

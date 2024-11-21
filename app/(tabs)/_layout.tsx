@@ -44,7 +44,7 @@ export default function TabLayout() {
             title: "Explore",
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon
-                name={focused ? "pizza" : "pizza-outline"}
+                name={focused ? "globe" : "globe-outline"}
                 color={color}
               />
             ),
