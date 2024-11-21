@@ -64,7 +64,7 @@ function BlogDetail({
     );
   }
 
-  const images = [blog.post.image_cover, ...blog.post.images];
+  const images = [...blog.post.images];
   const blogUpdatedTime = blog.updated_at as unknown as Timestamp;
   const formattedUpdatedTime = formatBlogUpdatedTime(blogUpdatedTime);
 
