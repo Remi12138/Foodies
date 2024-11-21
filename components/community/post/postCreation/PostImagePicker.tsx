@@ -56,9 +56,9 @@ function PostImagePicker() {
       for (const image of selectedImages) {
         const manipulatedImage = await ImageManipulator.manipulateAsync(
           image,
-          [{ resize: { width: 1080 } }],
+          [{ resize: { width: 512 } }],
           {
-            compress: 0.8,
+            compress: 0.6,
             format: ImageManipulator.SaveFormat.PNG,
             base64: true,
           }

@@ -6,13 +6,16 @@ import { createPostRecord } from "@/utils/blogs/posts";
 import { getAuth } from "firebase/auth";
 import { useUserStore } from "@/zustand/user";
 import { router } from "expo-router";
+import { useState } from "react";
 
 function PostBtnSubmit() {
   const { user } = useUserStore();
   const { draft, resetDraft } = usePostStore();
   const currentUser = getAuth().currentUser;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleCreateBlog = async () => {
+    setIsSubmitting(true);
     try {
       if (currentUser && user) {
         await createPostRecord(draft, currentUser.uid, user);
@@ -25,6 +28,8 @@ function PostBtnSubmit() {
     } catch (error) {
       console.error("Error creating post:", error);
       alert("An error occurred while creating the post");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -38,12 +43,13 @@ function PostBtnSubmit() {
     <TouchableOpacity
       style={[styles.postButton, { backgroundColor: postButtonBackground }]}
       onPress={handleCreateBlog}
+      disabled={isSubmitting}
     >
       <ThemedText
         type="default"
         style={[styles.postButtonText, { color: postButtonText }]}
       >
-        Post
+        {isSubmitting ? "Posting..." : "Post"}
       </ThemedText>
     </TouchableOpacity>
   );
