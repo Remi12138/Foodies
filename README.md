@@ -12,16 +12,15 @@ A blog sharing place.
 
 Explore food places around the world via list and map.
 
-### People
-
-Add/View followers
-
-### Profile
+### Record
 
 1. Manage receipts
 2. Find out food details e.g. calories
-3. Settings
-4. User authentication
+
+### Profile
+
+1. Settings
+2. User authentication
 
 ## API
 

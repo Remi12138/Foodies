@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   View,
+  StatusBar,
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
@@ -24,6 +25,7 @@ export default function ExploreScreen() {
   const [isMapView, setIsMapView] = useState(false);
   const [loading, setLoading] = useState(true);
   const fetchRestaurants = useRestaurantStore(
+    (state) => state.fetchRestaurants
     (state) => state.fetchRestaurants
   );
   const fetchFakeRestaurants = useRestaurantStore(
@@ -58,6 +60,7 @@ export default function ExploreScreen() {
     await fetchLocation();
     if (userLocation.latitude && userLocation.longitude) {
       await fetchRestaurants(userLocation);
+      await fetchRestaurants(userLocation);
     }
     console.log("userLocation", userLocation);
     setLoading(false);
@@ -68,7 +71,7 @@ export default function ExploreScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+    <SafeAreaView style={styles.safeArea}>
       <ThemedView style={styles.titleContainer}>
         <ThemedView style={{ flexDirection: "row" }}>
           <ThemedText type="title">Explore</ThemedText>
@@ -80,7 +83,7 @@ export default function ExploreScreen() {
           </ThemedText>
         </TouchableOpacity>
       </ThemedView>
-      
+
       <ThemedView style={{ flex: 1, paddingTop: 60 }}>
         {/* 使用绝对定位将 ExploreBar 覆盖在内容顶部 */}
         <View style={styles.exploreBarContainer}>
@@ -104,6 +107,11 @@ export default function ExploreScreen() {
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#FFF",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
   headerImage: {
     height: 199,
     bottom: 0,
@@ -135,5 +143,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff", // 设置背景色以覆盖下方内容
   },
 });
-
-

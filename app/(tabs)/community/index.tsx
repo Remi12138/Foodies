@@ -1,7 +1,13 @@
 import { HelloWave } from "@/components/common/HelloWave";
 import { Ionicons } from "@expo/vector-icons";
 
-import { StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  Platform,
+  StatusBar,
+} from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 
@@ -11,7 +17,7 @@ import { router } from "expo-router";
 
 export default function CommunityScreen() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+    <SafeAreaView style={styles.safeArea}>
       <ThemedView style={styles.titleContainer}>
         <ThemedView style={{ flexDirection: "row" }}>
           <ThemedText type="title">Community</ThemedText>
@@ -29,7 +35,7 @@ export default function CommunityScreen() {
         </TouchableOpacity>
       </ThemedView>
       <ThemedView style={{ flex: 1 }}>
-        <CommunityBar />
+        {/* <CommunityBar /> */}
         <Blogs />
       </ThemedView>
     </SafeAreaView>
@@ -37,6 +43,11 @@ export default function CommunityScreen() {
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#FFF",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
   headerImage: {
     height: 199,
     bottom: 0,

@@ -109,14 +109,13 @@ export default function CreateModal() {
                   if (index === 1) {
                     // Navigate to the Scan Receipt Screen
                     toggleMenu();
-                    router.push("/profile/AddReceipt");
+                    router.push("/record/AddReceipt");
                   }
                   if (index === 2) {
                     // Navigate to the Diet Camera Screen
                     toggleMenu();
-                    router.push("/profile/AddDiet");
+                    router.push("/record/AddDiet");
                   }
-                  console.log("hander for", buttonLabels[index]);
                 }}
               >
                 <ThemedView style={styles.optionButton}>
@@ -155,25 +154,26 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.6)", // You can adjust the opacity value for more or less darkness
   },
   fab: {
-    bottom: -5,
+    bottom: -3,
     backgroundColor: "#D1382C",
-    width: 45,
-    height: 45,
-    borderRadius: 30,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,
   },
   modalFab: {
     position: "absolute",
-    bottom: 25,
+    bottom: Platform.OS === "ios" ? 22 : 9,
     alignSelf: "center",
     width: 45,
     height: 45,
-    borderRadius: 30,
+    borderRadius: 23,
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,
+    backgroundColor: "#A9A9A9",
   },
   button: {
     position: "absolute",
