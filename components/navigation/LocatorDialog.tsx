@@ -43,9 +43,7 @@ const fetchCoordinatesFromAddress = async (address: string) => {
       const location = data[0];
       console.log("Latitude:", location.lat, "Longitude:", location.lon);
       return { latitude: parseFloat(location.lat), longitude: parseFloat(location.lon) };
-    } else {
-      throw new Error("No results found for this address.");
-    }
+    } 
   } catch (error) {
     console.error("Error fetching coordinates:", error);
   }

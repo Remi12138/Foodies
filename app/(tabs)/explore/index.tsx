@@ -43,8 +43,8 @@ export default function ExploreScreen() {
   useEffect(() => {
     const fetchData = async () => {
       console.log("Updated userLocation in component:", userLocation);
-      if (userLocation.latitude && userLocation.longitude) {
-        await fetchRestaurants(userLocation);
+      if (userLocation.latitude && userLocation.longitude) { 
+        await fetchRestaurants(userLocation); 
         setFilteredRestaurants(restaurants);
       }
     };
@@ -58,6 +58,7 @@ export default function ExploreScreen() {
     setLoading(true);
     await fetchLocation();
     if (userLocation.latitude && userLocation.longitude) {
+      await fetchRestaurants(userLocation);
       await fetchRestaurants(userLocation);
     }
     console.log("userLocation", userLocation);
