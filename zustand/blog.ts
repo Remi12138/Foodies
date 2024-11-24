@@ -9,6 +9,7 @@ export type BlogCover = {
   post_likes_count: number;
   author_uid: string;
   author: UserPublicProfile;
+  rtt_yelp_id: string;
 };
 
 export type Blog = {
