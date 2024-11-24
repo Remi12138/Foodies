@@ -17,6 +17,7 @@ function PostCreate() {
     draft,
     setTitle,
     setContent,
+    setRttYelpId,
     loadDraftFromStorage,
     saveDraftToStorage,
   } = usePostStore();
@@ -32,6 +33,11 @@ function PostCreate() {
 
   const handleContentChange = (content: string) => {
     setContent(content);
+    debouncedSaveDraft();
+  };
+
+  const handleRttYelpIdChange = (rttYelpId: string) => {
+    setRttYelpId(rttYelpId);
     debouncedSaveDraft();
   };
 
@@ -56,6 +62,12 @@ function PostCreate() {
             value={draft.content}
             onChangeText={handleContentChange}
             multiline
+          />
+          <TextInput
+            style={styles.rttInput}
+            placeholder="EvJqRISUz3IqSfIW0lygDg"
+            value={draft.rtt_yelp_id}
+            onChangeText={handleRttYelpIdChange}
           />
         </ScrollView>
         <PostBtnSubmit />
@@ -90,6 +102,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     height: 120,
     textAlignVertical: "top",
+  },
+  rttInput: {
+    fontSize: 16,
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+    marginBottom: 15,
+    paddingVertical: 10,
   },
 });
 

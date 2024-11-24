@@ -102,6 +102,7 @@ async function createBlogCoverRecord(blog: Blog) {
     post_likes_count: blog.likes_count,
     author_uid: blog.author_uid,
     author: blog.author,
+    rtt_yelp_id: blog.post.rtt_yelp_id,
   } as BlogCover;
 
   try {

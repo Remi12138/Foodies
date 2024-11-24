@@ -4,6 +4,8 @@ import {
   StyleSheet,
   Dimensions,
   ActivityIndicator,
+  TouchableOpacity,
+  Linking,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { Blog } from "@/zustand/blog";
@@ -20,6 +22,7 @@ import { useCollectionStore } from "@/zustand/collections";
 import { formatBlogUpdatedTime } from "@/utils/blogs/info";
 import BlogImageModal from "./BlogImageModal";
 import { FIREBASE_AUTH } from "@/firebaseConfig";
+import { FontAwesome } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
@@ -91,6 +94,27 @@ function BlogDetail({
             </ThemedText>
           </ThemedView>
         </ThemedView>
+
+        {blog.post.rtt_yelp_id && blog.post.rtt_yelp_id != "" && (
+          <ThemedView style={{ padding: 15 }}>
+            <ThemedText>
+              This post mentioned a restaurant @{blog.post.rtt_yelp_id}
+            </ThemedText>
+            <TouchableOpacity
+              style={styles.yelpButton}
+              onPress={() =>
+                Linking.openURL(
+                  `https://www.yelp.com/biz/${blog.post.rtt_yelp_id}`
+                )
+              }
+            >
+              <FontAwesome name="yelp" size={24} color="white" />
+              <ThemedText style={styles.yelpButtonText}>
+                View on Yelp
+              </ThemedText>
+            </TouchableOpacity>
+          </ThemedView>
+        )}
       </ScrollView>
     </GestureHandlerRootView>
   );
@@ -138,6 +162,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "right",
     marginTop: 8,
+  },
+  yelpButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#d32323",
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 16,
+  },
+  yelpButtonText: {
+    color: "white",
+    fontSize: 16,
+    marginLeft: 8,
   },
 });
 
