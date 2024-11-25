@@ -20,34 +20,13 @@ export default function ProfileScreen() {
       }
     >
       <WelcomeBar />
-      {/*<ThemedView>*/}
-      {/*  <TouchableOpacity*/}
-      {/*      style={styles.row}*/}
-      {/*      onPress={() => {*/}
-      {/*        router.push("/profile/MyDiets");*/}
-      {/*      }}*/}
-      {/*  >*/}
-      {/*    <ThemedText style={styles.rowText}>My Diets</ThemedText>*/}
-      {/*    <Ionicons name="chevron-forward" size={24} color="gray" />*/}
-      {/*  </TouchableOpacity>*/}
-      {/*</ThemedView>*/}
       <ThemedView>
         <TouchableOpacity style={styles.row}>
           <ThemedText style={styles.rowText}>My Posts</ThemedText>
           <Ionicons name="chevron-forward" size={24} color="gray" />
         </TouchableOpacity>
       </ThemedView>
-      {/*<ThemedView>*/}
-      {/*  <TouchableOpacity*/}
-      {/*      style={styles.row}*/}
-      {/*      onPress={() => {*/}
-      {/*        router.push("/profile/MyReceipts");*/}
-      {/*      }}*/}
-      {/*  >*/}
-      {/*    <ThemedText style={styles.rowText}>My Receipts</ThemedText>*/}
-      {/*    <Ionicons name="chevron-forward" size={24} color="gray" />*/}
-      {/*  </TouchableOpacity>*/}
-      {/*</ThemedView>*/}
+
       <ThemedView>
         <TouchableOpacity
           style={styles.row}

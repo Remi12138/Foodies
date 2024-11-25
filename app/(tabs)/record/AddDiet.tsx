@@ -21,9 +21,16 @@ import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as ImageManipulator from 'expo-image-manipulator';
 import CryptoJS from 'crypto-js';
+import {ThemedView} from "@/components/ThemedView";
+import {ThemedText} from "@/components/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 const MAX_SIZE_MB = 2;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024; // 2MB in bytes
+
+const apiKey = "vmg48AzN.7kadZgKHh9vPLjofJzyc2w21lRVSaVTg";
+const url = "https://vision.foodvisor.io/api/1.0/en/analysis/";
+
 
 const UploadDietScreen: React.FC = () => {
     const [imgUri, setImgUri] = useState<string | null>(null);
@@ -33,6 +40,8 @@ const UploadDietScreen: React.FC = () => {
     const { addDiet } = useDietStore();
     const [loading, setLoading] = useState(false);
     const [analyzeLoading, setAnalyzeLoading] = useState(false);
+    const textColor = useThemeColor({}, "text");
+    const tabIconDefaultColor = useThemeColor({}, "tabIconDefault");
     let analysisData: any;
     let newDiet: Diet;
     const navigation = useNavigation();
@@ -52,12 +61,12 @@ const UploadDietScreen: React.FC = () => {
         }
     };
 
-    // Todo: response.status === 4xx, return?
     // Call api, return data
+    // 200: Analysis successful.
+    // 400: Request malformed.  403: Access forbidden.
+    // 404: Requested resource does not exist.
+    // 429: Maximum calls reached, or rate limit exceeded.
     const analyzeImage = async (imageUri: string) => {
-        const apiKey = "vmg48AzN.7kadZgKHh9vPLjofJzyc2w21lRVSaVTg";
-        const url = "https://vision.foodvisor.io/api/1.0/en/analysis/";
-
         try {
             // Load the image as bytes
             const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {
@@ -76,12 +85,22 @@ const UploadDietScreen: React.FC = () => {
                 "Authorization": `Api-Key ${apiKey}`,
                 "Content-Type": "multipart/form-data",
             };
-
+            setAnalyzeLoading(true);
             const response = await axios.post(url, formData, { headers });
             // const response = await axios.post(url, body, { headers });
+            setAnalyzeLoading(false);
 
             if (response.status === 200) {
                 console.log("Data:", response.data);
+                if (response.data.items.length == 0 ) {
+                    console.warn("No items detected in the img.");
+                    Alert.alert(
+                        "No Food Detected",
+                        "There is no food detected in the image. Try another image!",
+                        [{ text: "OK" }]
+                    );
+                    throw new Error("No food detected");
+                }
                 response.data.items.forEach((item: { food: any[]; }, index: number) => {
                     console.log(`Food item #${index + 1}:`);
                     let foodOption = item.food[0];
@@ -107,9 +126,19 @@ const UploadDietScreen: React.FC = () => {
                 });
 
                 return response.data;
+            }  else if (response.status >= 400 && response.status < 500) {
+                // Notify the user of the 4xx error
+                Alert.alert(
+                    "Client Error",
+                    `Cannot get image analysis from API: ${response.statusText} (${response.status})`,
+                    [{ text: "OK" }]
+                );
+                console.warn(`Client error: ${response.status} - ${response.statusText}`);
+                throw new Error("Client error. Cannot get image analysis from API.");
             }
         } catch (error) {
-            console.error("something went wrong: ", error);
+            console.error("Something went wrong when calling API: ", error);
+            throw error;
         }
     };
 
@@ -134,7 +163,6 @@ const UploadDietScreen: React.FC = () => {
     // downloadImage("https://cdn.foodvisor.io/img/vision/examples/1.jpg");
 
 
-    // Todo: cancel button not checked
     // Options: select images from camera, album, or cancel
     const selectImage = async () => {
 
@@ -145,7 +173,7 @@ const UploadDietScreen: React.FC = () => {
         ]);
     };
 
-    // Todo: compress not work
+
     // pick img from camera/album, ask for authority, compress->setImgUri
     const pickImage = async (source: 'camera' | 'library') => {
         let result;
@@ -184,6 +212,7 @@ const UploadDietScreen: React.FC = () => {
             // console.log("select img uri:", result.assets[0].uri);
             let compressedImageUri = result.assets[0].uri;
             let imageSize = await getImageSize(compressedImageUri);
+            console.log("imageSize:", imageSize);
 
             // Keep resizing/compressing until it's under 2MB
             while (imageSize > MAX_SIZE_BYTES) {
@@ -195,6 +224,7 @@ const UploadDietScreen: React.FC = () => {
 
                 compressedImageUri = manipulatedImage.uri;
                 imageSize = await getImageSize(compressedImageUri);
+                console.log("After compress imageSize:", imageSize);
             }
 
             setImgUri(compressedImageUri); // Set the final compressed image URI
@@ -248,10 +278,10 @@ const UploadDietScreen: React.FC = () => {
                 );
             } else {
                 console.log("new imgUri");
-                setAnalyzeLoading(true);
+                // setAnalyzeLoading(true);
                 analysisData = await analyzeImage(imgUri); // Call analyzeImage with the image URI
+                // setAnalyzeLoading(false);
                 newDiet = await addDiet(imgUri, imgHash, title, analysisData, date);
-                setAnalyzeLoading(false);
 
                 // Navigate without alert if new image
                 navigation.reset({
@@ -276,21 +306,23 @@ const UploadDietScreen: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Create New Diet</Text>
+            <ThemedText style={styles.header}>Create New Diet</ThemedText>
 
-            <Text style={styles.label}>Title:</Text>
+            <ThemedText style={styles.label}>Title:</ThemedText>
             <TextInput
-                style={styles.input}
+                style={[styles.input, { color: textColor }]}
                 placeholder="Enter title"
+                placeholderTextColor={textColor + "99"}
                 value={title}
                 onChangeText={setTitle}
             />
 
-            <Text style={styles.label}>Date:</Text>
+            <ThemedText style={styles.label}>Date:</ThemedText>
             <TouchableOpacity onPress={() => setShowDatePicker(true)}>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { color: textColor }]}
                     placeholder="Select date"
+                    placeholderTextColor={textColor + "99"}
                     value={new Date(date).toLocaleDateString()}
                     editable={false}
                 />
@@ -307,20 +339,20 @@ const UploadDietScreen: React.FC = () => {
                 />
             )}
 
-            <Text style={styles.label}>Image:</Text>
+            <ThemedText style={styles.label}>Image:</ThemedText>
 
             <TouchableOpacity onPress={selectImage} style={styles.imageContainer}>
                 {imgUri ? (
                     <Image source={{ uri: imgUri }} style={styles.image} />
                 ) : (
-                    <View style={styles.placeholderImage}>
+                    <View style={[styles.placeholderImage, ]}>
                         {loading ? (
                             <>
                                 <ActivityIndicator size="large" color="#0000ff" />
-                                <Text>Compressing Image...</Text>
+                                <Text style={styles.selectText}>Compressing Image...</Text>
                             </>
                         ) : (
-                            <Text>Select Image</Text>
+                            <Text style={styles.selectText}>Select Image</Text>
                         )}
                     </View>
                 )}
@@ -328,10 +360,10 @@ const UploadDietScreen: React.FC = () => {
 
             <Button title="Start Analyze" onPress={handleAnalyze} />
             {analyzeLoading && (
-                <>
+                <View style={styles.loadingContainer}>
+                    <ThemedText style={styles.loadingText}>Analyzing...</ThemedText>
                     <ActivityIndicator size="small" color="#0000ff" />
-                    <Text>Analyzing...</Text>
-                </>
+                </View>
             )}
         </View>
     );
@@ -342,7 +374,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#f5f5f5',
+        // backgroundColor: '#f5f5f5',
     },
     datePickerButton: {
         marginBottom: 20,
@@ -358,7 +390,7 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 5,
     },
     label: {
         fontSize: 16,
@@ -382,10 +414,25 @@ const styles = StyleSheet.create({
     placeholderImage: {
         width: '100%',
         height: 300,
-        backgroundColor: '#ddd',
+        backgroundColor: 'rgba(197,197,197,0.74)',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 8,
+    },
+    selectText: {
+        // color: '#555',
+        fontSize: 16,
+    },
+    loadingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+    },
+    loadingText: {
+        // marginLeft: 10,
+        fontSize: 18,
+        color: '#000',
     },
 });
 

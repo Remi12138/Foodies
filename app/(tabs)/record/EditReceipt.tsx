@@ -4,6 +4,9 @@ import * as Notifications from 'expo-notifications';
 import { useReceiptStore } from '@/zustand/receipt';
 import {  router } from 'expo-router';
 import {useRoute} from "@react-navigation/native";
+import {ThemedView} from "@/components/ThemedView";
+import {ThemedText} from "@/components/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 const EditReceiptScreen: React.FC = () => {
     const { receipts, updateReceipt } = useReceiptStore();
@@ -17,6 +20,8 @@ const EditReceiptScreen: React.FC = () => {
     const [days, setDays] = useState<string>('0');
     const [hours, setHours] = useState<string>('0');
     const [minutes, setMinutes] = useState<string>('0');
+
+    const textColor = useThemeColor({}, "text");
 
     useEffect(() => {
         const requestNotificationsPermissions = async () => {
@@ -36,6 +41,11 @@ const EditReceiptScreen: React.FC = () => {
 
         if (isNaN(delayInMs) || delayInMs === 0) {
             // Alert.alert('Missing Scheduled Time', 'Please set a valid notification time.');
+            return;
+        }
+
+        if (delayInMs < 0) {
+            Alert.alert('Invalid Time', 'Please set a time in the future.');
             return;
         }
 
@@ -63,62 +73,67 @@ const EditReceiptScreen: React.FC = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Text style={styles.label}>Edit Title</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Title"
-                value={title}
-                onChangeText={(text) => setTitle(text)}
-            />
-            <Text style={styles.label}>Edit Amount</Text>
+        <ThemedView style={styles.container}>
+            <SafeAreaView style={styles.safeArea}>
+            <ThemedText style={styles.label}>Edit Title</ThemedText>
+            <ThemedView style={styles.amountContainer}>
+                <TextInput
+                    style={[styles.input, styles.amountInput, { color: textColor }]}
+                    placeholder="Title"
+                    value={title}
+                    onChangeText={(text) => setTitle(text)}
+                />
+                <Text style={styles.currencySymbol}>  </Text>
+            </ThemedView>
+            <ThemedText style={styles.label}>Edit Amount</ThemedText>
             <View style={styles.amountContainer}>
                 <TextInput
-                    style={[styles.input, styles.amountInput]}
+                    style={[styles.input, styles.amountInput, { color: textColor }]}
                     placeholder="Amount"
                     value={amount}
                     onChangeText={(text) => setAmount(text)}
                     keyboardType="numeric"
                 />
-                <Text style={styles.currencySymbol}>$</Text>
+                <ThemedText style={styles.currencySymbol}>$</ThemedText>
             </View>
 
-            <Text style={styles.label}>Notification Timer</Text>
+            <ThemedText style={styles.label}>Notification Timer</ThemedText>
             <View style={styles.timeInputsContainer}>
                 <View style={styles.timeInputGroup}>
                     <TextInput
-                        style={styles.timeInput}
+                        style={[styles.timeInput, { color: textColor }]}
                         placeholder="Days"
                         value={days}
                         onChangeText={(text) => setDays(text)}
                         keyboardType="numeric"
                     />
-                    <Text style={styles.timeUnit}>day</Text>
+                    <ThemedText style={styles.timeUnit}>day</ThemedText>
                 </View>
                 <View style={styles.timeInputGroup}>
                     <TextInput
-                        style={styles.timeInput}
+                        style={[styles.timeInput, { color: textColor }]}
                         placeholder="Hours"
                         value={hours}
                         onChangeText={(text) => setHours(text)}
                         keyboardType="numeric"
                     />
-                    <Text style={styles.timeUnit}>hour</Text>
+                    <ThemedText style={styles.timeUnit}>hour</ThemedText>
                 </View>
                 <View style={styles.timeInputGroup}>
                     <TextInput
-                        style={styles.timeInput}
+                        style={[styles.timeInput, { color: textColor }]}
                         placeholder="Minutes"
                         value={minutes}
                         onChangeText={(text) => setMinutes(text)}
                         keyboardType="numeric"
                     />
-                    <Text style={styles.timeUnit}>min</Text>
+                    <ThemedText style={styles.timeUnit}>min</ThemedText>
                 </View>
             </View>
 
             <Button title="Save Changes" onPress={handleSave} color="#F4511E" />
         </SafeAreaView>
+        </ThemedView>
     );
 };
 
@@ -126,9 +141,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        marginTop: 20,
-        marginHorizontal: 20,
-        backgroundColor: '#f5f5f5',
+        // marginTop: 20,
+        // marginHorizontal: 20,
+        // backgroundColor: '#f5f5f5',
+    },
+    safeArea: {
+        flex: 1,
     },
     label: {
         fontSize: 16,
@@ -142,7 +160,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginBottom: 20,
         paddingHorizontal: 10,
-        backgroundColor: '#ffffff',
+        // backgroundColor: '#fff',
     },
     amountContainer: {
         flexDirection: 'row',
@@ -174,7 +192,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 10,
-        backgroundColor: '#ffffff',
+        // backgroundColor: '#ffffff',
     },
     timeUnit: {
         fontSize: 16,
