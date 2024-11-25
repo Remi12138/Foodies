@@ -2,6 +2,9 @@ import React, {useEffect, useState} from 'react';
 import { View, Text, ScrollView, StyleSheet, Image, Dimensions, Button, TouchableOpacity } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Diet } from "@/zustand/diet";
+import {ThemedView} from "@/components/ThemedView";
+import {ThemedText} from "@/components/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 const screenWidth = Dimensions.get('window').width;
 const containerWidth = screenWidth - 40; // Fixed width for food item display container
@@ -30,7 +33,7 @@ const recBorderColors = [
 const AnalysisDetailScreen: React.FC = () => {
     const { params: { newDiet } } = useRoute<AnalysisDetailScreenProps>();
     const [selectedFoodIndex, setSelectedFoodIndex] = useState<number | null>(null);
-
+    const backgroundColor = useThemeColor({}, "background");
     const [displayHeight, setDisplayHeight] = useState(displayWidth); // Initialize with a square layout
 
     useEffect(() => {
@@ -80,10 +83,12 @@ const AnalysisDetailScreen: React.FC = () => {
                     onPress={() => setSelectedFoodIndex(null)}
                     style={[
                         styles.foodButton,
-                        { backgroundColor: selectedFoodIndex === null ? 'rgba(255, 99, 71, 0.8)' : '#E0E0E0' } // Highlight "All" button if selected
+                        { backgroundColor: selectedFoodIndex === null
+                                ? 'rgba(255, 99, 71, 0.8)'
+                                : backgroundColor } // Highlight "All" button if selected
                     ]}
                 >
-                    <Text style={styles.foodButtonText}>All</Text>
+                    <ThemedText style={styles.foodButtonText}>All</ThemedText>
                 </TouchableOpacity>
                 {newDiet.foodOptions.map((food, index) => (
                     <TouchableOpacity
@@ -94,11 +99,11 @@ const AnalysisDetailScreen: React.FC = () => {
                             {
                                 backgroundColor: selectedFoodIndex === index
                                     ? recBackgroundColors[index % recBackgroundColors.length]
-                                    : '#E0E0E0', // Default background
+                                    : backgroundColor, // Default background
                             },
                         ]}
                     >
-                        <Text style={styles.foodButtonText}>{food.name}</Text>
+                        <ThemedText style={styles.foodButtonText}>{food.name}</ThemedText>
                     </TouchableOpacity>
                 ))}
             </View>
@@ -111,49 +116,49 @@ const AnalysisDetailScreen: React.FC = () => {
                         {
                             backgroundColor: selectedFoodIndex === index
                                 ? recBackgroundColors[index % recBackgroundColors.length]
-                                : '#f9f9f9' // Default background
+                                : backgroundColor  // Default background
                         }
                     ]}>
-                        <Text style={styles.foodHeader}>Food Item #{index + 1}: {food.name}</Text>
+                        <ThemedText style={styles.foodHeader}>Food Item #{index + 1}: {food.name}</ThemedText>
 
                         <View style={styles.detailsRow}>
                             {/* Left column */}
                             <View style={styles.column}>
                                 <View style={styles.detailRow}>
-                                    <Text style={styles.detailLabel}>Confidence:</Text>
-                                    <Text style={styles.detailValue}>{(food.confidence * 100).toFixed(2)}%</Text>
+                                    <ThemedText style={styles.detailLabel}>Confidence:</ThemedText>
+                                    <ThemedText style={styles.detailValue}>{(food.confidence * 100).toFixed(2)}%</ThemedText>
                                 </View>
                                 <View style={styles.detailRow}>
-                                    <Text style={styles.detailLabel}>Calories:</Text>
-                                    <Text style={styles.detailValue}>{Math.round(food.calories)} Cal</Text>
+                                    <ThemedText style={styles.detailLabel}>Calories:</ThemedText>
+                                    <ThemedText style={styles.detailValue}>{Math.round(food.calories)} Cal</ThemedText>
                                 </View>
                                 <View style={styles.detailRow}>
-                                    <Text style={styles.detailLabel}>Quantity:</Text>
-                                    <Text style={styles.detailValue}>{food.quantity} g</Text>
+                                    <ThemedText style={styles.detailLabel}>Quantity:</ThemedText>
+                                    <ThemedText style={styles.detailValue}>{food.quantity} g</ThemedText>
                                 </View>
                                 <View style={styles.detailRow}>
-                                    <Text style={styles.detailLabel}>Glycemic Index:</Text>
-                                    <Text style={styles.detailValue}>{food.glycemic_index}</Text>
+                                    <ThemedText style={styles.detailLabel}>Glycemic Index:</ThemedText>
+                                    <ThemedText style={styles.detailValue}>{food.glycemic_index}</ThemedText>
                                 </View>
                             </View>
 
                             {/* Right column */}
                             <View style={styles.column}>
                                 <View style={styles.detailRow}>
-                                    <Text style={styles.detailLabel}>Proteins:</Text>
-                                    <Text style={styles.detailValue}>{food.proteins.toFixed(1)} g</Text>
+                                    <ThemedText style={styles.detailLabel}>Proteins:</ThemedText>
+                                    <ThemedText style={styles.detailValue}>{food.proteins.toFixed(1)} g</ThemedText>
                                 </View>
                                 <View style={styles.detailRow}>
-                                    <Text style={styles.detailLabel}>Fat:</Text>
-                                    <Text style={styles.detailValue}>{food.fat.toFixed(1)} g</Text>
+                                    <ThemedText style={styles.detailLabel}>Fat:</ThemedText>
+                                    <ThemedText style={styles.detailValue}>{food.fat.toFixed(1)} g</ThemedText>
                                 </View>
                                 <View style={styles.detailRow}>
-                                    <Text style={styles.detailLabel}>Carbs:</Text>
-                                    <Text style={styles.detailValue}>{food.carbs.toFixed(1)} g</Text>
+                                    <ThemedText style={styles.detailLabel}>Carbs:</ThemedText>
+                                    <ThemedText style={styles.detailValue}>{food.carbs.toFixed(1)} g</ThemedText>
                                 </View>
                                 <View style={styles.detailRow}>
-                                    <Text style={styles.detailLabel}>Fibers:</Text>
-                                    <Text style={styles.detailValue}>{food.fibers.toFixed(1)} g</Text>
+                                    <ThemedText style={styles.detailLabel}>Fibers:</ThemedText>
+                                    <ThemedText style={styles.detailValue}>{food.fibers.toFixed(1)} g</ThemedText>
                                 </View>
                             </View>
                         </View>
@@ -167,7 +172,7 @@ const AnalysisDetailScreen: React.FC = () => {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -197,6 +202,8 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         padding: 15,
         borderRadius: 10,
+        borderColor: '#ccc',
+        borderWidth: 1,
     },
     foodHeader: {
         fontSize: 18,
@@ -233,33 +240,6 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         alignItems: 'center',
     },
-    nutrientBarContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    nutrientLabel: {
-        width: 80,
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    nutrientBarBackground: {
-        flex: 1,
-        height: 10,
-        backgroundColor: '#E0E0E0',
-        borderRadius: 5,
-        marginHorizontal: 5,
-        overflow: 'hidden',
-    },
-    nutrientBar: {
-        height: 10,
-        borderRadius: 5,
-    },
-    nutrientValue: {
-        width: 50,
-        textAlign: 'right',
-        fontSize: 16,
-    },
     foodButtonsContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap', // Allow buttons to wrap to the next line
@@ -272,11 +252,13 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderRadius: 20,
         margin: 5, // Space between buttons
+        borderColor: '#ccc',
+        borderWidth: 1,
     },
     foodButtonText: {
         fontSize: 14,
         fontWeight: 'bold',
-        color: '#333',
+        // color: '#333',
     },
 });
 

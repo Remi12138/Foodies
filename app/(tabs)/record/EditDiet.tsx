@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Platform } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Platform, TouchableOpacity, } from 'react-native';
 import { useDietStore } from '@/zustand/diet';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {ThemedView} from "@/components/ThemedView";
+import {ThemedText} from "@/components/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 type EditDietScreenProps = RouteProp<{ params: { dietId: number } }, 'params'>;
 
@@ -10,6 +13,7 @@ const EditDietScreen: React.FC = () => {
     const { params: { dietId } } = useRoute<EditDietScreenProps>();
     const { diets, editDiet } = useDietStore();
     const navigation = useNavigation();
+    const textColor = useThemeColor({}, "text");
 
     const diet = diets.find(d => d.id === dietId);
     const [title, setTitle] = useState(diet ? diet.title : '');
@@ -32,27 +36,34 @@ const EditDietScreen: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.label}>Edit Title</Text>
+            <ThemedText style={styles.label}>Edit Title</ThemedText>
             <TextInput
-                style={styles.input}
+                style={[styles.input, { color: textColor }]}
                 value={title}
                 onChangeText={setTitle}
             />
-            <Text style={styles.label}>Edit Date</Text>
-            <Button title="Select Date" onPress={() => setShowDatePicker(true)} />
+            <ThemedText style={styles.label}>Edit Date</ThemedText>
 
-            {/* Display selected date */}
-            <Text style={styles.selectedDate}>{date.toLocaleDateString()}</Text>
-
-            {/* Date Picker for selecting a date */}
+            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                <TextInput
+                    style={[styles.input, { color: textColor }]}
+                    placeholder="Select date"
+                    value={new Date(date).toLocaleDateString()}
+                    editable={false}
+                />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
+                <Text style={styles.dateText}>Select Date</Text>
+            </TouchableOpacity>
             {showDatePicker && (
                 <DateTimePicker
-                    value={date}
+                    value={new Date(date)}
                     mode="date"
                     display={Platform.OS === 'ios' ? 'inline' : 'default'}
                     onChange={handleDateChange}
                 />
             )}
+
 
             <Button title="Save" onPress={handleSave} />
         </View>
@@ -60,10 +71,41 @@ const EditDietScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-    label: { fontSize: 18, marginBottom: 8 },
-    input: { borderColor: '#ccc', borderWidth: 1, padding: 10, marginBottom: 20, borderRadius: 5 },
-    selectedDate: { fontSize: 16, color: '#333', marginTop: 10, marginBottom: 20 },
+    container: {
+        flex: 1,
+        padding: 20,
+        // backgroundColor: '#fff'
+    },
+    label: {
+        fontSize: 18,
+        marginTop: 8,
+        marginBottom: 8,
+        fontWeight: '600',
+    },
+    input: {
+        borderColor: '#ccc',
+        borderWidth: 1,
+        padding: 10,
+        marginBottom: 20,
+        borderRadius: 5
+    },
+    selectedDate: {
+        fontSize: 16,
+        color: '#333',
+        marginTop: 10,
+        marginBottom: 20
+    },
+    datePickerButton: {
+        marginBottom: 20,
+        paddingVertical: 10,
+        backgroundColor: '#f46b42',
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    dateText: {
+        color: '#fff',
+        fontSize: 16,
+    },
 });
 
 export default EditDietScreen;
