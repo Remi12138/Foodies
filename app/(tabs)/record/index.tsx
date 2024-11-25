@@ -9,13 +9,13 @@ import SwitchTab from './SwitchTab';
 
 const RecordScreen: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'Diets' | 'Receipts'>('Diets');
-
     const handleTabChange = (tab: 'Diets' | 'Receipts') => {
         setActiveTab(tab);
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <ThemedView style={styles.container}>
+            <SafeAreaView style={styles.safeArea}>
             <ThemedView style={styles.titleContainer}>
                 <ThemedView style={{ flexDirection: "row" }}>
                     <ThemedText type="title">Record</ThemedText>
@@ -27,36 +27,23 @@ const RecordScreen: React.FC = () => {
             <View style={styles.contentContainer}>
                 {activeTab === 'Diets' ? <DietListScreen /> : <ReceiptBlogScreen />}
             </View>
-        </SafeAreaView>
+            </SafeAreaView>
+        </ThemedView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#ffffff',
+        // backgroundColor: '#ffffff',
     },
-    tabBar: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        backgroundColor: '#F4511E',
-        paddingVertical: 10,
+    safeArea: {
+        flex: 1,
     },
     tabButton: {
         flex: 1,
         alignItems: 'center',
         paddingVertical: 10,
-    },
-    activeTabButton: {
-        borderBottomWidth: 2,
-        borderBottomColor: '#ffffff',
-    },
-    tabText: {
-        fontSize: 16,
-        color: '#ffffff',
-    },
-    activeTabText: {
-        fontWeight: 'bold',
     },
     contentContainer: {
         flex: 1,

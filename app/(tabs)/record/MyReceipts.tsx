@@ -5,6 +5,9 @@ import { format } from 'date-fns';
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import * as Notifications from 'expo-notifications';
+import {ThemedView} from "@/components/ThemedView";
+import {ThemedText} from "@/components/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 const ReceiptBlogScreen: React.FC = () => {
     const { receipts, removeReceipt } = useReceiptStore();
@@ -15,7 +18,7 @@ const ReceiptBlogScreen: React.FC = () => {
     const [days, setDays] = useState<string>('0');
     const [hours, setHours] = useState<string>('0');
     const [minutes, setMinutes] = useState<string>('0');
-
+    const textColor = useThemeColor({}, "text");
     const sortedReceipts = receipts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     const handleEdit = (id: string) => {
@@ -80,14 +83,14 @@ const ReceiptBlogScreen: React.FC = () => {
 
     const renderReceiptItem = ({ item }: { item: typeof receipts[0] }) => (
         <TouchableOpacity onPress={() => handleImageClick(item.imgUri)}>
-        <View style={styles.receiptCard}>
+        <ThemedView style={styles.receiptCard}>
             <Image source={{ uri: item.imgUri }} style={styles.receiptImage} />
             <View style={styles.receiptDetails}>
                 <View style={styles.headerRow}>
-                    <Text style={styles.receiptTitle}>{item.title}</Text>
-                    <Text style={styles.receiptAmount}>${item.amount.toFixed(2)}</Text>
+                    <ThemedText style={styles.receiptTitle}>{item.title}</ThemedText>
+                    <ThemedText style={styles.receiptAmount}>${item.amount.toFixed(2)}</ThemedText>
                 </View>
-                <Text style={styles.receiptDate}>{format(new Date(item.date), 'MMM dd, yyyy')}</Text>
+                <ThemedText style={styles.receiptDate}>{format(new Date(item.date), 'MMM dd, yyyy')}</ThemedText>
                 <View style={styles.buttonRow}>
                     <TouchableOpacity style={styles.editButton} onPress={() => handleEdit(item.id)}>
                         <Ionicons name="pencil" size={25} color="#4CAF50" />
@@ -103,12 +106,12 @@ const ReceiptBlogScreen: React.FC = () => {
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
+        </ThemedView>
         </TouchableOpacity>
     );
 
     return (
-        <SafeAreaView style={styles.container}>
+        <ThemedView style={styles.container}>
             <FlatList
                 data={sortedReceipts}
                 keyExtractor={(item) => item.id}
@@ -125,38 +128,38 @@ const ReceiptBlogScreen: React.FC = () => {
                 onRequestClose={() => setReminderModalVisible(false)}
             >
                 <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Set Reminder</Text>
+                    <ThemedView style={styles.modalContent}>
+                        <ThemedText style={styles.modalTitle}>Set Reminder</ThemedText>
                         <View style={styles.timeInputsContainer}>
                             <View style={styles.timeInputGroup}>
                                 <TextInput
-                                    style={styles.timeInput}
+                                    style={[styles.timeInput, { color: textColor }]}
                                     placeholder="Days"
                                     value={days}
                                     onChangeText={(text) => setDays(text)}
                                     keyboardType="numeric"
                                 />
-                                <Text style={styles.timeUnit}>day</Text>
+                                <ThemedText style={styles.timeUnit}>day</ThemedText>
                             </View>
                             <View style={styles.timeInputGroup}>
                                 <TextInput
-                                    style={styles.timeInput}
+                                    style={[styles.timeInput, { color: textColor }]}
                                     placeholder="Hours"
                                     value={hours}
                                     onChangeText={(text) => setHours(text)}
                                     keyboardType="numeric"
                                 />
-                                <Text style={styles.timeUnit}>hour</Text>
+                                <ThemedText style={styles.timeUnit}>hour</ThemedText>
                             </View>
                             <View style={styles.timeInputGroup}>
                                 <TextInput
-                                    style={styles.timeInput}
+                                    style={[styles.timeInput, { color: textColor }]}
                                     placeholder="Minutes"
                                     value={minutes}
                                     onChangeText={(text) => setMinutes(text)}
                                     keyboardType="numeric"
                                 />
-                                <Text style={styles.timeUnit}>min</Text>
+                                <ThemedText style={styles.timeUnit}>min</ThemedText>
                             </View>
                         </View>
                         <TouchableOpacity style={styles.scheduleButton} onPress={scheduleNotification}>
@@ -165,7 +168,7 @@ const ReceiptBlogScreen: React.FC = () => {
                         <TouchableOpacity style={styles.closeButton2} onPress={() => setReminderModalVisible(false)}>
                             <Text style={styles.closeButtonText}>Cancel</Text>
                         </TouchableOpacity>
-                    </View>
+                    </ThemedView>
                 </View>
             </Modal>
 
@@ -188,14 +191,14 @@ const ReceiptBlogScreen: React.FC = () => {
                     )}
                 </View>
             </Modal>
-        </SafeAreaView>
+        </ThemedView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
         padding: 15,
         marginTop: 10,
     },
@@ -204,7 +207,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
     },
     receiptCard: {
-        backgroundColor: '#f5f5f5',
+        // backgroundColor: '#f5f5f5',
         borderRadius: 10,
         flexDirection: 'row',
         alignItems: 'center',
@@ -212,13 +215,13 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOpacity: 0.2,
         shadowOffset: { width: 0, height: 3 },
-        shadowRadius: 6,
-        elevation: 4,
+        shadowRadius: 1.4,
+        elevation: 2,
         // overflow: 'hidden',
     },
     receiptImage: {
-        width: 80,
-        height: 80,
+        width: 90,
+        height: 90,
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
     },
@@ -235,16 +238,17 @@ const styles = StyleSheet.create({
     receiptTitle: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#333',
+        // color: '#333',
     },
     receiptAmount: {
         fontSize: 14,
         fontWeight: 'bold',
-        color: '#00796b',
+        color: '#47a44a',
+        // color: '#00796b',
     },
     receiptDate: {
         fontSize: 12,
-        color: '#777',
+        // color: '#777',
         marginTop: 4,
     },
     buttonRow: {
@@ -253,15 +257,10 @@ const styles = StyleSheet.create({
     },
     editButton: {
         marginRight: 10,
-        backgroundColor: '#e8f5e9',
+        // backgroundColor: '#e8f5e9',
         borderRadius: 5,
         padding: 5,
     },
-    // deleteButton: {
-    //     backgroundColor: '#ffebee',
-    //     borderRadius: 5,
-    //     padding: 5,
-    // },
     modalContainer: {
         flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -281,8 +280,10 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: '80%',
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
         borderRadius: 8,
+        borderColor: '#ccc',
+        borderWidth: 1,
         padding: 20,
         alignItems: 'center',
     },
@@ -290,15 +291,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 20,
-    },
-    input: {
-        width: '100%',
-        height: 40,
-        borderColor: '#ddd',
-        borderWidth: 1,
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        marginBottom: 15,
     },
     scheduleButton: {
         backgroundColor: '#4CAF50',
@@ -336,7 +328,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 10,
-        backgroundColor: '#ffffff',
+        // backgroundColor: '#ffffff',
     },
     timeUnit: {
         fontSize: 16,

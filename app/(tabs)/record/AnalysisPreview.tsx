@@ -3,6 +3,9 @@ import { View, Text, ScrollView, StyleSheet, Image, Button, Dimensions, Activity
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { Diet, useDietStore } from "@/zustand/diet";
+import {ThemedView} from "@/components/ThemedView";
+import {ThemedText} from "@/components/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 const ChatGPT_KEY = "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";
 
@@ -147,7 +150,7 @@ const AnalysisPreviewScreen: React.FC = () => {
                         <Text style={styles.adviceIcon}>{adviceIcon}</Text>
                         <View style={styles.adviceContent}>
                             <Text style={styles.gradeText}>Grade: {adviceGrade}</Text>
-                            <Text style={styles.adviceText}>{adviceText}</Text>
+                            <ThemedText style={styles.adviceText}>{adviceText}</ThemedText>
                         </View>
                     </View>
                 )}
@@ -169,11 +172,11 @@ const NutrientBar = ({ label, value, color, max }: { label: string, value: numbe
 
     return (
         <View style={styles.nutrientBarContainer}>
-            <Text style={styles.nutrientLabel}>{label}</Text>
+            <ThemedText style={styles.nutrientLabel}>{label}</ThemedText>
             <View style={styles.nutrientBarBackground}>
                 <View style={[styles.nutrientBar, { backgroundColor: color, width: barWidth }]} />
             </View>
-            <Text style={styles.nutrientValue}>{value} g</Text>
+            <ThemedText style={styles.nutrientValue}>{value} g</ThemedText>
         </View>
     );
 };
@@ -181,7 +184,7 @@ const NutrientBar = ({ label, value, color, max }: { label: string, value: numbe
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
     },
     imageContainer: {
         alignItems: 'center',
@@ -270,7 +273,7 @@ const styles = StyleSheet.create({
     },
     adviceText: {
         fontSize: 16,
-        color: '#333',
+        // color: '#333',
         lineHeight: 24,
     },
 });

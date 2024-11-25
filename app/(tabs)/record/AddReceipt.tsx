@@ -17,6 +17,9 @@ import { useReceiptStore } from '@/zustand/receipt';
 import { router } from 'expo-router';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {useNavigation} from "@react-navigation/native";
+import {ThemedView} from "@/components/ThemedView";
+import {ThemedText} from "@/components/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 const UploadReceiptScreen: React.FC = () => {
     const [imgUri, setImgUri] = useState<string | null>(null);
@@ -29,6 +32,7 @@ const UploadReceiptScreen: React.FC = () => {
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
     const { addReceipt } = useReceiptStore();
     const navigation = useNavigation();
+    const textColor = useThemeColor({}, "text");
 
     useEffect(() => {
         const requestNotificationsPermissions = async () => {
@@ -144,28 +148,30 @@ const UploadReceiptScreen: React.FC = () => {
                 {imgUri ? (
                     <Image source={{ uri: imgUri }} style={styles.image} />
                 ) : (
-                    <Text style={styles.imagePlaceholder}>Tap to Select Image</Text>
+                    <Text style={styles.imagePlaceholder}>      Tap to Select Image</Text>
                 )}
             </TouchableOpacity>
             <Button title="Capture Photo" onPress={takePhoto} color="#F4511E" />
             <View style={styles.amountContainer}>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { color: textColor }]}
                     placeholder="Title"
+                    placeholderTextColor={textColor + "99"}
                     value={title}
                     onChangeText={(text) => setTitle(text)}
                 />
-                <Text style={styles.currencySymbol}>  </Text>
+                <ThemedText style={styles.currencySymbol}>  </ThemedText>
             </View>
             <View style={styles.amountContainer}>
                 <TextInput
-                    style={[styles.input, styles.amountInput]}
+                    style={[styles.input, styles.amountInput, { color: textColor }]}
                     placeholder="Amount"
+                    placeholderTextColor={textColor + "99"}
                     value={amount}
                     onChangeText={(text) => setAmount(text)}
                     keyboardType="numeric"
                 />
-                <Text style={styles.currencySymbol}>$</Text>
+                <ThemedText style={styles.currencySymbol}>$</ThemedText>
             </View>
             <View style={styles.amountContainer}>
                 <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
@@ -183,37 +189,37 @@ const UploadReceiptScreen: React.FC = () => {
                 />
             )}
 
-            <Text style={styles.label}>Notification Timer</Text>
+            <ThemedText style={styles.label}>Notification Timer</ThemedText>
             <View style={styles.timeInputsContainer}>
                 <View style={styles.timeInputGroup}>
                     <TextInput
-                        style={styles.timeInput}
+                        style={[styles.timeInput, { color: textColor }]}
                         placeholder="Days"
                         value={days}
                         onChangeText={(text) => setDays(text)}
                         keyboardType="numeric"
                     />
-                    <Text style={styles.timeUnit}>day</Text>
+                    <ThemedText style={styles.timeUnit}>day</ThemedText>
                 </View>
                 <View style={styles.timeInputGroup}>
                     <TextInput
-                        style={styles.timeInput}
+                        style={[styles.timeInput, { color: textColor }]}
                         placeholder="Hours"
                         value={hours}
                         onChangeText={(text) => setHours(text)}
                         keyboardType="numeric"
                     />
-                    <Text style={styles.timeUnit}>hour</Text>
+                    <ThemedText style={styles.timeUnit}>hour</ThemedText>
                 </View>
                 <View style={styles.timeInputGroup}>
                     <TextInput
-                        style={styles.timeInput}
+                        style={[styles.timeInput, { color: textColor }]}
                         placeholder="Minutes"
                         value={minutes}
                         onChangeText={(text) => setMinutes(text)}
                         keyboardType="numeric"
                     />
-                    <Text style={styles.timeUnit}>min</Text>
+                    <ThemedText style={styles.timeUnit}>min</ThemedText>
                 </View>
             </View>
             <Button title="Save Receipt" onPress={handleSubmit} color="#F4511E" />
@@ -225,15 +231,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#f5f5f5',
+        // backgroundColor: '#f5f5f5',
     },
     imagePicker: {
         height: 200,
-        backgroundColor: '#e0e0e0',
+        width: '96%',
+        // backgroundColor: '#e0e0e0',
+        backgroundColor: 'rgba(197,197,197,0.74)',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,
-        marginBottom: 20,
+        marginBottom: 10,
     },
     image: {
         width: '100%',
@@ -241,7 +249,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     imagePlaceholder: {
-        color: '#555',
+        // color: '#555',
         fontSize: 16,
     },
     input: {
@@ -250,9 +258,10 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 8,
-        marginBottom: 20,
+        marginBottom: 10,
+        marginTop: 10,
         paddingHorizontal: 10,
-        backgroundColor: '#ffffff',
+        // backgroundColor: '#ffffff',
     },
     amountContainer: {
         flexDirection: 'row',
@@ -301,7 +310,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 10,
-        backgroundColor: '#ffffff',
+        // backgroundColor: '#ffffff',
     },
     timeUnit: {
         fontSize: 16,

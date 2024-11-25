@@ -13,7 +13,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onDone }) => {
             onDone={onDone}
             pages={[
                 {
-                    backgroundColor: 'rgba(252,139,62,0.82)',
+                    backgroundColor: 'rgba(252,139,62,0.86)',
                     image: <Image style={styles.image} source={require('@/assets/images/boarding_welcome.png')} />,
                     title: 'Welcome to Foodies',
                     subtitle: 'Your ultimate food journey starts here! \n 🍕🍔🌮🍩 ',
@@ -29,7 +29,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onDone }) => {
                     subTitleStyles: styles.subtitle2,
                 },
                 {
-                    backgroundColor: 'rgba(255,133,52,0.74)',
+                    backgroundColor: 'rgba(255,133,52,0.85)',
                     image: <Image style={styles.image} source={require('@/assets/images/boarding_explore.png')} />,
                     title: 'Find Restaurants',
                     subtitle: 'Discover the hottest spots around! 🗺️',

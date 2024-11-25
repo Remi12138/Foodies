@@ -3,6 +3,8 @@ import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet, Alert } from
 import { useDietStore, Diet } from '@/zustand/diet';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {ThemedView} from "@/components/ThemedView";
+import {ThemedText} from "@/components/ThemedText";
 
 const DietListScreen: React.FC = () => {
     const { diets, loadDiets, removeDiet } = useDietStore();
@@ -25,16 +27,16 @@ const DietListScreen: React.FC = () => {
 
     const renderItem = ({ item }: { item: Diet }) => {
         return (
-            <View style={styles.dietCard}>
+            <ThemedView style={styles.dietCard}>
                 <TouchableOpacity
                     style={styles.dietContent}
                     onPress={() => navigation.navigate('AnalysisPreview', { newDiet: item })}
                 >
                     <Image source={{ uri: item.imgUri }} style={styles.dietImage} />
                     <View style={styles.dietInfo}>
-                        <Text style={styles.dietTitle}>{item.title}</Text>
-                        <Text style={styles.dietDate}>{new Date(item.date).toLocaleDateString()}</Text>
-                        <Text style={styles.dietCalories}>{Math.round(item.total_calories)} Cal</Text>
+                        <ThemedText style={styles.dietTitle}>{item.title}</ThemedText>
+                        <ThemedText style={styles.dietDate}>{new Date(item.date).toLocaleDateString()}</ThemedText>
+                        <ThemedText style={styles.dietCalories}>{Math.round(item.total_calories)} Cal</ThemedText>
                     </View>
                 </TouchableOpacity>
                 <View style={styles.iconButtons}>
@@ -45,26 +47,26 @@ const DietListScreen: React.FC = () => {
                         <Icon name="delete" size={24} color="#F44336" style={styles.icon} />
                     </TouchableOpacity>
                 </View>
-            </View>
+            </ThemedView>
         );
     };
 
     return (
-        <View style={styles.container}>
+        <ThemedView style={styles.container}>
             <FlatList
                 data={diets}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
                 contentContainerStyle={styles.listContent}
             />
-        </View>
+        </ThemedView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
     },
     listContent: {
         paddingBottom: 10,
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 15,
         marginVertical: 10,
-        backgroundColor: '#f5f5f5',
+        // backgroundColor: '#f5f5f5',
         borderRadius: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
@@ -103,12 +105,12 @@ const styles = StyleSheet.create({
     },
     dietDate: {
         fontSize: 14,
-        color: '#888',
+        // color: '#888',
         marginTop: 4,
     },
     dietCalories: {
         fontSize: 14,
-        color: '#333',
+        // color: '#333',
         marginTop: 4,
     },
     iconButtons: {

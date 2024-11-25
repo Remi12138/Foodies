@@ -21,6 +21,9 @@ import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as ImageManipulator from 'expo-image-manipulator';
 import CryptoJS from 'crypto-js';
+import {ThemedView} from "@/components/ThemedView";
+import {ThemedText} from "@/components/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 const MAX_SIZE_MB = 2;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024; // 2MB in bytes
@@ -37,6 +40,8 @@ const UploadDietScreen: React.FC = () => {
     const { addDiet } = useDietStore();
     const [loading, setLoading] = useState(false);
     const [analyzeLoading, setAnalyzeLoading] = useState(false);
+    const textColor = useThemeColor({}, "text");
+    const tabIconDefaultColor = useThemeColor({}, "tabIconDefault");
     let analysisData: any;
     let newDiet: Diet;
     const navigation = useNavigation();
@@ -301,21 +306,23 @@ const UploadDietScreen: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Create New Diet</Text>
+            <ThemedText style={styles.header}>Create New Diet</ThemedText>
 
-            <Text style={styles.label}>Title:</Text>
+            <ThemedText style={styles.label}>Title:</ThemedText>
             <TextInput
-                style={styles.input}
+                style={[styles.input, { color: textColor }]}
                 placeholder="Enter title"
+                placeholderTextColor={textColor + "99"}
                 value={title}
                 onChangeText={setTitle}
             />
 
-            <Text style={styles.label}>Date:</Text>
+            <ThemedText style={styles.label}>Date:</ThemedText>
             <TouchableOpacity onPress={() => setShowDatePicker(true)}>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { color: textColor }]}
                     placeholder="Select date"
+                    placeholderTextColor={textColor + "99"}
                     value={new Date(date).toLocaleDateString()}
                     editable={false}
                 />
@@ -332,13 +339,13 @@ const UploadDietScreen: React.FC = () => {
                 />
             )}
 
-            <Text style={styles.label}>Image:</Text>
+            <ThemedText style={styles.label}>Image:</ThemedText>
 
             <TouchableOpacity onPress={selectImage} style={styles.imageContainer}>
                 {imgUri ? (
                     <Image source={{ uri: imgUri }} style={styles.image} />
                 ) : (
-                    <View style={styles.placeholderImage}>
+                    <View style={[styles.placeholderImage, ]}>
                         {loading ? (
                             <>
                                 <ActivityIndicator size="large" color="#0000ff" />
@@ -354,7 +361,7 @@ const UploadDietScreen: React.FC = () => {
             <Button title="Start Analyze" onPress={handleAnalyze} />
             {analyzeLoading && (
                 <View style={styles.loadingContainer}>
-                    <Text style={styles.loadingText}>Analyzing...</Text>
+                    <ThemedText style={styles.loadingText}>Analyzing...</ThemedText>
                     <ActivityIndicator size="small" color="#0000ff" />
                 </View>
             )}
@@ -367,7 +374,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#f5f5f5',
+        // backgroundColor: '#f5f5f5',
     },
     datePickerButton: {
         marginBottom: 20,
@@ -383,7 +390,7 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 5,
     },
     label: {
         fontSize: 16,
@@ -407,13 +414,13 @@ const styles = StyleSheet.create({
     placeholderImage: {
         width: '100%',
         height: 300,
-        backgroundColor: '#ddd',
+        backgroundColor: 'rgba(197,197,197,0.74)',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 8,
     },
     selectText: {
-        color: '#555',
+        // color: '#555',
         fontSize: 16,
     },
     loadingContainer: {

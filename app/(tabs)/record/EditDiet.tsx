@@ -3,6 +3,9 @@ import { View, Text, TextInput, Button, StyleSheet, Platform, TouchableOpacity, 
 import { useDietStore } from '@/zustand/diet';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {ThemedView} from "@/components/ThemedView";
+import {ThemedText} from "@/components/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 type EditDietScreenProps = RouteProp<{ params: { dietId: number } }, 'params'>;
 
@@ -10,6 +13,7 @@ const EditDietScreen: React.FC = () => {
     const { params: { dietId } } = useRoute<EditDietScreenProps>();
     const { diets, editDiet } = useDietStore();
     const navigation = useNavigation();
+    const textColor = useThemeColor({}, "text");
 
     const diet = diets.find(d => d.id === dietId);
     const [title, setTitle] = useState(diet ? diet.title : '');
@@ -32,31 +36,17 @@ const EditDietScreen: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.label}>Edit Title</Text>
+            <ThemedText style={styles.label}>Edit Title</ThemedText>
             <TextInput
-                style={styles.input}
+                style={[styles.input, { color: textColor }]}
                 value={title}
                 onChangeText={setTitle}
             />
-            <Text style={styles.label}>Edit Date</Text>
-            {/*<Button title="Select Date" onPress={() => setShowDatePicker(true)} />*/}
-
-            {/*/!* Display selected date *!/*/}
-            {/*<Text style={styles.selectedDate}>{date.toLocaleDateString()}</Text>*/}
-
-            {/*/!* Date Picker for selecting a date *!/*/}
-            {/*{showDatePicker && (*/}
-            {/*    <DateTimePicker*/}
-            {/*        value={date}*/}
-            {/*        mode="date"*/}
-            {/*        display={Platform.OS === 'ios' ? 'inline' : 'default'}*/}
-            {/*        onChange={handleDateChange}*/}
-            {/*    />*/}
-            {/*)}*/}
+            <ThemedText style={styles.label}>Edit Date</ThemedText>
 
             <TouchableOpacity onPress={() => setShowDatePicker(true)}>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { color: textColor }]}
                     placeholder="Select date"
                     value={new Date(date).toLocaleDateString()}
                     editable={false}
@@ -84,7 +74,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#fff'
+        // backgroundColor: '#fff'
     },
     label: {
         fontSize: 18,

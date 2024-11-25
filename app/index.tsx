@@ -31,61 +31,70 @@ export default function HomeScreen() {
   const [showOnboarding, setShowOnboarding] = useState(true);
 
   useEffect(() => {
-    const checkOnboarding = async () => {
+    const initializeApp = async () => {
+      // Check if onboarding has already been seen
       const hasSeenOnboarding = await AsyncStorage.getItem("hasSeenOnboarding");
-      if (!hasSeenOnboarding) {
-        setShowOnboarding(true);
-      }
-    };
 
-    checkOnboarding();
+      // when debugging onboarding, comment this
+      // if (!hasSeenOnboarding) {
+      //   console.log("not see onboarding ");
+      //   setShowOnboarding(true);
+      // } else {
+      //   console.log("already seen onboarding ");
+      //   setShowOnboarding(false);
+      // }
 
-    // Show splash screen for 1.5 seconds
-    const splashTimeout = setTimeout(() => {
-      setShowSplash(false);
-    }, 1500);
+      // Show splash screen for 1.5 seconds
+      const splashTimeout = setTimeout(() => {
+        setShowSplash(false);
+      }, 1500);
 
-    // Initialize user and their profile, collections.
-    const session = onAuthStateChanged(FIREBASE_AUTH, async (firebaseUser) => {
-      if (firebaseUser) {
-        setUserSignedIn(true);
-        setUserVerified(firebaseUser.emailVerified);
-        if (firebaseUser.emailVerified) {
-          const userProfile = await fetchUserPublicProfile(firebaseUser.uid);
-          if (!userProfile) {
-            console.log(
-                "User profile not found and just created for user:",
-                firebaseUser.uid
-            );
-            const userNewProfile = await initUserProfile(firebaseUser.uid);
-            setUser(userNewProfile);
-          } else {
-            setUser(userProfile);
-            console.log("User:", userProfile?.name, userProfile?.cid);
+      // Initialize user session
+      const session = onAuthStateChanged(FIREBASE_AUTH, async (firebaseUser) => {
+        if (firebaseUser) {
+          setUserSignedIn(true);
+          setUserVerified(firebaseUser.emailVerified);
+          if (firebaseUser.emailVerified) {
+            const userProfile = await fetchUserPublicProfile(firebaseUser.uid);
+            if (!userProfile) {
+              console.log(
+                  "User profile not found and just created for user:",
+                  firebaseUser.uid
+              );
+              const userNewProfile = await initUserProfile(firebaseUser.uid);
+              setUser(userNewProfile);
+            } else {
+              setUser(userProfile);
+              console.log("User:", userProfile?.name, userProfile?.cid);
+            }
+            initUserCollection(firebaseUser.uid);
+            initBlogCollections(firebaseUser.uid, setBlogIds, setBlogCovers);
           }
-          initUserCollection(firebaseUser.uid);
-          initBlogCollections(firebaseUser.uid, setBlogIds, setBlogCovers);
+          setShowOnboarding(false); // Ensure onboarding is disabled after login
+        } else {
+          setUserSignedIn(false);
+          setUserVerified(false);
         }
-      } else {
-        setUserSignedIn(false);
-        setUserVerified(false);
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
 
-    // Listen for incoming notifications
-    const notificationListener = Notifications.addNotificationReceivedListener(
-        (notification) => {
-          console.log("Notification received:", notification);
-        }
-    );
+      // Listen for incoming notifications
+      const notificationListener = Notifications.addNotificationReceivedListener(
+          (notification) => {
+            console.log("Notification received:", notification);
+          }
+      );
 
-    return () => {
-      clearTimeout(splashTimeout);
-      session();
-      notificationListener.remove(); // Clean up listener on unmount
+      return () => {
+        clearTimeout(splashTimeout);
+        session();
+        notificationListener.remove(); // Clean up listener on unmount
+      };
     };
+
+    initializeApp();
   }, []);
+
 
   // Show splash screen during loading
   if (showSplash || loading) {
