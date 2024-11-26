@@ -45,7 +45,7 @@ function RestaurantsView({ data }: RestaurantsViewProps) {
   const renderRestaurantCard = ({ item }: { item: Restaurant }) => (
     <TouchableOpacity
       style={styles.cardContainer}
-      onPress={() => router.push(`/explore/${item.name}`)} 
+      onPress={() => router.push(`/explore/${item.id}`)} 
     >
       <RestaurantCard item={item} />
     </TouchableOpacity>
