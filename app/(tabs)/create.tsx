@@ -109,12 +109,14 @@ export default function CreateModal() {
                   if (index === 1) {
                     // Navigate to the Scan Receipt Screen
                     toggleMenu();
-                    router.push("/record/AddReceipt");
+                    router.replace("/record"); // Ensure record is in stack
+                    setTimeout(() => router.push("/record/AddReceipt"), 0);
                   }
                   if (index === 2) {
                     // Navigate to the Diet Camera Screen
                     toggleMenu();
-                    router.push("/record/AddDiet");
+                    router.replace("/record"); // Ensure record is in stack
+                    setTimeout(() => router.push("/record/AddDiet"), 0);
                   }
                 }}
               >

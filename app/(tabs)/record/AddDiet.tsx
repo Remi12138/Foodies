@@ -38,13 +38,32 @@ const UploadDietScreen: React.FC = () => {
     const [date, setDate] = useState<string>(new Date().toISOString());
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
     const { addDiet } = useDietStore();
+    // compress loading
     const [loading, setLoading] = useState(false);
     const [analyzeLoading, setAnalyzeLoading] = useState(false);
+    const [existCheckLoading, setExistCheckLoading] = useState(false);
     const textColor = useThemeColor({}, "text");
     const tabIconDefaultColor = useThemeColor({}, "tabIconDefault");
     let analysisData: any;
     let newDiet: Diet;
     const navigation = useNavigation();
+
+    // Save the image to a permanent location
+    const saveImageToFileSystem = async (uri: string): Promise<string | null> => {
+        try {
+            const fileName = uri.split('/').pop(); // Extract the file name
+            const newPath = `${FileSystem.documentDirectory}${fileName}`; // Save it to the app's document directory
+            await FileSystem.copyAsync({
+                from: uri,
+                to: newPath,
+            });
+            console.log('Image saved to:', newPath);
+            return newPath; // Return the permanent URI
+        } catch (error) {
+            console.error('Error saving image:', error);
+            return null;
+        }
+    };
 
     const getImageSize = async (uri: string) => {
         const fileInfo = await FileSystem.getInfoAsync(uri);
@@ -85,10 +104,10 @@ const UploadDietScreen: React.FC = () => {
                 "Authorization": `Api-Key ${apiKey}`,
                 "Content-Type": "multipart/form-data",
             };
-            setAnalyzeLoading(true);
+
             const response = await axios.post(url, formData, { headers });
             // const response = await axios.post(url, body, { headers });
-            setAnalyzeLoading(false);
+
 
             if (response.status === 200) {
                 console.log("Data:", response.data);
@@ -227,7 +246,10 @@ const UploadDietScreen: React.FC = () => {
                 console.log("After compress imageSize:", imageSize);
             }
 
-            setImgUri(compressedImageUri); // Set the final compressed image URI
+            const permanentUri = await saveImageToFileSystem(compressedImageUri);
+            if (permanentUri) {
+                setImgUri(permanentUri); // Use the permanent URI
+            }
             setLoading(false);
         }
     };
@@ -244,9 +266,11 @@ const UploadDietScreen: React.FC = () => {
         }
 
         try {
+            setExistCheckLoading(true);
             const imgHash = await generateImageHash(imgUri);
             // Check if the image hash already exists
             const existingDiet = useDietStore.getState().diets.find(diet => diet.imgHash === imgHash);
+            setExistCheckLoading(false);
             if (existingDiet) {
                 const existingDietWithDate = {
                     ...existingDiet,
@@ -279,9 +303,11 @@ const UploadDietScreen: React.FC = () => {
             } else {
                 console.log("new imgUri");
                 // setAnalyzeLoading(true);
+                setAnalyzeLoading(true);
                 analysisData = await analyzeImage(imgUri); // Call analyzeImage with the image URI
                 // setAnalyzeLoading(false);
                 newDiet = await addDiet(imgUri, imgHash, title, analysisData, date);
+                setAnalyzeLoading(false);
 
                 // Navigate without alert if new image
                 navigation.reset({
@@ -359,10 +385,16 @@ const UploadDietScreen: React.FC = () => {
             </TouchableOpacity>
 
             <Button title="Start Analyze" onPress={handleAnalyze} />
+            {existCheckLoading && (
+                <View style={styles.loadingContainer}>
+                    <ThemedText style={styles.loadingText}>Checking whether exists...</ThemedText>
+                    <ActivityIndicator size="small" color="#007AFF" />
+                </View>
+            )}
             {analyzeLoading && (
                 <View style={styles.loadingContainer}>
                     <ThemedText style={styles.loadingText}>Analyzing...</ThemedText>
-                    <ActivityIndicator size="small" color="#0000ff" />
+                    <ActivityIndicator size="small" color="#007AFF" />
                 </View>
             )}
         </View>
@@ -432,7 +464,8 @@ const styles = StyleSheet.create({
     loadingText: {
         // marginLeft: 10,
         fontSize: 18,
-        color: '#000',
+        // color: '#000',
+        // color: '#007AFF',
     },
 });
 

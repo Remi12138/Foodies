@@ -48,6 +48,7 @@ const EditDietScreen: React.FC = () => {
                 <TextInput
                     style={[styles.input, { color: textColor }]}
                     placeholder="Select date"
+                    placeholderTextColor={textColor + "99"}
                     value={new Date(date).toLocaleDateString()}
                     editable={false}
                 />

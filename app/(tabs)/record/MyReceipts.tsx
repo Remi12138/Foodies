@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Alert, Modal, Text, TextInput, Image, FlatList, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Platform, View, Alert, Modal, Text, TextInput, Image, FlatList, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useReceiptStore } from '@/zustand/receipt';
 import { format } from 'date-fns';
 import { Ionicons } from "@expo/vector-icons";
@@ -49,11 +49,30 @@ const ReceiptBlogScreen: React.FC = () => {
         setReminderModalVisible(true);
     };
 
+    const createNotificationChannel = async () => {
+        if (Platform.OS === 'android') {
+            await Notifications.setNotificationChannelAsync('receipt-reminder-channel', {
+                name: 'Receipt Reminders',
+                importance: Notifications.AndroidImportance.HIGH, // Set importance level
+                description: 'Notifications for receipt reminders',
+            });
+        }
+    };
+
     const scheduleNotification = async () => {
+        // Create the notification channel (Android only)
+        if (Platform.OS === 'android') {
+            await createNotificationChannel();
+        }
+
+        const validDays = parseFloat(days) || 0;
+        const validHours = parseFloat(hours) || 0;
+        const validMinutes = parseFloat(minutes) || 0;
+
         const delayInMs =
-            (parseFloat(days) * 24 * 60 * 60 * 1000) +
-            (parseFloat(hours) * 60 * 60 * 1000) +
-            (parseFloat(minutes) * 60 * 1000);
+            (validDays * 24 * 60 * 60 * 1000) +
+            (validHours * 60 * 60 * 1000) +
+            (validMinutes * 60 * 1000);
 
         if (isNaN(delayInMs) || delayInMs === 0) {
             // Alert.alert('Missing Scheduled Time', 'Please set a valid notification time.');
@@ -64,16 +83,27 @@ const ReceiptBlogScreen: React.FC = () => {
             Alert.alert('Invalid Time', 'Please set a time in the future.');
             return;
         }
-
+        const triggerTime = new Date().getTime() + delayInMs;
         await Notifications.scheduleNotificationAsync({
             content: {
                 title: "Receipt Reminder 📋",
                 body: `Hey! It's time to double-check your bank for the transaction titled "${selectedReceipt?.title}" for $${selectedReceipt?.amount}. Make sure the amount is accurate!`,
             },
-            trigger: { seconds: delayInMs / 1000 },
+            trigger: {
+                type: 'date', // Explicitly specify the type as 'date'
+                date: new Date(triggerTime), // Set the target date
+                repeats: false, // No repeats
+                channelId: Platform.OS === 'android' ? 'receipt-reminder-channel' : undefined, // Use channelId for Android
+            } as Notifications.NotificationTriggerInput,
         });
 
-        Alert.alert('Reminder Set', `Your reminder will pop up in ${days} days, ${hours} hours, and ${minutes} minutes.`);
+        const timeParts = [];
+        if (validDays > 0) timeParts.push(`${validDays} day${validDays > 1 ? "s" : ""}`);
+        if (validHours > 0) timeParts.push(`${validHours} hour${validHours > 1 ? "s" : ""}`);
+        if (validMinutes > 0) timeParts.push(`${validMinutes} minute${validMinutes > 1 ? "s" : ""}`);
+        const message = `Your reminder will pop up in ${timeParts.join(", ")}.`;
+        Alert.alert('Reminder Set', message);
+
         setReminderModalVisible(false); // Close the modal
         setDays("0");
         setHours("0");
@@ -135,6 +165,7 @@ const ReceiptBlogScreen: React.FC = () => {
                                 <TextInput
                                     style={[styles.timeInput, { color: textColor }]}
                                     placeholder="Days"
+                                    placeholderTextColor={textColor + "99"}
                                     value={days}
                                     onChangeText={(text) => setDays(text)}
                                     keyboardType="numeric"
@@ -145,6 +176,7 @@ const ReceiptBlogScreen: React.FC = () => {
                                 <TextInput
                                     style={[styles.timeInput, { color: textColor }]}
                                     placeholder="Hours"
+                                    placeholderTextColor={textColor + "99"}
                                     value={hours}
                                     onChangeText={(text) => setHours(text)}
                                     keyboardType="numeric"
@@ -155,6 +187,7 @@ const ReceiptBlogScreen: React.FC = () => {
                                 <TextInput
                                     style={[styles.timeInput, { color: textColor }]}
                                     placeholder="Minutes"
+                                    placeholderTextColor={textColor + "99"}
                                     value={minutes}
                                     onChangeText={(text) => setMinutes(text)}
                                     keyboardType="numeric"

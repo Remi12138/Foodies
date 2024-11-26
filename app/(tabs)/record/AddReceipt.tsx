@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+    KeyboardAvoidingView,
     View,
     Text,
     TextInput,
@@ -20,6 +21,8 @@ import {useNavigation} from "@react-navigation/native";
 import {ThemedView} from "@/components/ThemedView";
 import {ThemedText} from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import * as FileSystem from 'expo-file-system';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const UploadReceiptScreen: React.FC = () => {
     const [imgUri, setImgUri] = useState<string | null>(null);
@@ -44,11 +47,46 @@ const UploadReceiptScreen: React.FC = () => {
         requestNotificationsPermissions();
     }, []);
 
+    // Save the image to a permanent location
+    const saveImageToFileSystem = async (uri: string): Promise<string | null> => {
+        try {
+            const fileName = uri.split('/').pop(); // Extract the file name
+            const newPath = `${FileSystem.documentDirectory}${fileName}`; // Save it to the app's document directory
+            await FileSystem.copyAsync({
+                from: uri,
+                to: newPath,
+            });
+            console.log('Image saved to:', newPath);
+            return newPath; // Return the permanent URI
+        } catch (error) {
+            console.error('Error saving image:', error);
+            return null;
+        }
+    };
+
+    const createNotificationChannel = async () => {
+        if (Platform.OS === 'android') {
+            await Notifications.setNotificationChannelAsync('receipt-reminder-channel', {
+                name: 'Receipt Reminders',
+                importance: Notifications.AndroidImportance.HIGH, // Set importance level
+                description: 'Notifications for receipt reminders',
+            });
+        }
+    };
+
     const scheduleNotification = async () => {
+        // Create the notification channel (Android only)
+        if (Platform.OS === 'android') {
+            await createNotificationChannel();
+        }
+        const validDays = parseFloat(days) || 0;
+        const validHours = parseFloat(hours) || 0;
+        const validMinutes = parseFloat(minutes) || 0;
+
         const delayInMs =
-            (parseFloat(days) * 24 * 60 * 60 * 1000) +
-            (parseFloat(hours) * 60 * 60 * 1000) +
-            (parseFloat(minutes) * 60 * 1000);
+            (validDays * 24 * 60 * 60 * 1000) +
+            (validHours * 60 * 60 * 1000) +
+            (validMinutes * 60 * 1000);
 
         if (isNaN(delayInMs) || delayInMs === 0) {
             // Alert.alert('No Notification Scheduled', 'Looks like you didn’t set a notification time. You can always add one later if needed!');
@@ -61,16 +99,27 @@ const UploadReceiptScreen: React.FC = () => {
             return;
         }
 
+        const triggerTime = new Date().getTime() + delayInMs;
         await Notifications.scheduleNotificationAsync({
             content: {
                 title: "Receipt Reminder 📋",
                 body: `Hey! It's time to double-check your bank for the transaction titled "${title}" for $${amount}. Make sure the amount is accurate!`,
                 // icon: require("@/assets/images/notification-icon.png"),
             },
-            trigger: { seconds: delayInMs / 1000 },
+            trigger: {
+                type: 'date', // Explicitly specify the type as 'date'
+                date: new Date(triggerTime), // Set the target date
+                repeats: false, // No repeats
+                channelId: Platform.OS === 'android' ? 'receipt-reminder-channel' : undefined, // Use channelId for Android
+            } as Notifications.NotificationTriggerInput,
         });
 
-        Alert.alert('Reminder Set', `Your reminder will pop up in ${days} days, ${hours} hours, and ${minutes} minutes.`);
+        const timeParts = [];
+        if (validDays > 0) timeParts.push(`${validDays} day${validDays > 1 ? "s" : ""}`);
+        if (validHours > 0) timeParts.push(`${validHours} hour${validHours > 1 ? "s" : ""}`);
+        if (validMinutes > 0) timeParts.push(`${validMinutes} minute${validMinutes > 1 ? "s" : ""}`);
+        const message = `Your reminder will pop up in ${timeParts.join(", ")}.`;
+        Alert.alert('Reminder Set', message);
     };
 
     const pickImage = async () => {
@@ -88,7 +137,10 @@ const UploadReceiptScreen: React.FC = () => {
         });
 
         if (!result.canceled) {
-            setImgUri(result.assets[0].uri);
+            const permanentUri = await saveImageToFileSystem(result.assets[0].uri); // Save to permanent storage
+            if (permanentUri) {
+                setImgUri(permanentUri); // Set the permanent URI
+            }
         }
     };
 
@@ -105,7 +157,10 @@ const UploadReceiptScreen: React.FC = () => {
         });
 
         if (!result.canceled) {
-            setImgUri(result.assets[0].uri);
+            const permanentUri = await saveImageToFileSystem(result.assets[0].uri); // Save to permanent storage
+            if (permanentUri) {
+                setImgUri(permanentUri); // Set the permanent URI
+            }
         }
     };
 
@@ -143,7 +198,15 @@ const UploadReceiptScreen: React.FC = () => {
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <KeyboardAwareScrollView
+            contentContainerStyle={{
+                flexGrow: 1,
+                padding: 20,
+            }}
+            enableOnAndroid={true}
+            extraScrollHeight={20}
+            keyboardShouldPersistTaps="handled"
+        >
             <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
                 {imgUri ? (
                     <Image source={{ uri: imgUri }} style={styles.image} />
@@ -195,6 +258,7 @@ const UploadReceiptScreen: React.FC = () => {
                     <TextInput
                         style={[styles.timeInput, { color: textColor }]}
                         placeholder="Days"
+                        placeholderTextColor={textColor + "99"}
                         value={days}
                         onChangeText={(text) => setDays(text)}
                         keyboardType="numeric"
@@ -205,6 +269,7 @@ const UploadReceiptScreen: React.FC = () => {
                     <TextInput
                         style={[styles.timeInput, { color: textColor }]}
                         placeholder="Hours"
+                        placeholderTextColor={textColor + "99"}
                         value={hours}
                         onChangeText={(text) => setHours(text)}
                         keyboardType="numeric"
@@ -215,6 +280,7 @@ const UploadReceiptScreen: React.FC = () => {
                     <TextInput
                         style={[styles.timeInput, { color: textColor }]}
                         placeholder="Minutes"
+                        placeholderTextColor={textColor + "99"}
                         value={minutes}
                         onChangeText={(text) => setMinutes(text)}
                         keyboardType="numeric"
@@ -222,8 +288,8 @@ const UploadReceiptScreen: React.FC = () => {
                     <ThemedText style={styles.timeUnit}>min</ThemedText>
                 </View>
             </View>
-            <Button title="Save Receipt" onPress={handleSubmit} color="#F4511E" />
-        </ScrollView>
+            <Button title="Save Receipt" onPress={handleSubmit} color="#F4511E"  />
+        </KeyboardAwareScrollView>
     );
 };
 
@@ -231,6 +297,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        marginBottom: 100,
         // backgroundColor: '#f5f5f5',
     },
     imagePicker: {
@@ -246,6 +313,7 @@ const styles = StyleSheet.create({
     image: {
         width: '100%',
         height: '100%',
+        // resizeMode: "contain",
         borderRadius: 10,
     },
     imagePlaceholder: {
@@ -295,7 +363,7 @@ const styles = StyleSheet.create({
     timeInputsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 20,
+        marginBottom: 60,
     },
     timeInputGroup: {
         flex: 1,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, SafeAreaView } from 'react-native';
+import { KeyboardAvoidingView, Platform, View, Text, TextInput, Button, StyleSheet, Alert, SafeAreaView } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { useReceiptStore } from '@/zustand/receipt';
 import {  router } from 'expo-router';
@@ -33,14 +33,33 @@ const EditReceiptScreen: React.FC = () => {
         requestNotificationsPermissions();
     }, []);
 
+    const createNotificationChannel = async () => {
+        if (Platform.OS === 'android') {
+            await Notifications.setNotificationChannelAsync('receipt-reminder-channel', {
+                name: 'Receipt Reminders',
+                importance: Notifications.AndroidImportance.HIGH, // Set importance level
+                description: 'Notifications for receipt reminders',
+            });
+        }
+    };
+
     const scheduleNotification = async () => {
+        // Create the notification channel (Android only)
+        if (Platform.OS === 'android') {
+            await createNotificationChannel();
+        }
+        const validDays = parseFloat(days) || 0;
+        const validHours = parseFloat(hours) || 0;
+        const validMinutes = parseFloat(minutes) || 0;
+
         const delayInMs =
-            (parseFloat(days) * 24 * 60 * 60 * 1000) +
-            (parseFloat(hours) * 60 * 60 * 1000) +
-            (parseFloat(minutes) * 60 * 1000);
+            (validDays * 24 * 60 * 60 * 1000) +
+            (validHours * 60 * 60 * 1000) +
+            (validMinutes * 60 * 1000);
 
         if (isNaN(delayInMs) || delayInMs === 0) {
-            // Alert.alert('Missing Scheduled Time', 'Please set a valid notification time.');
+            // Alert.alert('No Notification Scheduled', 'Looks like you didn’t set a notification time. You can always add one later if needed!');
+            Alert.alert('No Notification Scheduled', 'Looks like you didn’t set a notification time. You can always add one later if needed!');
             return;
         }
 
@@ -49,15 +68,27 @@ const EditReceiptScreen: React.FC = () => {
             return;
         }
 
+        const triggerTime = new Date().getTime() + delayInMs;
         await Notifications.scheduleNotificationAsync({
             content: {
                 title: "Receipt Reminder 📋",
                 body: `Hey! It's time to double-check your bank for the transaction titled "${title}" for $${amount}. Make sure the amount is accurate!`,
+                // icon: require("@/assets/images/notification-icon.png"),
             },
-            trigger: { seconds: delayInMs / 1000 },
+            trigger: {
+                type: 'date', // Explicitly specify the type as 'date'
+                date: new Date(triggerTime), // Set the target date
+                repeats: false, // No repeats
+                channelId: Platform.OS === 'android' ? 'receipt-reminder-channel' : undefined, // Use channelId for Android
+            } as Notifications.NotificationTriggerInput,
         });
 
-        Alert.alert('Reminder Set', `Your reminder will pop up in ${days} days, ${hours} hours, and ${minutes} minutes.`);
+        const timeParts = [];
+        if (validDays > 0) timeParts.push(`${validDays} day${validDays > 1 ? "s" : ""}`);
+        if (validHours > 0) timeParts.push(`${validHours} hour${validHours > 1 ? "s" : ""}`);
+        if (validMinutes > 0) timeParts.push(`${validMinutes} minute${validMinutes > 1 ? "s" : ""}`);
+        const message = `Your reminder will pop up in ${timeParts.join(", ")}.`;
+        Alert.alert('Reminder Set', message);
     };
 
     const handleSave = () => {
@@ -73,6 +104,10 @@ const EditReceiptScreen: React.FC = () => {
     };
 
     return (
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Adjust behavior based on platform
+            style={{ flex: 1 }} // Ensure it takes the full height
+        >
         <ThemedView style={styles.container}>
             <SafeAreaView style={styles.safeArea}>
             <ThemedText style={styles.label}>Edit Title</ThemedText>
@@ -80,6 +115,7 @@ const EditReceiptScreen: React.FC = () => {
                 <TextInput
                     style={[styles.input, styles.amountInput, { color: textColor }]}
                     placeholder="Title"
+                    placeholderTextColor={textColor + "99"}
                     value={title}
                     onChangeText={(text) => setTitle(text)}
                 />
@@ -90,6 +126,7 @@ const EditReceiptScreen: React.FC = () => {
                 <TextInput
                     style={[styles.input, styles.amountInput, { color: textColor }]}
                     placeholder="Amount"
+                    placeholderTextColor={textColor + "99"}
                     value={amount}
                     onChangeText={(text) => setAmount(text)}
                     keyboardType="numeric"
@@ -103,6 +140,7 @@ const EditReceiptScreen: React.FC = () => {
                     <TextInput
                         style={[styles.timeInput, { color: textColor }]}
                         placeholder="Days"
+                        placeholderTextColor={textColor + "99"}
                         value={days}
                         onChangeText={(text) => setDays(text)}
                         keyboardType="numeric"
@@ -113,6 +151,7 @@ const EditReceiptScreen: React.FC = () => {
                     <TextInput
                         style={[styles.timeInput, { color: textColor }]}
                         placeholder="Hours"
+                        placeholderTextColor={textColor + "99"}
                         value={hours}
                         onChangeText={(text) => setHours(text)}
                         keyboardType="numeric"
@@ -123,6 +162,7 @@ const EditReceiptScreen: React.FC = () => {
                     <TextInput
                         style={[styles.timeInput, { color: textColor }]}
                         placeholder="Minutes"
+                        placeholderTextColor={textColor + "99"}
                         value={minutes}
                         onChangeText={(text) => setMinutes(text)}
                         keyboardType="numeric"
@@ -134,6 +174,7 @@ const EditReceiptScreen: React.FC = () => {
             <Button title="Save Changes" onPress={handleSave} color="#F4511E" />
         </SafeAreaView>
         </ThemedView>
+        </KeyboardAvoidingView>
     );
 };
 
