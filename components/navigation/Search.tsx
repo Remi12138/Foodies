@@ -10,10 +10,11 @@ import {
   FlatList,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { Restaurant } from "@/zustand/restaurant";
+import { Restaurant,useRestaurantStore } from "@/zustand/restaurant";
 import { useLocation } from "@/zustand/location"; 
 import * as Location from 'expo-location';
-
+import { transformToRestaurant } from "@/zustand/restaurant";
+const addRestaurant = useRestaurantStore.getState().addRestaurant;
 const fetchCoordinatesFromAddress = async (address: string) => {
   const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
 
@@ -49,18 +50,84 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
   ]); 
   const { userLocation, setLocation: setUserLocation } = useLocation(); 
 
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
+ 
+    const handleSearch = async (term: string) => {
+      setSearchTerm(term);
+    
+      const regex = new RegExp(term, "i");
+      let filteredData = restaurants.filter(
+        (restaurant) =>
+          restaurant.name.match(regex) ||
+          restaurant.location.displayAddress.join(", ").match(regex) ||
+          restaurant.categories.some((cat) => cat.title.match(regex))
+      );
+      const postRequestData = async (url: string, latitude: number, longitude: number) => {
+        // Construct URLSearchParams
+        const params = new URLSearchParams({
+            term: "mcdonald", // Fixed search term
+            latitude: latitude.toString(), // User's current latitude
+            longitude: longitude.toString(), // User's current longitude
+            radius: "10000", // Search radius in meters
+            limit: "10", // Limit results to 10
+        });
+    
+        // Construct full URL
+        const fullUrl = `${url}?${params.toString()}`;
+        const apiKey = 'JHaahtXtTaeO2EqFch4v7BWI4Xy1fxjmBzC2-z2WO32RrUiqti6jRQupiMS6npdYfFfjN9QGOxu_o_Q6cbB-_oMNhVguCu5QLegsrBgfr0PxIriLvsnJ95F-CDEdZ3Yx'; // Replace with the actual API key
+        // Request options
+        const opts = {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${apiKey}`, // Add "Bearer " before the API key
+              "Content-Type": "application/x-www-form-urlencoded",
+          },
+            timeout: 20 * 1000, // Set timeout for 20 seconds
+        };
+    
+        try {
+            // Perform the fetch request
+            const response = await fetch(fullUrl, opts);
+            if (response.ok) {
+                const responseJson = await response.json();
+                console.log("Response Code:", responseJson.code);
+                console.log("Response Message:", responseJson.message);
+                console.log("Restaurant Data:", responseJson.businesses); // Yelp returns 'businesses'
+                // Update filtered data using onFilter
+                const filteredData = responseJson.businesses.map(transformToRestaurant);
 
-    const regex = new RegExp(term, "i");
-    const filteredData = restaurants.filter((restaurant) =>
-      restaurant.name.match(regex) ||
-      restaurant.location.displayAddress.join(", ").match(regex) ||
-      restaurant.categories.some((cat) => cat.title.match(regex))
-    );
+                filteredData.forEach((restaurant: Restaurant) => {
+                  addRestaurant(restaurant); // Add one by one
+              });
+              onFilter(filteredData); // Call onFilter with the processed data
 
-    onFilter(filteredData);
-  };
+              console.log("Added restaurants to zustand store");            
+            } else {
+                // Log detailed error response
+                const errorResponse = await response.text();
+                console.error(`HTTP Error: ${response.status}`);
+                console.error("Error Details:", errorResponse);
+            }
+        } catch (error) {
+            console.error("Error occurred:", error);
+        }
+    };
+    
+    // Example Usage
+    const apiUrl = "https://api.yelp.com/v3/businesses/search"; // Replace with correct API endpoint
+    const latitude = 36.019; // Replace with actual latitude
+    const longitude = -78.94836; // Replace with actual longitude
+    
+    
+          
+      if (filteredData.length === 0 && term.trim() !== "") {
+        postRequestData(apiUrl, latitude, longitude);
+      } else {
+        onFilter(filteredData);
+      }
+    };
+
+
+
 
   const handleLocationSubmit = async () => {
     try {
