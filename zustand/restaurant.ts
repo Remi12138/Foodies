@@ -108,8 +108,17 @@ type RestaurantStore = {
 export const useRestaurantStore = create<RestaurantStore>()((set) => ({
   restaurants: [],
   setRestaurants: (restaurants) => set(() => ({ restaurants })),
-  addRestaurant: (restaurant) =>
-    set((state) => ({ restaurants: [...state.restaurants, restaurant] })),
+  addRestaurant: (restaurant) => {
+    set((state) => {
+      // 检查餐厅是否已经存在
+      const exists = state.restaurants.some((r) => r.id === restaurant.id);
+      if (exists) {
+        console.log(`Restaurant with id ${restaurant.id} already exists.`);
+        return state;
+      }
+      return { restaurants: [...state.restaurants, restaurant] };
+    });
+  },  
   removeRestaurant: (id) =>
     set((state) => ({
       restaurants: state.restaurants.filter(
