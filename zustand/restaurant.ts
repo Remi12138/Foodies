@@ -121,7 +121,7 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
   fetchRestaurants: async (userLocation: { latitude: number; longitude: number }) => {
 
    // console.log(userLocation);
-    const apiKey = 'JHaahtXtTaeO2EqFch4v7BWI4Xy1fxjmBzC2-z2WO32RrUiqti6jRQupiMS6npdYfFfjN9QGOxu_o_Q6cbB-_oMNhVguCu5QLegsrBgfr0PxIriLvsnJ95F-CDEdZ3Yx';
+    const apiKey = '-fn0ifdZSmgiv2Q90tLr4j6kt0I6mlVQEFvF-xrdqEpUmzyg_UkDPn0L1TkkLX0QZSdP2sw-4teU3BeP-0YoG21ro7bA4B4i4C8aNOt9KBPci1GFJCqkCr4_Nk5GZ3Yx';
     if (!apiKey) {
       throw new Error("YELP_API_KEY is not defined in the environment variables");
     }
