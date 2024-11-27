@@ -129,7 +129,7 @@ const RestaurantInfo = () => {
   const { key } = useLocalSearchParams(); 
   console.log(key);
   const restaurant = useRestaurantStore((state) =>
-    state.restaurants.find((r) => r.name === key)
+    state.restaurants.find((r) => r.id === key)
   );
 
   if (!restaurant) {
