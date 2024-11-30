@@ -384,7 +384,7 @@ const UploadDietScreen: React.FC = () => {
                 )}
             </TouchableOpacity>
 
-            <Button title="Start Analyze" onPress={handleAnalyze} />
+            <Button title="Start Analyze" onPress={handleAnalyze} color="#F4511E" />
             {existCheckLoading && (
                 <View style={styles.loadingContainer}>
                     <ThemedText style={styles.loadingText}>Checking whether exists...</ThemedText>
