@@ -14,8 +14,42 @@ Explore food places around the world via list and map.
 
 ### Record
 
-1. Manage receipts
-2. Find out food details e.g. calories
+**1. Daily Diet Tracking and List Management**
+* Keep a record of your diets each day by uploading photos of your food. 
+The images are analyzed using the Foodvisor API. 
+   * In the preview, you'll see the calorie, protein, fat, carbs, and fiber content of your diet. 
+   You’ll also receive a diet grade along with personalized dietary advice powered by the ChatGPT. 
+  (If you're not satisfied with the advice, you can request a new one.)
+   * Clicking "Details" will show an analysis of every individual food item identified in your diet. 
+  Detected food items are marked directly on the uploaded image. 
+  You can use buttons below to toggle between viewing all foods or focusing on specific ones.
+  Each identified food item comes with a card displaying details such as confidence(accuracy of food identification), 
+  calories, quantity, glycemic index, and contents of protein, fat, carbs, and fiber. 
+  By tapping a food card, you can highlight its exact location in the image.
+* Diet List Management: All uploaded diets are displayed in a list format, allowing you to edit the title and date or 
+delete entries as needed.
+
+**2. Receipt Tracking and List Management**
+* People often forget the exact amount spent at restaurants, the tip they left, 
+or fail to verify if the correct amount was deducted from their bank account. 
+In **Foodies**, users can upload and save restaurant receipts while 
+setting reminders to follow up on the transaction at a specified time.
+* Receipt List Management: All uploaded receipts are displayed in a list format, 
+allowing users to edit the title, amount, and reminder time or delete entries as needed.
+
+<img src="/screenshots/000.png" alt="0" height="350">
+<img src="/screenshots/001.png" alt="1" height="350">
+<img src="/screenshots/002.png" alt="2" height="350">
+<img src="/screenshots/003.png" alt="3" height="350">
+<img src="/screenshots/004.png" alt="4" height="350">
+<img src="/screenshots/005.png" alt="5" height="350">
+<img src="/screenshots/006.png" alt="6" height="350">
+<img src="/screenshots/007.png" alt="7" height="350">
+<img src="/screenshots/008.png" alt="8" height="350">
+<img src="/screenshots/009.png" alt="9" height="350">
+<img src="/screenshots/010.png" alt="10" height="350">
+<img src="/screenshots/011.png" alt="11" height="350">
+<img src="/screenshots/012.png" alt="12" height="350">
 
 ### Profile
 
