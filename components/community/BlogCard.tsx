@@ -18,9 +18,19 @@ function BlogCard({ item }: { item: BlogCover }) {
   }, [blogIds]);
 
   const textColor = useThemeColor({}, "text");
+  const backgroundColor = useThemeColor({}, "background");
 
   return (
-    <ThemedView style={styles.card}>
+    <ThemedView
+      style={[
+        styles.card,
+        {
+          shadowColor: textColor,
+          backgroundColor: backgroundColor,
+          borderColor: textColor,
+        },
+      ]}
+    >
       <ThemedView style={{ flex: 1 }}>
         <Image
           source={{ uri: item.post_image_cover }}
@@ -66,11 +76,7 @@ function BlogCard({ item }: { item: BlogCover }) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#FFF",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 5 },
-    elevation: 3,
+    elevation: 10,
     flex: 1,
     borderWidth: 1,
   },
