@@ -11,6 +11,7 @@ import { getAuth } from "firebase/auth";
 import { destroyPostRecord } from "@/utils/blogs/posts";
 import { router } from "expo-router";
 import { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 function PostBtnDeletion({ blogId }: { blogId: string }) {
   const [destroying, setDestroying] = useState(false);
@@ -36,33 +37,25 @@ function PostBtnDeletion({ blogId }: { blogId: string }) {
   };
 
   const deleteButtonBackground = useThemeColor(
-    { light: "#FF0000", dark: "#FF4444" },
+    { light: "#FFF", dark: "#000" },
     "background"
   );
   const deletionButtonText = useThemeColor(
-    { light: "#FFF", dark: "#FFF" },
+    { light: "#FF0000", dark: "#FFF" },
     "text"
   );
 
   return (
     <>
       <TouchableOpacity
-        style={[
-          styles.postDestroyButton,
-          { backgroundColor: deleteButtonBackground },
-        ]}
+        style={[styles.postDestroyButton]}
         onPress={() => setModalVisible(true)}
         disabled={destroying}
       >
         {destroying ? (
           <ActivityIndicator color={deletionButtonText} />
         ) : (
-          <ThemedText
-            type="default"
-            style={[styles.deletionButtonText, { color: deletionButtonText }]}
-          >
-            Destroy
-          </ThemedText>
+          <Ionicons name="trash-outline" size={24} color="#FF0000" />
         )}
       </TouchableOpacity>
 

@@ -12,6 +12,7 @@ import {
 import { Blog, BlogCover } from "@/zustand/blog";
 import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { ThemedText } from "@/components/ThemedText";
+import PostBtnDeletion from "../post/postDeletion/postBtnDeletion";
 
 function BlogInfo({
   blog,
@@ -80,9 +81,12 @@ function BlogInfo({
         <ThemedView style={styles.likecount}>
           <ThemedText>{likecount}</ThemedText>
         </ThemedView>
-        <TouchableOpacity style={styles.shareButton}>
+        {currentUser?.uid === blog.author_uid && (
+          <PostBtnDeletion blogId={blog.id} />
+        )}
+        {/* <TouchableOpacity style={styles.shareButton}>
           <Ionicons name="share-social-outline" size={24} color="#000" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ThemedView>
     </ThemedView>
   );
