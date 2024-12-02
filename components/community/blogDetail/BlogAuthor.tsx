@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, Image } from "react-native";
+import { StyleSheet, Image } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { getAuth } from "firebase/auth";
@@ -19,11 +19,7 @@ function BlogAuthor({ blog }: { blog: Blog }) {
         />
         <ThemedText style={styles.authorText}>{blog.author.name}</ThemedText>
       </ThemedView>
-      {currentUser && currentUser.uid !== blog.author_uid ? (
-        <TouchableOpacity style={styles.followButton}>
-          <ThemedText style={styles.followButtonText}>Follow</ThemedText>
-        </TouchableOpacity>
-      ) : (
+      {currentUser && currentUser.uid === blog.author_uid && (
         <ThemedView style={{ marginLeft: 5 }}>
           <ThemedText>(Me)</ThemedText>
         </ThemedView>

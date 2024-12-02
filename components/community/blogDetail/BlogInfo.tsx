@@ -80,9 +80,9 @@ function BlogInfo({
         <ThemedView style={styles.likecount}>
           <ThemedText>{likecount}</ThemedText>
         </ThemedView>
-        <TouchableOpacity style={styles.shareButton}>
+        {/* <TouchableOpacity style={styles.shareButton}>
           <Ionicons name="share-social-outline" size={24} color="#000" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ThemedView>
     </ThemedView>
   );
