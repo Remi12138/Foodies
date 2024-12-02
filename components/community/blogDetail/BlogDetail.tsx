@@ -79,9 +79,9 @@ function BlogDetail({
         <ThemedView style={styles.contentContainer}>
           <ThemedText style={styles.title}>{blog.post.title}</ThemedText>
           <BlogInfo blog={blog} isInitiallyLiked={isLiked} />
-          {currentUser?.uid === authorUid && (
+          {/* {currentUser?.uid === authorUid && (
             <PostAuthorTool blogId={blog.id} />
-          )}
+          )} */}
           <ThemedText style={styles.content}>
             <ThemedText style={styles.firstLetter}>
               {blog.post.content[0]}
