@@ -12,6 +12,7 @@ import { usePostStore } from "@/zustand/post";
 import PostBtnSubmit from "./PostBtnSubmit";
 import { debounce } from "lodash";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import PostResPicker from "./PostResPicker";
 
 function PostCreate() {
   const {
@@ -75,6 +76,7 @@ function PostCreate() {
             value={draft.rtt_yelp_id}
             onChangeText={handleRttYelpIdChange}
           />
+          <PostResPicker />
         </ScrollView>
         <PostBtnSubmit />
       </ThemedView>
