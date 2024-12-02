@@ -6,6 +6,7 @@ import { BlogCover } from "@/zustand/blog";
 import { useCollectionStore } from "@/zustand/collections";
 import { useEffect, useState } from "react";
 import { checkIfBlogIsLikedLocal } from "@/utils/blogs/favorites";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 function BlogCard({ item }: { item: BlogCover }) {
   const { blogIds } = useCollectionStore();
@@ -16,8 +17,20 @@ function BlogCard({ item }: { item: BlogCover }) {
     setIsLiked(checkIfBlogIsLikedLocal(blogIds, item.blog_id));
   }, [blogIds]);
 
+  const textColor = useThemeColor({}, "text");
+  const backgroundColor = useThemeColor({}, "background");
+
   return (
-    <ThemedView style={styles.card}>
+    <ThemedView
+      style={[
+        styles.card,
+        {
+          shadowColor: textColor,
+          backgroundColor: backgroundColor,
+          borderColor: textColor,
+        },
+      ]}
+    >
       <ThemedView style={{ flex: 1 }}>
         <Image
           source={{ uri: item.post_image_cover }}
@@ -48,7 +61,7 @@ function BlogCard({ item }: { item: BlogCover }) {
               <Ionicons
                 name={isLiked ? "heart" : "heart-outline"}
                 size={14}
-                color={isLiked ? "#D1382C" : "#000"}
+                color={isLiked ? "#D1382C" : textColor}
               />
             </ThemedText>
             <ThemedText style={styles.likesCount}>
@@ -63,11 +76,7 @@ function BlogCard({ item }: { item: BlogCover }) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#FFF",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 5 },
-    elevation: 3,
+    elevation: 10,
     flex: 1,
     borderWidth: 1,
   },
@@ -117,7 +126,6 @@ const styles = StyleSheet.create({
   },
   likesCount: {
     fontSize: 12,
-    color: "#555",
   },
 });
 

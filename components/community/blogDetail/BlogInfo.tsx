@@ -13,6 +13,7 @@ import { Blog, BlogCover } from "@/zustand/blog";
 import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { ThemedText } from "@/components/ThemedText";
 import PostBtnDeletion from "../post/postDeletion/postBtnDeletion";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 function BlogInfo({
   blog,
@@ -67,6 +68,8 @@ function BlogInfo({
     }
   };
 
+  const textColor = useThemeColor({}, "text");
+
   return (
     <ThemedView style={styles.blogInfoContainer}>
       <BlogAuthor blog={blog} />
@@ -75,7 +78,7 @@ function BlogInfo({
           <Ionicons
             name={isLiked ? "heart" : "heart-outline"}
             size={24}
-            color={isLiked ? "#D1382C" : "#000"}
+            color={isLiked ? "#D1382C" : textColor}
           />
         </TouchableOpacity>
         <ThemedView style={styles.likecount}>

@@ -11,6 +11,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { usePostStore } from "@/zustand/post";
 import PostBtnSubmit from "./PostBtnSubmit";
 import { debounce } from "lodash";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 function PostCreate() {
   const {
@@ -45,6 +46,8 @@ function PostCreate() {
     saveDraftToStorage();
   }, 5000);
 
+  const textColor = useThemeColor({}, "text");
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ThemedView style={styles.container}>
@@ -53,12 +56,14 @@ function PostCreate() {
           <TextInput
             style={styles.titleInput}
             placeholder="Add a title"
+            placeholderTextColor={textColor}
             value={draft.title}
             onChangeText={handleTitleChange}
           />
           <TextInput
             style={styles.contentInput}
             placeholder="Add text"
+            placeholderTextColor={textColor}
             value={draft.content}
             onChangeText={handleContentChange}
             multiline
@@ -66,6 +71,7 @@ function PostCreate() {
           <TextInput
             style={styles.rttInput}
             placeholder="EvJqRISUz3IqSfIW0lygDg"
+            placeholderTextColor={textColor}
             value={draft.rtt_yelp_id}
             onChangeText={handleRttYelpIdChange}
           />
@@ -80,7 +86,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "white",
   },
   scrollViewContent: {
     paddingBottom: 80,
