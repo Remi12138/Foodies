@@ -59,7 +59,6 @@ const EditReceiptScreen: React.FC = () => {
 
         if (isNaN(delayInMs) || delayInMs === 0) {
             // Alert.alert('No Notification Scheduled', 'Looks like you didn’t set a notification time. You can always add one later if needed!');
-            Alert.alert('No Notification Scheduled', 'Looks like you didn’t set a notification time. You can always add one later if needed!');
             return;
         }
 

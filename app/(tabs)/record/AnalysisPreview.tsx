@@ -139,7 +139,7 @@ const AnalysisPreviewScreen: React.FC = () => {
             </View>
 
             <View style={styles.buttonContainer}>
-                <Button title="Detail" onPress={() => navigation.navigate('AnalysisDetail', { newDiet: { ...newDiet, date: parsedDate.toISOString() } })} />
+                <Button title="Detail" onPress={() => navigation.navigate('AnalysisDetail', { newDiet: { ...newDiet, date: parsedDate.toISOString() } })} color="#F4511E" />
             </View>
 
             <View style={styles.analysisContainer}>
@@ -160,7 +160,7 @@ const AnalysisPreviewScreen: React.FC = () => {
                 {loading ? (
                     <ActivityIndicator size="small" color="#0000ff" />
                 ) : (
-                    <Button title="Get New Advice" onPress={() => getAdvice()} />
+                    <Button title="Get New Advice" onPress={() => getAdvice()} color="#F4511E" />
                 )}
             </View>
         </ScrollView>
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     buttonContainer2: {
-        // marginTop: 20,
+        marginTop: 20,
         alignItems: 'center',
         marginBottom: 50,
     },

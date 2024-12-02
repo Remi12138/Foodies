@@ -4,8 +4,7 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Ionicons } from "@expo/vector-icons";
-import ThemeSetting from "@/components/profile/ThemeSetting";
-import {Href, router} from "expo-router";
+import { router } from "expo-router";
 import WelcomeBar from "@/components/profile/WelcomeBar";
 
 export default function ProfileScreen() {
@@ -20,12 +19,12 @@ export default function ProfileScreen() {
       }
     >
       <WelcomeBar />
-      <ThemedView>
+      {/* <ThemedView>
         <TouchableOpacity style={styles.row}>
           <ThemedText style={styles.rowText}>My Posts</ThemedText>
           <Ionicons name="chevron-forward" size={24} color="gray" />
         </TouchableOpacity>
-      </ThemedView>
+      </ThemedView> */}
 
       <ThemedView>
         <TouchableOpacity

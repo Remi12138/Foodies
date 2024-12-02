@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
         flex: 1,
         // backgroundColor: '#fff',
         padding: 15,
-        marginTop: 10,
+        // marginTop: 10,
     },
     flatListContent: {
         paddingBottom: 20,
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 15,
+        marginBottom: 10,
         shadowColor: '#000',
         shadowOpacity: 0.2,
         shadowOffset: { width: 0, height: 3 },

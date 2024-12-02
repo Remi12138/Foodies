@@ -66,7 +66,7 @@ const EditDietScreen: React.FC = () => {
             )}
 
 
-            <Button title="Save" onPress={handleSave} />
+            <Button title="Save" onPress={handleSave} color="#F4511E" />
         </View>
     );
 };

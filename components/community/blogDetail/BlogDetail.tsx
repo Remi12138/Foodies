@@ -23,6 +23,7 @@ import { formatBlogUpdatedTime } from "@/utils/blogs/info";
 import BlogImageModal from "./BlogImageModal";
 import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { FontAwesome } from "@expo/vector-icons";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 const { width } = Dimensions.get("window");
 
@@ -38,6 +39,7 @@ function BlogDetail({
   const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const currentUser = FIREBASE_AUTH.currentUser;
+  const backgroundColor = useThemeColor({}, "background");
 
   useEffect(() => {
     const fetchBlogDetailsAndLikeStatus = async () => {
@@ -72,16 +74,18 @@ function BlogDetail({
 
   return (
     <GestureHandlerRootView style={styles.gestureContainer}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={[styles.container, { backgroundColor }]}
+      >
         <ThemedView>
           <BlogImageModal images={images} />
         </ThemedView>
         <ThemedView style={styles.contentContainer}>
           <ThemedText style={styles.title}>{blog.post.title}</ThemedText>
           <BlogInfo blog={blog} isInitiallyLiked={isLiked} />
-          {currentUser?.uid === authorUid && (
+          {/* {currentUser?.uid === authorUid && (
             <PostAuthorTool blogId={blog.id} />
-          )}
+          )} */}
           <ThemedText style={styles.content}>
             <ThemedText style={styles.firstLetter}>
               {blog.post.content[0]}
@@ -121,10 +125,10 @@ function BlogDetail({
 }
 
 const styles = StyleSheet.create({
-  gestureContainer: { flex: 1, backgroundColor: "#FFF" },
+  gestureContainer: { flex: 1 },
   container: {
     flexGrow: 1,
-    backgroundColor: "#FFF",
+    paddingBottom: 32,
   },
   loadingContainer: {
     flex: 1,
