@@ -63,14 +63,20 @@ function PostCreate() {
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <PostImagePicker />
           <TextInput
-            style={[styles.titleInput, { color: textColor }]}
+            style={[
+              styles.titleInput,
+              { color: textColor, borderColor: textColor },
+            ]}
             placeholder="Add a title"
             placeholderTextColor={textColor}
             value={draft.title}
             onChangeText={handleTitleChange}
           />
           <TextInput
-            style={[styles.contentInput, { color: textColor }]}
+            style={[
+              styles.contentInput,
+              { color: textColor, borderColor: textColor },
+            ]}
             placeholder="Add content"
             placeholderTextColor={textColor}
             value={draft.content}

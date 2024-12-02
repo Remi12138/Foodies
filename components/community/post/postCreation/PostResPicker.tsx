@@ -42,12 +42,20 @@ function PostResPicker({
   const textColor = useThemeColor({}, "text");
 
   return (
-    <ThemedView>
+    <ThemedView
+      style={{
+        borderWidth: 1,
+        borderColor: textColor,
+        paddingHorizontal: 8,
+      }}
+    >
       <TouchableOpacity onPress={() => setModalVisible(true)}>
         <ThemedText
           style={{ color: textColor, fontSize: 16, marginVertical: 10 }}
         >
-          {selectedRestaurant ? selectedRestaurant.name : "Pick a Restaurant"}
+          {selectedRestaurant
+            ? selectedRestaurant.name
+            : "Pick a Restaurant (optional)"}
         </ThemedText>
       </TouchableOpacity>
 
