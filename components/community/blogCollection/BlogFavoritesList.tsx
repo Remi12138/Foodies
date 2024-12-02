@@ -63,7 +63,7 @@ function BlogFavoritesList() {
           data={blogCovers}
           renderItem={renderItem}
           keyExtractor={(item) => item.blog_id}
-          contentContainerStyle={[styles.container, { backgroundColor }]}
+          contentContainerStyle={[styles.listContent, { backgroundColor }]}
           refreshing={refreshing}
           onRefresh={onRefresh}
         />
@@ -75,9 +75,9 @@ function BlogFavoritesList() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  listContent: {
     padding: 16,
-    flex: 1,
+    flexGrow: 1, // Ensures that the FlatList can grow and be scrollable
   },
   rowContainer: {
     width: "100%",
@@ -89,11 +89,13 @@ const styles = StyleSheet.create({
     padding: 8,
     elevation: 5,
     borderWidth: 1,
+    borderRadius: 8,
   },
   image: {
     width: 100,
     height: 100,
     marginRight: 16,
+    borderRadius: 8,
   },
   textContainer: {
     flex: 1,
