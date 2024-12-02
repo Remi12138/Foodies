@@ -51,6 +51,11 @@ allowing users to edit the title, amount, and reminder time or delete entries as
 <img src="/screenshots/011.png" alt="11" height="350">
 <img src="/screenshots/012.png" alt="12" height="350">
 
+_Error Handling_
+
+<img src="/screenshots/013.png" alt="13" height="350">
+<img src="/screenshots/014.png" alt="14" height="350">
+
 ### Profile
 
 1. Settings
