@@ -36,10 +36,7 @@ function PostBtnDeletion({ blogId }: { blogId: string }) {
     }
   };
 
-  const deleteButtonBackground = useThemeColor(
-    { light: "#FFF", dark: "#000" },
-    "background"
-  );
+  const confirmBackground = useThemeColor({}, "background");
   const deletionButtonText = useThemeColor(
     { light: "#FF0000", dark: "#FFF" },
     "text"
@@ -66,34 +63,31 @@ function PostBtnDeletion({ blogId }: { blogId: string }) {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
+          <View
+            style={[
+              styles.modalContent,
+              { backgroundColor: confirmBackground },
+            ]}
+          >
             <ThemedText style={styles.modalText}>
               Are you sure you want to delete this post?
             </ThemedText>
             <View style={styles.modalButtonsContainer}>
               <TouchableOpacity
-                style={[
-                  styles.modalButton,
-                  { backgroundColor: deleteButtonBackground },
-                ]}
+                style={[styles.modalButton]}
                 onPress={handleDestroyBlog}
               >
                 <ThemedText
-                  style={[
-                    styles.modalButtonText,
-                    { color: deletionButtonText },
-                  ]}
+                  style={[styles.modalButtonText, { color: "#FF0000" }]}
                 >
                   Confirm
                 </ThemedText>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.modalButton, { backgroundColor: "#CCC" }]}
+                style={[styles.modalButton]}
                 onPress={() => setModalVisible(false)}
               >
-                <ThemedText style={[styles.modalButtonText, { color: "#000" }]}>
-                  Cancel
-                </ThemedText>
+                <ThemedText style={[styles.modalButtonText]}>Cancel</ThemedText>
               </TouchableOpacity>
             </View>
           </View>
@@ -122,7 +116,6 @@ const styles = StyleSheet.create({
   modalContent: {
     width: 300,
     padding: 20,
-    backgroundColor: "#FFF",
     alignItems: "center",
   },
   modalText: {
