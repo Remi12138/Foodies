@@ -13,7 +13,6 @@ import PostBtnSubmit from "./PostBtnSubmit";
 import { debounce } from "lodash";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import PostResPicker from "./PostResPicker";
-import { ThemedText } from "@/components/ThemedText";
 
 function PostCreate() {
   const {
@@ -48,9 +47,11 @@ function PostCreate() {
     saveDraftToStorage();
   }, 5000);
 
-  const handleRestaurantSelect = (restaurant: { id: string; name: string }) => {
+  const handleRestaurantSelect = (
+    restaurant: { id: string; name: string } | null
+  ) => {
     setSelectedRestaurant(restaurant);
-    setRttYelpId(restaurant.id);
+    setRttYelpId(restaurant ? restaurant.id : "");
     debouncedSaveDraft();
   };
 
@@ -76,12 +77,10 @@ function PostCreate() {
             onChangeText={handleContentChange}
             multiline
           />
-          {selectedRestaurant && (
-            <ThemedText style={[styles.rttInput, { color: textColor }]}>
-              {selectedRestaurant.name} - {selectedRestaurant.id}
-            </ThemedText>
-          )}
-          <PostResPicker onRestaurantSelect={handleRestaurantSelect} />
+          <PostResPicker
+            onRestaurantSelect={handleRestaurantSelect}
+            selectedRestaurant={selectedRestaurant}
+          />
         </ScrollView>
         <PostBtnSubmit />
       </ThemedView>

@@ -6,20 +6,21 @@ import {
   Button,
   FlatList,
   TouchableOpacity,
-  View,
-  Text,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { searchYelpBusinesses } from "@/utils/blogs/restaurant";
-import { useTheme } from "@react-navigation/native";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedText } from "@/components/ThemedText";
 
 interface PostResPickerProps {
-  onRestaurantSelect: (restaurant: { id: string; name: string }) => void;
+  onRestaurantSelect: (restaurant: { id: string; name: string } | null) => void;
+  selectedRestaurant: { id: string; name: string } | null;
 }
 
-function PostResPicker({ onRestaurantSelect }: PostResPickerProps) {
+function PostResPicker({
+  onRestaurantSelect,
+  selectedRestaurant,
+}: PostResPickerProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [restaurants, setRestaurants] = useState<any[]>([]);
@@ -31,9 +32,10 @@ function PostResPicker({ onRestaurantSelect }: PostResPickerProps) {
     }
   };
 
-  const handleRestaurantSelect = (restaurant: { id: string; name: string }) => {
-    console.log("Selected Restaurant:", restaurant);
-    onRestaurantSelect(restaurant); // Call the callback with the selected restaurant
+  const handleRestaurantSelect = (
+    restaurant: { id: string; name: string } | null
+  ) => {
+    onRestaurantSelect(restaurant); // Call the callback with the selected restaurant or null
     setModalVisible(false);
   };
 
@@ -41,7 +43,13 @@ function PostResPicker({ onRestaurantSelect }: PostResPickerProps) {
 
   return (
     <ThemedView>
-      <Button title="Pick a Restaurant" onPress={() => setModalVisible(true)} />
+      <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <ThemedText
+          style={{ color: textColor, fontSize: 16, marginVertical: 10 }}
+        >
+          {selectedRestaurant ? selectedRestaurant.name : "Pick a Restaurant"}
+        </ThemedText>
+      </TouchableOpacity>
 
       <Modal
         animationType="slide"
@@ -56,7 +64,7 @@ function PostResPicker({ onRestaurantSelect }: PostResPickerProps) {
         >
           <ThemedView
             style={{
-              height: "75%",
+              height: "80%",
               padding: 16,
             }}
           >
@@ -92,10 +100,14 @@ function PostResPicker({ onRestaurantSelect }: PostResPickerProps) {
               </TouchableOpacity>
             </ThemedView>
             <FlatList
-              data={restaurants}
+              data={[{ id: "none", name: "None" }, ...restaurants]}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleRestaurantSelect(item)}>
+                <TouchableOpacity
+                  onPress={() =>
+                    handleRestaurantSelect(item.id === "none" ? null : item)
+                  }
+                >
                   <ThemedView
                     style={{
                       padding: 16,
