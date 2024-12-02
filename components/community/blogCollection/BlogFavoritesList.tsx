@@ -9,6 +9,7 @@ import { BlogCover } from "@/zustand/blog";
 import { initBlogCollections } from "@/utils/blogs/favorites";
 import { getAuth } from "firebase/auth";
 import BlogFavoritesEmpty from "@/components/community/blogCollection/BlogFavoritesEmpty";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 function BlogFavoritesList() {
   const { blogCovers } = useCollectionStore();
@@ -16,6 +17,9 @@ function BlogFavoritesList() {
   const [refreshing, setRefreshing] = useState(false);
 
   const currentUser = getAuth().currentUser;
+
+  const backgroundColor = useThemeColor({}, "background");
+  const textColor = useThemeColor({}, "text");
 
   function renderItem({ item }: { item: BlogCover }) {
     return (
@@ -25,7 +29,7 @@ function BlogFavoritesList() {
           asChild
         >
           <Pressable>
-            <ThemedView style={styles.card}>
+            <ThemedView style={[styles.card, { borderColor: textColor }]}>
               <Image
                 source={{ uri: item.post_image_cover }}
                 style={styles.image}
@@ -59,7 +63,7 @@ function BlogFavoritesList() {
           data={blogCovers}
           renderItem={renderItem}
           keyExtractor={(item) => item.blog_id}
-          contentContainerStyle={styles.container}
+          contentContainerStyle={[styles.container, { backgroundColor }]}
           refreshing={refreshing}
           onRefresh={onRefresh}
         />
@@ -74,7 +78,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     flex: 1,
-    backgroundColor: "#FFF",
   },
   rowContainer: {
     width: "100%",
