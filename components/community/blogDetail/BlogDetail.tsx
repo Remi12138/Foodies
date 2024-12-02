@@ -25,8 +25,6 @@ import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { FontAwesome } from "@expo/vector-icons";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
-import { Colors } from "@/constants/Colors";
-
 const { width } = Dimensions.get("window");
 
 function BlogDetail({
@@ -41,10 +39,7 @@ function BlogDetail({
   const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const currentUser = FIREBASE_AUTH.currentUser;
-  const backgroundColor = useThemeColor(
-    { light: Colors.light.background, dark: Colors.dark.background },
-    "background"
-  );
+  const backgroundColor = useThemeColor({}, "background");
 
   useEffect(() => {
     const fetchBlogDetailsAndLikeStatus = async () => {
