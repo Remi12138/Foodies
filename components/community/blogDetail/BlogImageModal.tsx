@@ -10,6 +10,7 @@ import {
 import { GestureHandlerRootView, FlatList } from "react-native-gesture-handler";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 const { width, height } = Dimensions.get("window");
 
@@ -31,6 +32,8 @@ function BlogImageModal({ images }: BlogImageModalProps) {
     setIsModalVisible(false);
     setCurrentImage(null);
   };
+
+  const textcolor = useThemeColor({}, "text");
 
   return (
     <GestureHandlerRootView>
@@ -61,7 +64,11 @@ function BlogImageModal({ images }: BlogImageModalProps) {
         {images.map((_, index) => (
           <ThemedView
             key={index}
-            style={[styles.dot, { opacity: currentIndex === index ? 1 : 0.4 }]}
+            style={[
+              styles.dot,
+              { opacity: currentIndex === index ? 1 : 0.4 },
+              { backgroundColor: textcolor },
+            ]}
           />
         ))}
       </ThemedView>
@@ -87,7 +94,6 @@ const styles = StyleSheet.create({
   dot: {
     width: 8,
     height: 8,
-    backgroundColor: "#000",
     marginHorizontal: 4,
   },
   paginationContainerCloser: {

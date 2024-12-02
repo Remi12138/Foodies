@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
   gestureContainer: { flex: 1 },
   container: {
     flexGrow: 1,
+    paddingBottom: 32,
   },
   loadingContainer: {
     flex: 1,
