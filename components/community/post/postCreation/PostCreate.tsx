@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextInput,
   StyleSheet,
@@ -13,6 +13,7 @@ import PostBtnSubmit from "./PostBtnSubmit";
 import { debounce } from "lodash";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import PostResPicker from "./PostResPicker";
+import { ThemedText } from "@/components/ThemedText";
 
 function PostCreate() {
   const {
@@ -23,6 +24,11 @@ function PostCreate() {
     loadDraftFromStorage,
     saveDraftToStorage,
   } = usePostStore();
+
+  const [selectedRestaurant, setSelectedRestaurant] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   useEffect(() => {
     loadDraftFromStorage();
@@ -38,14 +44,15 @@ function PostCreate() {
     debouncedSaveDraft();
   };
 
-  const handleRttYelpIdChange = (rttYelpId: string) => {
-    setRttYelpId(rttYelpId);
-    debouncedSaveDraft();
-  };
-
   const debouncedSaveDraft = debounce(() => {
     saveDraftToStorage();
   }, 5000);
+
+  const handleRestaurantSelect = (restaurant: { id: string; name: string }) => {
+    setSelectedRestaurant(restaurant);
+    setRttYelpId(restaurant.id);
+    debouncedSaveDraft();
+  };
 
   const textColor = useThemeColor({}, "text");
 
@@ -69,14 +76,12 @@ function PostCreate() {
             onChangeText={handleContentChange}
             multiline
           />
-          <TextInput
-            style={[styles.rttInput, { color: textColor }]}
-            placeholder="EvJqRISUz3IqSfIW0lygDg"
-            placeholderTextColor={textColor}
-            value={draft.rtt_yelp_id}
-            onChangeText={handleRttYelpIdChange}
-          />
-          <PostResPicker />
+          {selectedRestaurant && (
+            <ThemedText style={[styles.rttInput, { color: textColor }]}>
+              {selectedRestaurant.name} - {selectedRestaurant.id}
+            </ThemedText>
+          )}
+          <PostResPicker onRestaurantSelect={handleRestaurantSelect} />
         </ScrollView>
         <PostBtnSubmit />
       </ThemedView>

@@ -11,8 +11,15 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { searchYelpBusinesses } from "@/utils/blogs/restaurant";
+import { useTheme } from "@react-navigation/native";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { ThemedText } from "@/components/ThemedText";
 
-function PostResPicker() {
+interface PostResPickerProps {
+  onRestaurantSelect: (restaurant: { id: string; name: string }) => void;
+}
+
+function PostResPicker({ onRestaurantSelect }: PostResPickerProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [restaurants, setRestaurants] = useState<any[]>([]);
@@ -24,10 +31,13 @@ function PostResPicker() {
     }
   };
 
-  const handleRestaurantSelect = (restaurantId: string) => {
-    console.log("Selected Restaurant ID:", restaurantId);
+  const handleRestaurantSelect = (restaurant: { id: string; name: string }) => {
+    console.log("Selected Restaurant:", restaurant);
+    onRestaurantSelect(restaurant); // Call the callback with the selected restaurant
     setModalVisible(false);
   };
+
+  const textColor = useThemeColor({}, "text");
 
   return (
     <ThemedView>
@@ -41,17 +51,16 @@ function PostResPicker() {
           setModalVisible(false);
         }}
       >
-        <View style={{ flex: 1, justifyContent: "flex-end" }}>
-          <View
+        <ThemedView
+          style={{ flex: 1, justifyContent: "flex-end", borderWidth: 1 }}
+        >
+          <ThemedView
             style={{
               height: "75%",
-              backgroundColor: "white",
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
               padding: 16,
             }}
           >
-            <View
+            <ThemedView
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -61,13 +70,17 @@ function PostResPicker() {
               <TextInput
                 autoFocus={true}
                 placeholder="Search for a restaurant..."
-                style={{
-                  flex: 1,
-                  height: 40,
-                  borderColor: "gray",
-                  borderWidth: 1,
-                  paddingHorizontal: 8,
-                }}
+                placeholderTextColor={textColor}
+                style={[
+                  {
+                    flex: 1,
+                    height: 40,
+                    color: textColor,
+                    borderColor: textColor,
+                    borderWidth: 1,
+                    paddingHorizontal: 8,
+                  },
+                ]}
                 value={searchQuery}
                 onChangeText={(text) => setSearchQuery(text)}
               />
@@ -75,31 +88,29 @@ function PostResPicker() {
                 onPress={() => handleSearch(searchQuery)}
                 style={{ marginLeft: 8 }}
               >
-                <Ionicons name="search" size={24} color="black" />
+                <Ionicons name="search" size={24} color={textColor} />
               </TouchableOpacity>
-            </View>
+            </ThemedView>
             <FlatList
               data={restaurants}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() => handleRestaurantSelect(item.id)}
-                >
-                  <View
+                <TouchableOpacity onPress={() => handleRestaurantSelect(item)}>
+                  <ThemedView
                     style={{
                       padding: 16,
                       borderBottomWidth: 1,
                       borderBottomColor: "#eee",
                     }}
                   >
-                    <Text>{item.name}</Text>
-                  </View>
+                    <ThemedText>{item.name}</ThemedText>
+                  </ThemedView>
                 </TouchableOpacity>
               )}
             />
             <Button title="Close" onPress={() => setModalVisible(false)} />
-          </View>
-        </View>
+          </ThemedView>
+        </ThemedView>
       </Modal>
     </ThemedView>
   );
