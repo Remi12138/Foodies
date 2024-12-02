@@ -17,6 +17,7 @@ import DraggableFlatList, {
 } from "react-native-draggable-flatlist";
 import * as ImageManipulator from "expo-image-manipulator";
 import { usePostStore } from "@/zustand/post";
+import { ThemedText } from "@/components/ThemedText";
 
 const { width, height } = Dimensions.get("window");
 
@@ -143,11 +144,11 @@ function PostImagePicker() {
                 >
                   <Ionicons name="add" size={48} color="#ccc" />
                 </TouchableOpacity>
-                <Text style={styles.placeholderLabel}>
+                <ThemedText style={styles.placeholderLabel}>
                   {draft.images.length === 0
                     ? "Pick a Cover"
                     : `${9 - draft.images.length} Seats Available`}
-                </Text>
+                </ThemedText>
               </View>
             ) : null
           }
@@ -204,7 +205,6 @@ const styles = StyleSheet.create({
   placeholderLabel: {
     marginTop: 5,
     fontSize: 12,
-    color: "#333",
   },
   image: {
     width: 135,
