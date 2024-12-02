@@ -6,10 +6,12 @@ import {
   doc,
   documentId,
   getDocs,
+  increment,
   limit,
   orderBy,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 
@@ -128,10 +130,62 @@ async function fetchFavoriteBlogs(
   return [blogsFilteredData, blogsOutdated];
 }
 
+async function updateBlogLikesFromServer(
+  authorUid: string,
+  blogId: string,
+  action: "increase" | "decrease"
+) {
+  try {
+    const collectionRef = doc(
+      FIREBASE_DB,
+      `users/${authorUid}/blogs/${blogId}`
+    );
+
+    if (action === "increase") {
+      // Increment the likes count by 1
+      await updateDoc(collectionRef, {
+        likes_count: increment(1),
+      });
+    } else if (action === "decrease") {
+      // Decrement the likes count by 1
+      await updateDoc(collectionRef, {
+        likes_count: increment(-1),
+      });
+    }
+  } catch (error) {
+    console.error("Error updating blog likes: ", error);
+  }
+}
+
+async function updateBlogCoverLikesFromServer(
+  blogId: string,
+  action: "increase" | "decrease"
+) {
+  try {
+    const collectionRef = doc(FIREBASE_DB, `blog_covers/${blogId}`);
+
+    if (action === "increase") {
+      // Increment the likes count by 1
+      await updateDoc(collectionRef, {
+        post_likes_count: increment(1),
+      });
+    } else if (action === "decrease") {
+      // Decrement the likes count by 1
+      await updateDoc(collectionRef, {
+        post_likes_count: increment(-1),
+      });
+    }
+  } catch (error) {
+    console.error("Error updating blog cover likes: ", error);
+  }
+}
+
 export {
   initBlogCollections,
   fetchFavoriteBlogCoverIds,
   updateFavoriteBlogIdFromServer,
+  updateBlogCoverLikesFromServer,
+  updateBlogLikesFromServer,
   fetchFavoriteBlogs,
   checkIfBlogIsLikedLocal,
 };

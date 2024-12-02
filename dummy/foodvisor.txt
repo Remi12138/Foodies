@@ -1,0 +1,64 @@
+Data: {"analysis_id": "4d393bba-7560-4143-8d2a-e88bb22b0073", "items": [{"food": [Array], "position": [Object]}, {"food": [Array], "position": [Object]}, {"food": [Array], "position": [Object]}, {"food": [Array], "position": [Object]}, {"food": [Array], "position": [Object]}], "scopes": ["nutrition:micro", "nutrition:macro", "position", "nutrition:nutriscore", "multiple_items", "quantity"]}
+ (NOBRIDGE) LOG  Food item #1:
+ (NOBRIDGE) LOG      Name: Chive
+ (NOBRIDGE) LOG      Confidence: 35.67%
+ (NOBRIDGE) LOG      Quantity: 2
+ (NOBRIDGE) LOG      Glycemic Index: 15
+ (NOBRIDGE) LOG      Main Nutritional Info:
+ (NOBRIDGE) LOG        calories_100g: 34
+ (NOBRIDGE) LOG        carbs_100g: 4.4
+ (NOBRIDGE) LOG        sugars_100g: 3.95
+ (NOBRIDGE) LOG        proteins_100g: 2.3
+ (NOBRIDGE) LOG        fibers_100g: 1.8
+ (NOBRIDGE) LOG  Food item #2:
+ (NOBRIDGE) LOG      Name: Black olives
+ (NOBRIDGE) LOG      Confidence: 20.979999999999997%
+ (NOBRIDGE) LOG      Quantity: 34
+ (NOBRIDGE) LOG      Glycemic Index: 15
+ (NOBRIDGE) LOG      Main Nutritional Info:
+ (NOBRIDGE) LOG        calories_100g: 162
+ (NOBRIDGE) LOG        fat_100g: 14
+ (NOBRIDGE) LOG        fibers_100g: 12.5
+ (NOBRIDGE) LOG        insat_fat_100g: 9.76
+ (NOBRIDGE) LOG        mono_fat_100g: 8.14
+ (NOBRIDGE) LOG  Food item #3:
+ (NOBRIDGE) LOG      Name: Teriyaki chicken
+ (NOBRIDGE) LOG      Confidence: 100%
+ (NOBRIDGE) LOG      Quantity: 150
+ (NOBRIDGE) LOG      Glycemic Index: 0
+ (NOBRIDGE) LOG      Main Nutritional Info:
+ (NOBRIDGE) LOG        calories_100g: 149
+ (NOBRIDGE) LOG        proteins_100g: 21.1
+ (NOBRIDGE) LOG        carbs_100g: 6
+ (NOBRIDGE) LOG        sugars_100g: 3.6
+ (NOBRIDGE) LOG        fat_100g: 2.8
+ (NOBRIDGE) LOG  Food item #4:
+ (NOBRIDGE) LOG      Name: Ground beef
+ (NOBRIDGE) LOG      Confidence: 65.77%
+ (NOBRIDGE) LOG      Quantity: 125
+ (NOBRIDGE) LOG      Glycemic Index: 0
+ (NOBRIDGE) LOG      Main Nutritional Info:
+ (NOBRIDGE) LOG        calories_100g: 239
+ (NOBRIDGE) LOG        proteins_100g: 23.6
+ (NOBRIDGE) LOG        fat_100g: 16.1
+ (NOBRIDGE) LOG        insat_fat_100g: 8.01
+ (NOBRIDGE) LOG        sat_fat_100g: 7.15
+ (NOBRIDGE) LOG  Food item #5:
+ (NOBRIDGE) LOG      Name: Chicken filet
+ (NOBRIDGE) LOG      Confidence: 36.94%
+ (NOBRIDGE) LOG      Quantity: 150
+ (NOBRIDGE) LOG      Glycemic Index: 0
+ (NOBRIDGE) LOG      Main Nutritional Info:
+ (NOBRIDGE) LOG        calories_100g: 121
+ (NOBRIDGE) LOG        proteins_100g: 26.2
+ (NOBRIDGE) LOG        fat_100g: 1.7999999999999998
+ (NOBRIDGE) LOG        insat_fat_100g: 1.096
+ (NOBRIDGE) LOG        mono_fat_100g: 0.673
+ (NOBRIDGE) LOG  Position Data: {"height": 0.371, "width": 0.4415, "x": 0.0248, "y": 0.1761}
+ (NOBRIDGE) LOG  Position Data: {"height": 0.1076, "width": 0.2633, "x": 0.1649, "y": 0.2272}
+ (NOBRIDGE) LOG  Position Data: {"height": 0.5837, "width": 0.8532, "x": 0.0533, "y": 0.2573}
+ (NOBRIDGE) LOG  Position Data: {"height": 0.2635, "width": 0.2294, "x": 0.7598, "y": 0.5003}
+ (NOBRIDGE) LOG  Position Data: {"height": 0.726, "width": 0.7267, "x": 0.0947, "y": 0.1361}
+ (NOBRIDGE) LOG  Advice: Your meal is high in protein and fat but low in carbs and fiber. Consider adding more complex carbs and fiber-rich foods to improve the balance.
+Grade: B
+Icon: 🌿 (low fiber)
