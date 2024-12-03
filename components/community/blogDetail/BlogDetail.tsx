@@ -101,9 +101,9 @@ function BlogDetail({
 
         {blog.post.rtt_yelp_id && blog.post.rtt_yelp_id != "" && (
           <ThemedView style={{ padding: 15 }}>
-            <ThemedText>
+            {/* <ThemedText>
               This post mentioned a restaurant @{blog.post.rtt_yelp_id}
-            </ThemedText>
+            </ThemedText> */}
             <TouchableOpacity
               style={styles.yelpButton}
               onPress={() => {
@@ -113,9 +113,9 @@ function BlogDetail({
                 router.push(`/explore/${blog.post.rtt_yelp_id}`);
               }}
             >
-              <Ionicons name="earth" size={24} color="white" />
+              <Ionicons name="restaurant-outline" size={24} color="white" />
               <ThemedText style={styles.yelpButtonText}>
-                View in Explore
+                View this Restaurant in Explore
               </ThemedText>
             </TouchableOpacity>
           </ThemedView>

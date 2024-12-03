@@ -13,8 +13,16 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedText } from "@/components/ThemedText";
 import { useLocation } from "@/zustand/location";
 
+type Restaurant = {
+  id: string;
+  name: string;
+  location: {
+    display_address: string[];
+  };
+};
+
 interface PostResPickerProps {
-  onRestaurantSelect: (restaurant: { id: string; name: string } | null) => void;
+  onRestaurantSelect: (restaurant: Restaurant | null) => void;
   selectedRestaurant: { id: string; name: string } | null;
 }
 
@@ -42,9 +50,7 @@ function PostResPicker({
     }
   };
 
-  const handleRestaurantSelect = (
-    restaurant: { id: string; name: string } | null
-  ) => {
+  const handleRestaurantSelect = (restaurant: Restaurant | null) => {
     onRestaurantSelect(restaurant); // Call the callback with the selected restaurant or null
     setModalVisible(false);
   };
@@ -118,7 +124,14 @@ function PostResPicker({
               </TouchableOpacity>
             </ThemedView>
             <FlatList
-              data={[{ id: "none", name: "None" }, ...restaurants]}
+              data={[
+                {
+                  id: "none",
+                  name: "None",
+                  location: {},
+                },
+                ...restaurants,
+              ]}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <TouchableOpacity
@@ -134,6 +147,16 @@ function PostResPicker({
                     }}
                   >
                     <ThemedText>{item.name}</ThemedText>
+                    {item.location.display_address && (
+                      <>
+                        <ThemedText>
+                          {item.location.display_address[0]}
+                        </ThemedText>
+                        <ThemedText>
+                          {item.location.display_address[1]}
+                        </ThemedText>
+                      </>
+                    )}
                   </ThemedView>
                 </TouchableOpacity>
               )}
