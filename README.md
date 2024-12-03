@@ -102,9 +102,13 @@ A blog sharing place.
 
 2. Post likes: User can favor a post and view them in collections. The likes count will increase or decrease accordingly and visible for everyone.
 
-3. Post creation: User can delete a post if necessary
+3. Post deletion: User can delete a post if necessary
 
 4. Post draft auto saving: unpublished draft of post will be saved to async-storage if user stop typing for a while automatically, giving user anthoer chance to get them back!
+
+<img src="/screenshots/015.png" alt="0" height="350">
+<img src="/screenshots/016.png" alt="1" height="350">
+<img src="/screenshots/017.png" alt="2" height="350">
 
 ### Explore
 
