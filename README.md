@@ -102,7 +102,7 @@ A blog sharing place.
 
 2. Post likes: User can favor a post and view them in collections. The likes count will increase or decrease accordingly and visible for everyone.
 
-3. Post creation: User can delete a post if necessary
+3. Post deletion: User can delete a post if necessary
 
 4. Post draft auto saving: unpublished draft of post will be saved to async-storage if user stop typing for a while automatically, giving user anthoer chance to get them back!
 
@@ -120,12 +120,12 @@ A blog sharing place.
 Discover nearby restaurants based on your preferences with advanced filtering and sorting options.  
 Users can explore restaurants categorized by cuisine, such as Italian, Chinese, or BBQ, and refine their search using features like price range, distance, and ratings.
 
-- **Search**: Quickly search for restaurants by entering a name, address, or category in the search bar.  
+- **Search**: Quickly search for restaurants by entering a name, address, or category in the search bar.
 - **Filter and Sort**: Use the "More" button to access the advanced filter menu, where you can:
   - Sort restaurants by price, distance, or rating in ascending or descending order.
   - Apply category filters to narrow down results based on cuisines or dining styles, like Pizza, Cafes, or Seafood.
-- **Interactive Map**: Switch to map view to visually explore restaurant locations around you.  
-- **Personalization**: Set preferences to highlight restaurants matching your dietary or budgetary needs.  
+- **Interactive Map**: Switch to map view to visually explore restaurant locations around you.
+- **Personalization**: Set preferences to highlight restaurants matching your dietary or budgetary needs.
 
 Filtered results dynamically update based on selected criteria, ensuring users find the perfect dining option.
 
@@ -138,7 +138,6 @@ The explore page provides an organized list of nearby restaurants, complete with
   - Business hours, reviews, and available services.
   - A direct link to the restaurant’s Yelp page for further exploration.
 
-
 The list ensures seamless restaurant discovery and allows users to manage their exploration efficiently.
 
 <div style="display: flex; flex-wrap: wrap; gap: 10px;">
@@ -149,7 +148,6 @@ The list ensures seamless restaurant discovery and allows users to manage their 
   <img src="/screenshots/019.png" alt="4" height="350">
   <img src="/screenshots/020.png" alt="5" height="350">
 </div>
-
 
 ### Record
 
