@@ -1,6 +1,6 @@
 # project
 .idea
-.env
+# .env
 
 # general
 node_modules/

@@ -4,11 +4,13 @@ async function searchYelpBusinesses(
   latitude: string
 ) {
   try {
+    const yelp_api = process.env.EXPO_PUBLIC_YELP_API_SEARCH;
+    console.log(yelp_api);
     const response = await fetch(
       `https://api.yelp.com/v3/businesses/search?term=${term}&longitude=${longitude}&latitude=${latitude}&limit=20&sort_by=best_match`,
       {
         headers: {
-          Authorization: `Bearer 7rQ5Lm4vERRjoBgA2vtbGk6-moj3vejwuJ3qg5sD48tL3DP8KWmDFY0KSkdh4ph_AJkwPPOKUSRbmETxGSvWdvkcCqpUlpZNih_dzL9S7aCo75dEbwV_r9FCxo0_Z3Yx`,
+          Authorization: `Bearer ${yelp_api}`,
         },
       }
     );
