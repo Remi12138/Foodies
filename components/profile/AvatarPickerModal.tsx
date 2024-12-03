@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
+  useColorScheme,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -12,6 +13,7 @@ import { useState } from "react";
 import { useUserStore } from "@/zustand/user";
 import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { uploadAvatar } from "@/utils/users/avatar";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 interface AvatarPickerModalProps {
   isVisible: boolean;
@@ -69,49 +71,62 @@ export default function AvatarPickerModal({
     onClose();
   }
 
+  const backgroundColor = useThemeColor({}, "background");
+  const textColor = useThemeColor({}, "text");
+
   return (
-    <Modal
-      visible={isVisible}
-      transparent={true}
-      animationType="slide"
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalContainer}>
-        <View style={styles.avatarPickerContainer}>
-          <Image
-            source={
-              selectedAvatar !== ""
-                ? { uri: selectedAvatar }
-                : require("@/assets/images/avatar-placeholder.jpg")
-            }
-            style={styles.modalAvatar}
-          />
-          <View style={styles.buttonContainer}>
-            {isImagePicked ? (
+    <View>
+      <Modal
+        visible={isVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={onClose}
+      >
+        <View style={styles.modalContainer}>
+          <View
+            style={[
+              styles.avatarPickerContainer,
+              {
+                backgroundColor: backgroundColor,
+                borderColor: textColor,
+              },
+            ]}
+          >
+            <Image
+              source={
+                selectedAvatar !== ""
+                  ? { uri: selectedAvatar }
+                  : require("@/assets/images/avatar-placeholder.jpg")
+              }
+              style={styles.modalAvatar}
+            />
+            <View style={styles.buttonContainer}>
+              {isImagePicked ? (
+                <TouchableOpacity
+                  style={[styles.button, styles.uploadButton]}
+                  onPress={saveImage}
+                >
+                  <Text style={styles.uploadButtonText}>Save</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={[styles.button, styles.uploadButton]}
+                  onPress={pickImageFromAlbum}
+                >
+                  <Text style={styles.uploadButtonText}>New Avatar</Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
-                style={[styles.button, styles.uploadButton]}
-                onPress={saveImage}
+                style={[styles.button, styles.cancelButton]}
+                onPress={cancelAvatarPicker}
               >
-                <Text style={styles.uploadButtonText}>Save</Text>
+                <Text style={styles.cancelButtonText}>Cancel</Text>
               </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={[styles.button, styles.uploadButton]}
-                onPress={pickImageFromAlbum}
-              >
-                <Text style={styles.uploadButtonText}>New Avatar</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              style={[styles.button, styles.cancelButton]}
-              onPress={cancelAvatarPicker}
-            >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
+    </View>
   );
 }
 
@@ -120,13 +135,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   avatarPickerContainer: {
     width: 320,
     padding: 20,
-    backgroundColor: "white",
     borderRadius: 10,
+    borderWidth: 1,
     alignItems: "center",
   },
   modalAvatar: {
