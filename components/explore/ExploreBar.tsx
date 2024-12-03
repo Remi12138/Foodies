@@ -14,7 +14,7 @@ interface ExploreBarProps {
 const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
   const cardBackgroundColor = useThemeColor({ light: "#fff", dark: "#000" }, "background");
-  const resetBackgroundColor = useThemeColor({ light: "#fff", dark: "#333" }, "background");
+  const resetBackgroundColor = useThemeColor({ light: "#f9f9f9", dark: "#333" }, "background");
   const cardNameColor = useThemeColor({ light: "#333", dark: "#fff" }, "text");
 
   // Extract unique categories from restaurants

@@ -65,7 +65,6 @@ export default function ExploreScreen() {
     await fetchLocation();
     if (userLocation.latitude && userLocation.longitude) {
       await fetchRestaurants(userLocation);
-      await fetchRestaurants(userLocation);
     }
     console.log("userLocation", userLocation);
     setLoading(false);

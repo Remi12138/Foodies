@@ -18,9 +18,9 @@ interface FilterBarProps {
 
 const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
 
-  const cardBackgroundColor = useThemeColor({ light: "#fff", dark: "#333" }, "background");
+  const cardBackgroundColor = useThemeColor({ light: "#f9f9f9", dark: "#333" }, "background");
   const cardNameColor = useThemeColor({ light: "#333", dark: "#fff" }, "text");
-  const optionBackgroundColor = useThemeColor({ light: "#f9f9f9", dark: "#000" }, "background");
+  const optionBackgroundColor = useThemeColor({ light: "#E0E0E0", dark: "#000" }, "background");
   const selectedOptionBackgroundColor = useThemeColor({ light: "#F4511E", dark: "#F4511E" }, "background");
   const optionTextColor = useThemeColor({ light: "#333", dark: "#fff" }, "text");
 

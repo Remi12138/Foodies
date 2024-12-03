@@ -232,7 +232,6 @@ const Search: React.FC<SearchProps> = ({
       <View style={[styles.searchContainer, { borderColor: borderColor }]}>
         <TextInput
           style={[styles.searchInput, { color: cardTextColor }]}
-          style={[styles.searchInput, { color: cardTextColor }]} 
           placeholder="Search restaurants..."
           placeholderTextColor={cardTextColor}
           value={searchTerm}
