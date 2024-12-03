@@ -134,8 +134,8 @@ export const useRestaurantStore = create<RestaurantStore>()((set) => ({
     if (!apiKey) {
       throw new Error("YELP_API_KEY is not defined in the environment variables");
     }
-    const radius = 1000; 
-    const limit = 30; 
+    const radius = 10000; 
+    const limit = 50; 
 
 
     

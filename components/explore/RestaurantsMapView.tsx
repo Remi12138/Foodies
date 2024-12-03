@@ -14,6 +14,7 @@ type Marker = {
   latitude: number;
   longitude: number;
   title?: string;
+  id ?:string;
   description?: string;
 };
 
@@ -30,14 +31,13 @@ function extractLocations(restaurants: Restaurant[]): Marker[] {
       latitude: Number(restaurant.coordinates.latitude),
       longitude: Number(restaurant.coordinates.longitude),
       title: restaurant.name,
+      id: restaurant.id,
       description: `${restaurant.categories[0].title} • ${restaurant.rating} ⭐`,
     }));
 }
 
-// 计算餐厅的中心位置
 function calculateCenter(restaurants: Restaurant[]): { latitude: number; longitude: number } {
   if (restaurants.length === 0) {
-    // 设置默认中心位置为旧金山
     return { latitude: 37.7749, longitude: -122.4194 };
   }
 
@@ -80,7 +80,7 @@ function RestaurantsMapView({ data }: RestaurantsMapViewProps) {
           longitudeDelta: 0.05,
         }}
         mapType={mapType}
-        showsUserLocation={true} // 显示用户当前位置
+        showsUserLocation={true} 
       >
         {markers.map((marker) => (
           <Marker
@@ -91,7 +91,7 @@ function RestaurantsMapView({ data }: RestaurantsMapViewProps) {
             }}
             title={marker.title}
             description={marker.description}
-            onPress={() => router.push(`/explore/${marker.title}`)} // 跳转到动态路由
+            onPress={() => router.push(`/explore/${marker.id}`)} 
           />
         ))}
       </MapView>

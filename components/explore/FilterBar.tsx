@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Modal from "react-native-modal";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 interface Restaurant {
   price?: string;
@@ -16,6 +17,9 @@ interface FilterBarProps {
 }
 
 const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
+
+  const cardBackgroundColor = useThemeColor({ light: "#fff", dark: "#000" }, "background");
+
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedSort, setSelectedSort] = useState("price");
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -67,7 +71,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
   const handleApply = () => {
     toggleModal();
     let filteredData = [...restaurants];
-
+  
     if (selectedFilters.length > 0) {
       filteredData = filteredData.filter((restaurant) =>
         selectedFilters.some((filter) =>
@@ -75,27 +79,25 @@ const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
         )
       );
     }
-
+  
+    if (selectedSort === "price") {
+      filteredData.sort((a, b) => (a.price?.length || 0) - (b.price?.length || 0));
+    } else if (selectedSort === "distance") {
+      filteredData.sort((a, b) => a.distance - b.distance);
+    } else if (selectedSort === "rating") {
+      filteredData.sort((a, b) => a.rating - b.rating);
+    }
+  
+    if (!isAscending) {
+      filteredData.reverse();
+    }
+  
     onFilter(filteredData);
   };
-
+  
   useEffect(() => {
-    let sortedData = [...restaurants];
-
-    if (selectedSort === "price") {
-      sortedData.sort((a, b) => (a.price?.length || 0) - (b.price?.length || 0));
-    } else if (selectedSort === "distance") {
-      sortedData.sort((a, b) => a.distance - b.distance);
-    } else if (selectedSort === "rating") {
-      sortedData.sort((a, b) => a.rating - b.rating);
-    }
-
-    if (!isAscending) {
-      sortedData.reverse();
-    }
-
-    onFilter(sortedData);
-  }, [selectedSort, isAscending, restaurants]);
+    onFilter(restaurants);
+  }, [restaurants]);
 
   return (
     <View>

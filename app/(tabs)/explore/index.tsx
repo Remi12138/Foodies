@@ -20,8 +20,11 @@ import { Restaurant, useRestaurantStore } from "@/zustand/restaurant";
 import RestaurantsMapView from "@/components/explore/RestaurantsMapView";
 import { useLocation } from "@/zustand/location";
 import { router } from "expo-router";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function ExploreScreen() {
+  const cardBackgroundColor = useThemeColor({ light: "#fff", dark: "#000" }, "background");
+
   const [isMapView, setIsMapView] = useState(false);
   const [loading, setLoading] = useState(true);
   const fetchRestaurants = useRestaurantStore(
@@ -70,7 +73,10 @@ export default function ExploreScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[
+      styles.safeArea,
+      { backgroundColor: cardBackgroundColor },
+    ]}>
       <ThemedView style={styles.titleContainer}>
         <ThemedView style={{ flexDirection: "row" }}>
           <ThemedText type="title">Explore</ThemedText>
@@ -84,8 +90,10 @@ export default function ExploreScreen() {
       </ThemedView>
 
       <ThemedView style={{ flex: 1, paddingTop: 60 }}>
-        {/* 使用绝对定位将 ExploreBar 覆盖在内容顶部 */}
-        <View style={styles.exploreBarContainer}>
+        <View  style={[
+      styles.exploreBarContainer,
+      { backgroundColor: cardBackgroundColor },
+    ]}>
           <ExploreBar restaurants={restaurants} onFilter={handleFilter} />
         </View>
 
@@ -133,12 +141,12 @@ const styles = StyleSheet.create({
   },
   exploreBarContainer: {
     position: "absolute",
-    top: -5, // 将 exploreBar 放在 titleContainer 下面
+    top: -5, 
     left: 0,
     right: 0,
-    zIndex: 1, // 确保 ExploreBar 在顶部
+    zIndex: 1, 
     paddingHorizontal: 10,
     paddingVertical: 0,
-    backgroundColor: "#ffffff", // 设置背景色以覆盖下方内容
+    backgroundColor: "#ffffff", 
   },
 });

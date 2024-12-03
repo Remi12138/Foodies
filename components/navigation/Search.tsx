@@ -14,6 +14,7 @@ import { Restaurant,useRestaurantStore } from "@/zustand/restaurant";
 import { useLocation } from "@/zustand/location"; 
 import * as Location from 'expo-location';
 import { transformToRestaurant } from "@/zustand/restaurant";
+import { useThemeColor } from "@/hooks/useThemeColor";
 const addRestaurant = useRestaurantStore.getState().addRestaurant;
 const fetchCoordinatesFromAddress = async (address: string) => {
   const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
@@ -49,8 +50,12 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
     "San Francisco, CA",
   ]); 
   const { userLocation, setLocation: setUserLocation } = useLocation(); 
-
- 
+  const cardBackgroundColor = useThemeColor({ light: "#fff", dark: "#000" }, "background");
+  const cardTextColor = useThemeColor({ light: "#000", dark: "#fff" }, "text");
+  const borderColor = useThemeColor({ light: "gray", dark: "#666" }, "background");
+  const modalBackgroundColor = useThemeColor({ light: "white", dark: "#333" }, "background");
+  const modalOverlayColor = useThemeColor({ light: "rgba(0, 0, 0, 0.5)", dark: "rgba(255, 255, 255, 0.1)" }, "background");
+     
   const handleSearch = async (term: string) => {
     setSearchTerm(term);
   
@@ -194,11 +199,18 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
   
 
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
+    <View style={[
+      styles.container,
+      { backgroundColor: cardBackgroundColor },
+    ]}>
+      <View style={[
+      styles.searchContainer,
+      { borderColor: borderColor },
+    ]}>
         <TextInput
           style={styles.searchInput}
           placeholder="Search restaurants..."
+          placeholderTextColor={cardTextColor}
           value={searchTerm}
           onChangeText={handleSearch}
         />
@@ -216,12 +228,24 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
         animationType="slide"
         onRequestClose={() => setIsModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Set Location</Text>
+        <View style={[
+      styles.modalOverlay,
+      { backgroundColor: modalOverlayColor },
+    ]}>
+          <View style={[
+      styles.modalContent,
+      { backgroundColor: modalBackgroundColor },
+    ]}>
+            <Text style={[
+      styles.modalTitle,
+      { color: cardTextColor },
+    ]}>Set Location</Text>
 
             <TextInput
-              style={styles.locationInput}
+              style={[
+                styles.locationInput,
+                { color: cardTextColor },
+              ]}
               placeholder="Enter location..."
               value={location}
               onChangeText={setLocation}
@@ -233,10 +257,16 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
               style={styles.systemLocationContainer}
             >
               <FontAwesome name="location-arrow" size={20} color="#F4511E" />
-              <Text style={styles.systemLocationText}>Use System Location</Text>
+              <Text style={[
+      styles.systemLocationText,
+      { color: cardTextColor },
+    ]}>Use System Location</Text>
             </TouchableOpacity>
 
-            <Text style={styles.recentTitle}>Recent Locations</Text>
+            <Text style={[
+      styles.recentTitle,
+      { color: cardTextColor },
+    ]}>Recent Locations</Text>
             <FlatList
               data={recentLocations}
               keyExtractor={(item) => item}
@@ -246,7 +276,10 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
                   style={styles.recentItem}
                 >
                   <FontAwesome name="map-marker" size={20} color="#F4511E" />
-                  <Text style={styles.recentText}>{item}</Text>
+                  <Text style={[
+      styles.recentText,
+      { color: cardTextColor },
+    ]}>{item}</Text>
                 </TouchableOpacity>
               )}
             />
@@ -276,7 +309,7 @@ const styles = StyleSheet.create({
     position: "relative", 
     flexDirection: "row",
     alignItems: "center",
-    borderColor: "gray",
+    //borderColor: "gray",
     borderWidth: 1,
     borderRadius: 4,
     paddingLeft: 8,
@@ -300,11 +333,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+   // backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
     width: 300,
-    backgroundColor: "white",
+   // backgroundColor: "white",
     padding: 20,
     borderRadius: 8,
   },
