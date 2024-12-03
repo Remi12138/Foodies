@@ -106,9 +106,9 @@ A blog sharing place.
 
 4. Post draft auto saving: unpublished draft of post will be saved to async-storage if user stop typing for a while automatically, giving user anthoer chance to get them back!
 
-<img src="/screenshots/015.png" alt="0" height="350">
-<img src="/screenshots/016.png" alt="1" height="350">
-<img src="/screenshots/017.png" alt="2" height="350">
+<img src="/screenshots/015.png" alt="15" height="350">
+<img src="/screenshots/016.png" alt="16" height="350">
+<img src="/screenshots/017.png" alt="17" height="350">
 
 ### Explore
 
@@ -164,7 +164,10 @@ _Error Handling_
 
 1. User profile: display of user avatar, user id, and allow user update avatar.
 2. User settings: update name, change password, and account deletion
-3. USer sign out
+3. User sign out
+
+<img src="/screenshots/018.png" alt="18" height="350">
+<img src="/screenshots/019.png" alt="19" height="350">
 
 ## API
 
