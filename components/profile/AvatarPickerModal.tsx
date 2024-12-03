@@ -70,48 +70,50 @@ export default function AvatarPickerModal({
   }
 
   return (
-    <Modal
-      visible={isVisible}
-      transparent={true}
-      animationType="slide"
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalContainer}>
-        <View style={styles.avatarPickerContainer}>
-          <Image
-            source={
-              selectedAvatar !== ""
-                ? { uri: selectedAvatar }
-                : require("@/assets/images/avatar-placeholder.jpg")
-            }
-            style={styles.modalAvatar}
-          />
-          <View style={styles.buttonContainer}>
-            {isImagePicked ? (
+    <View>
+      <Modal
+        visible={isVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={onClose}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.avatarPickerContainer}>
+            <Image
+              source={
+                selectedAvatar !== ""
+                  ? { uri: selectedAvatar }
+                  : require("@/assets/images/avatar-placeholder.jpg")
+              }
+              style={styles.modalAvatar}
+            />
+            <View style={styles.buttonContainer}>
+              {isImagePicked ? (
+                <TouchableOpacity
+                  style={[styles.button, styles.uploadButton]}
+                  onPress={saveImage}
+                >
+                  <Text style={styles.uploadButtonText}>Save</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={[styles.button, styles.uploadButton]}
+                  onPress={pickImageFromAlbum}
+                >
+                  <Text style={styles.uploadButtonText}>New Avatar</Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
-                style={[styles.button, styles.uploadButton]}
-                onPress={saveImage}
+                style={[styles.button, styles.cancelButton]}
+                onPress={cancelAvatarPicker}
               >
-                <Text style={styles.uploadButtonText}>Save</Text>
+                <Text style={styles.cancelButtonText}>Cancel</Text>
               </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={[styles.button, styles.uploadButton]}
-                onPress={pickImageFromAlbum}
-              >
-                <Text style={styles.uploadButtonText}>New Avatar</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              style={[styles.button, styles.cancelButton]}
-              onPress={cancelAvatarPicker}
-            >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
+    </View>
   );
 }
 
