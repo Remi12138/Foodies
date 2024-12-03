@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { searchYelpBusinesses } from "@/utils/blogs/restaurant";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedText } from "@/components/ThemedText";
+import { useLocation } from "@/zustand/location";
 
 interface PostResPickerProps {
   onRestaurantSelect: (restaurant: { id: string; name: string } | null) => void;
@@ -21,12 +22,21 @@ function PostResPicker({
   onRestaurantSelect,
   selectedRestaurant,
 }: PostResPickerProps) {
+  const { userLocation } = useLocation();
   const [modalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [restaurants, setRestaurants] = useState<any[]>([]);
 
+  console.log(
+    `userLocation: ${userLocation.latitude}, ${userLocation.longitude}`
+  );
+
   const handleSearch = async (query: string) => {
-    const response = await searchYelpBusinesses(query, "-73.99429", "40.70544");
+    const response = await searchYelpBusinesses(
+      query,
+      userLocation.longitude.toString(),
+      userLocation.latitude.toString()
+    );
     if (response.businesses) {
       setRestaurants(response.businesses);
     }
