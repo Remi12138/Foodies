@@ -4,6 +4,7 @@ import Search from "@/components/navigation/Search";
 import FilterBar from "@/components/explore/FilterBar";
 import { Restaurant } from "@/zustand/restaurant";
 import { FontAwesome } from "@expo/vector-icons";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 interface ExploreBarProps {
   restaurants: Restaurant[];
@@ -12,6 +13,7 @@ interface ExploreBarProps {
 
 const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
+  const cardBackgroundColor = useThemeColor({ light: "#fff", dark: "#000" }, "background");
 
   // Extract unique categories from restaurants
   const categories = Array.from(
@@ -38,7 +40,10 @@ const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View  style={[
+      styles.container,
+      { backgroundColor: cardBackgroundColor },
+    ]}>
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <Search

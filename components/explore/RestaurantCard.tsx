@@ -2,8 +2,15 @@ import React from "react";
 import { StyleSheet, View, Image, Text } from "react-native";
 import { Restaurant } from "@/zustand/restaurant";
 import { FontAwesome } from "@expo/vector-icons";
+import { useThemeColor } from "@/hooks/useThemeColor";
+
+
+
 
 function RestaurantCard({ item }: { item: Restaurant }) {
+  const cardBackgroundColor = useThemeColor({ light: "#fff", dark: "#333" }, "background");
+  const cardNameColor = useThemeColor({ light: "#333", dark: "#fff" }, "text");
+
   const imageUrl =
     item.imageUrl && item.imageUrl.trim() !== ""
       ? { uri: item.imageUrl }
@@ -18,20 +25,30 @@ function RestaurantCard({ item }: { item: Restaurant }) {
   };
 
   return (
-    <View style={styles.cardContainer}>
+
+    <View  style={[
+      styles.cardContainer,
+      { backgroundColor: cardBackgroundColor },
+    ]}>
       {/* Image Section */}
       <Image source={imageUrl} style={styles.image} />
 
       {/* Text Content */}
       <View style={styles.textContainer}>
         {/* Name */}
-        <Text style={styles.name}>{item.name}</Text>
+        <Text style={[
+      styles.name,
+      { color: cardNameColor },
+    ]}>{item.name}</Text>
 
         {/* Ratings */}
         <View style={styles.ratingContainer}>{renderStars(item.rating)}</View>
 
         {/* Location */}
-        <Text style={styles.location}>
+        <Text style={[
+      styles.location,
+      { color: cardNameColor },
+    ]}>
           {item.location.city}, {item.location.state}
         </Text>
       </View>
@@ -41,7 +58,6 @@ function RestaurantCard({ item }: { item: Restaurant }) {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: "#fff",
     borderRadius: 8,
     overflow: "hidden",
     marginVertical: 10,
@@ -65,7 +81,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 4,
-    color: "#333",
+   // color: "#333",
   },
   ratingContainer: {
     flexDirection: "row",
@@ -74,7 +90,7 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 14,
-    color: "#666",
+   // color: "#666",
   },
 });
 
