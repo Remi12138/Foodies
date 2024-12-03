@@ -92,6 +92,11 @@ Well designed for fast content retrieving: BlogCovers serves as a centralized su
 
 For serving and storing large content data such as post images.
 
+### Rule
+
+Set comprehensive rules to avoid users' misbehavior and abuse of system, enhanced safety.
+<img src="/screenshots/rule.png" alt="rule" width="650">
+
 ## Functionality
 
 ### Community
