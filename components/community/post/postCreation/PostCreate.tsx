@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextInput,
   StyleSheet,
@@ -12,6 +12,7 @@ import { usePostStore } from "@/zustand/post";
 import PostBtnSubmit from "./PostBtnSubmit";
 import { debounce } from "lodash";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import PostResPicker from "./PostResPicker";
 
 function PostCreate() {
   const {
@@ -22,6 +23,11 @@ function PostCreate() {
     loadDraftFromStorage,
     saveDraftToStorage,
   } = usePostStore();
+
+  const [selectedRestaurant, setSelectedRestaurant] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   useEffect(() => {
     loadDraftFromStorage();
@@ -37,14 +43,17 @@ function PostCreate() {
     debouncedSaveDraft();
   };
 
-  const handleRttYelpIdChange = (rttYelpId: string) => {
-    setRttYelpId(rttYelpId);
-    debouncedSaveDraft();
-  };
-
   const debouncedSaveDraft = debounce(() => {
     saveDraftToStorage();
   }, 5000);
+
+  const handleRestaurantSelect = (
+    restaurant: { id: string; name: string } | null
+  ) => {
+    setSelectedRestaurant(restaurant);
+    setRttYelpId(restaurant ? restaurant.id : "");
+    debouncedSaveDraft();
+  };
 
   const textColor = useThemeColor({}, "text");
 
@@ -54,26 +63,29 @@ function PostCreate() {
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <PostImagePicker />
           <TextInput
-            style={[styles.titleInput, { color: textColor }]}
+            style={[
+              styles.titleInput,
+              { color: textColor, borderColor: textColor },
+            ]}
             placeholder="Add a title"
             placeholderTextColor={textColor}
             value={draft.title}
             onChangeText={handleTitleChange}
           />
           <TextInput
-            style={[styles.contentInput, { color: textColor }]}
+            style={[
+              styles.contentInput,
+              { color: textColor, borderColor: textColor },
+            ]}
             placeholder="Add content"
             placeholderTextColor={textColor}
             value={draft.content}
             onChangeText={handleContentChange}
             multiline
           />
-          <TextInput
-            style={[styles.rttInput, { color: textColor }]}
-            placeholder="EvJqRISUz3IqSfIW0lygDg"
-            placeholderTextColor={textColor}
-            value={draft.rtt_yelp_id}
-            onChangeText={handleRttYelpIdChange}
+          <PostResPicker
+            onRestaurantSelect={handleRestaurantSelect}
+            selectedRestaurant={selectedRestaurant}
           />
         </ScrollView>
         <PostBtnSubmit />

@@ -22,7 +22,7 @@ import { useCollectionStore } from "@/zustand/collections";
 import { formatBlogUpdatedTime } from "@/utils/blogs/info";
 import BlogImageModal from "./BlogImageModal";
 import { FIREBASE_AUTH } from "@/firebaseConfig";
-import { FontAwesome } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 const { width } = Dimensions.get("window");
@@ -106,15 +106,16 @@ function BlogDetail({
             </ThemedText>
             <TouchableOpacity
               style={styles.yelpButton}
-              onPress={() =>
-                Linking.openURL(
-                  `https://www.yelp.com/biz/${blog.post.rtt_yelp_id}`
-                )
-              }
+              onPress={() => {
+                // Linking.openURL(
+                //   `https://www.yelp.com/biz/${blog.post.rtt_yelp_id}`
+                // )
+                router.push(`/explore/${blog.post.rtt_yelp_id}`);
+              }}
             >
-              <FontAwesome name="yelp" size={24} color="white" />
+              <Ionicons name="earth" size={24} color="white" />
               <ThemedText style={styles.yelpButtonText}>
-                View on Yelp
+                View in Explore
               </ThemedText>
             </TouchableOpacity>
           </ThemedView>

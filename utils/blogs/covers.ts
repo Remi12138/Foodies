@@ -5,7 +5,7 @@ import { collection, getDocs, limit, query } from "firebase/firestore";
 async function fetchBlogCovers(): Promise<BlogCover[] | void> {
   try {
     const blogCoversCollection = collection(FIREBASE_DB, "blog_covers");
-    const blogsQuery = query(blogCoversCollection, limit(10));
+    const blogsQuery = query(blogCoversCollection, limit(20));
     const querySnapshot = await getDocs(blogsQuery);
 
     const blogCovers: BlogCover[] = querySnapshot.docs.map((doc) => {
