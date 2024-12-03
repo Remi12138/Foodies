@@ -108,8 +108,6 @@ A blog sharing place.
 
 ### Explore
 
-### Explore
-
 1. **Restaurant Exploration and Search**
 
 Discover nearby restaurants based on your preferences with advanced filtering and sorting options.  
