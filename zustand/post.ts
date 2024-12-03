@@ -15,7 +15,7 @@ type PostStore = {
   addImage: (image: string) => void;
   removeImage: (index: number) => void;
   setImages: (images: string[]) => void;
-  setRttYelpId: (rttYelpId: string) => void;
+  setRttYelpId: (rtt_yelp_id: string) => void;
   resetDraft: () => void;
   saveDraftToStorage: () => Promise<void>;
   loadDraftFromStorage: () => Promise<void>;
@@ -25,7 +25,7 @@ const defaultDraft: Post = {
   title: "",
   content: "",
   images: [],
-  rtt_yelp_id: "EvJqRISUz3IqSfIW0lygDg",
+  rtt_yelp_id: "",
 };
 
 export const usePostStore = create<PostStore>()((set) => ({
@@ -33,8 +33,8 @@ export const usePostStore = create<PostStore>()((set) => ({
   setTitle: (title) => set((state) => ({ draft: { ...state.draft, title } })),
   setContent: (content) =>
     set((state) => ({ draft: { ...state.draft, content } })),
-  setRttYelpId: (rttYelpId) =>
-    set((state) => ({ draft: { ...state.draft, rttYelpId } })),
+  setRttYelpId: (rtt_yelp_id) =>
+    set((state) => ({ draft: { ...state.draft, rtt_yelp_id } })),
   addImage: (image) =>
     set((state) => ({
       draft: {
