@@ -23,7 +23,10 @@ import { router } from "expo-router";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function ExploreScreen() {
-  const cardBackgroundColor = useThemeColor({ light: "#fff", dark: "#000" }, "background");
+  const cardBackgroundColor = useThemeColor(
+    { light: "#fff", dark: "#000" },
+    "background"
+  );
 
   const [isMapView, setIsMapView] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -46,8 +49,8 @@ export default function ExploreScreen() {
   useEffect(() => {
     const fetchData = async () => {
       console.log("Updated userLocation in component:", userLocation);
-      if (userLocation.latitude && userLocation.longitude) { 
-        await fetchRestaurants(userLocation); 
+      if (userLocation.latitude && userLocation.longitude) {
+        await fetchRestaurants(userLocation);
         setFilteredRestaurants(restaurants);
       }
     };
@@ -73,12 +76,18 @@ export default function ExploreScreen() {
   };
 
   return (
-    <SafeAreaView style={[
-      styles.safeArea,
-      { backgroundColor: cardBackgroundColor },
-    ]}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedView style={{ flexDirection: "row" }}>
+    <SafeAreaView
+      style={[styles.safeArea, { backgroundColor: cardBackgroundColor }]}
+    >
+      <ThemedView
+        style={[
+          styles.titleContainer,
+          { backgroundColor: cardBackgroundColor },
+        ]}
+      >
+        <ThemedView
+          style={{ flexDirection: "row", backgroundColor: cardBackgroundColor }}
+        >
           <ThemedText type="title">Explore</ThemedText>
           <HelloWave emoji="🏖" />
         </ThemedView>
@@ -90,10 +99,12 @@ export default function ExploreScreen() {
       </ThemedView>
 
       <ThemedView style={{ flex: 1, paddingTop: 60 }}>
-        <View  style={[
-      styles.exploreBarContainer,
-      { backgroundColor: cardBackgroundColor },
-    ]}>
+        <View
+          style={[
+            styles.exploreBarContainer,
+            { backgroundColor: cardBackgroundColor },
+          ]}
+        >
           <ExploreBar restaurants={restaurants} onFilter={handleFilter} />
         </View>
 
@@ -116,8 +127,6 @@ export default function ExploreScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#FFF",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   headerImage: {
     height: 199,
@@ -141,12 +150,12 @@ const styles = StyleSheet.create({
   },
   exploreBarContainer: {
     position: "absolute",
-    top: -5, 
+    top: -5,
     left: 0,
     right: 0,
-    zIndex: 1, 
+    zIndex: 1,
     paddingHorizontal: 10,
     paddingVertical: 0,
-    backgroundColor: "#ffffff", 
+    backgroundColor: "#ffffff",
   },
 });
