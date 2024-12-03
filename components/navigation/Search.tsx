@@ -206,7 +206,7 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
       { borderColor: borderColor },
     ]}>
         <TextInput
-          style={styles.searchInput}
+          style={[styles.searchInput, { color: cardTextColor }]} 
           placeholder="Search restaurants..."
           placeholderTextColor={cardTextColor}
           value={searchTerm}

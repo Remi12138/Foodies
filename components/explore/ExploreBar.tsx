@@ -14,6 +14,8 @@ interface ExploreBarProps {
 const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
   const cardBackgroundColor = useThemeColor({ light: "#fff", dark: "#000" }, "background");
+  const resetBackgroundColor = useThemeColor({ light: "#fff", dark: "#333" }, "background");
+  const cardNameColor = useThemeColor({ light: "#333", dark: "#fff" }, "text");
 
   // Extract unique categories from restaurants
   const categories = Array.from(
@@ -64,6 +66,10 @@ const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
             key={category}
             style={[
               styles.categoryItem,
+    
+              
+                { backgroundColor: resetBackgroundColor },
+          
               activeCategories.includes(category) && styles.activeCategoryItem,
             ]}
             onPress={() => toggleCategory(category)}
@@ -72,6 +78,9 @@ const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
             <Text
               style={[
                 styles.categoryText,
+                
+                  { color: cardNameColor },
+              
                 activeCategories.includes(category) && styles.activeCategoryText,
               ]}
             >
@@ -80,7 +89,10 @@ const ExploreBar: React.FC<ExploreBarProps> = ({ restaurants, onFilter }) => {
           </TouchableOpacity>
         ))}
         {/* Reset Button */}
-        <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>
+        <TouchableOpacity style={[
+      styles.resetButton,
+      { backgroundColor: resetBackgroundColor },
+    ]} onPress={resetFilters}>
           <FontAwesome name="refresh" size={16} color="#F4511E" />
           <Text style={styles.resetText}>Reset</Text>
         </TouchableOpacity>

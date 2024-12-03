@@ -18,7 +18,11 @@ interface FilterBarProps {
 
 const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
 
-  const cardBackgroundColor = useThemeColor({ light: "#fff", dark: "#000" }, "background");
+  const cardBackgroundColor = useThemeColor({ light: "#fff", dark: "#333" }, "background");
+  const cardNameColor = useThemeColor({ light: "#333", dark: "#fff" }, "text");
+  const optionBackgroundColor = useThemeColor({ light: "#f9f9f9", dark: "#000" }, "background");
+  const selectedOptionBackgroundColor = useThemeColor({ light: "#F4511E", dark: "#F4511E" }, "background");
+  const optionTextColor = useThemeColor({ light: "#333", dark: "#fff" }, "text");
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedSort, setSelectedSort] = useState("price");
@@ -70,6 +74,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
 
   const handleApply = () => {
     toggleModal();
+  
     let filteredData = [...restaurants];
   
     if (selectedFilters.length > 0) {
@@ -80,20 +85,22 @@ const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
       );
     }
   
-    if (selectedSort === "price") {
-      filteredData.sort((a, b) => (a.price?.length || 0) - (b.price?.length || 0));
-    } else if (selectedSort === "distance") {
-      filteredData.sort((a, b) => a.distance - b.distance);
-    } else if (selectedSort === "rating") {
-      filteredData.sort((a, b) => a.rating - b.rating);
-    }
-  
-    if (!isAscending) {
-      filteredData.reverse();
-    }
+    filteredData.sort((a, b) => {
+      if (selectedSort === "price") {
+        const priceA = a.price?.length || 0;
+        const priceB = b.price?.length || 0;
+        return isAscending ? priceA - priceB : priceB - priceA;
+      } else if (selectedSort === "distance") {
+        return isAscending ? a.distance - b.distance : b.distance - a.distance;
+      } else if (selectedSort === "rating") {
+        return isAscending ? a.rating - b.rating : b.rating - a.rating;
+      }
+      return 0; 
+    });
   
     onFilter(filteredData);
   };
+  
   
   useEffect(() => {
     onFilter(restaurants);
@@ -102,79 +109,146 @@ const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
   return (
     <View>
       {/* "More" Icon Button */}
-      <TouchableOpacity style={styles.iconButton} onPress={toggleModal}>
+      <TouchableOpacity style={[
+      styles.iconButton,
+      { backgroundColor: cardBackgroundColor },
+    ]} onPress={toggleModal}>
         <Icon name="filter-variant" size={20} color="#F4511E" />
         <Text style={styles.moreText}>More</Text>
       </TouchableOpacity>
 
       {/* Filter Modal */}
       <Modal isVisible={isModalVisible} onBackdropPress={toggleModal} style={styles.modal}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Filter</Text>
+        <View style={[
+      styles.modalContent,
+      { backgroundColor: cardBackgroundColor },
+    ]}>
+          <Text style={[
+      styles.modalTitle,
+      { color: cardNameColor },
+    ]}>Filter</Text>
 
           {/* Sort By Section */}
-          <Text style={styles.sectionTitle}>Sort by</Text>
+          <Text style={[
+      styles.sectionTitle,
+      { color: cardNameColor },
+    ]}>Sort by</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.optionsContainer}>
             {sortOptions.map((option) => (
-              <TouchableOpacity
-                key={option}
-                style={[styles.optionButton, selectedSort === option.toLowerCase() && styles.selectedOption]}
-                onPress={() => handleSelectSort(option)}
-              >
-                <Text
-                  style={[styles.optionText, selectedSort === option.toLowerCase() && styles.selectedOptionText]}
-                >
-                  {option}
-                </Text>
-              </TouchableOpacity>
+<TouchableOpacity
+  key={option}
+  style={[
+    styles.optionButton,
+    { backgroundColor: selectedSort === option.toLowerCase() ? selectedOptionBackgroundColor : optionBackgroundColor }, 
+    selectedSort === option.toLowerCase() && styles.selectedOption, 
+  ]}
+  onPress={() => handleSelectSort(option)}
+>
+  <Text
+    style={[
+      styles.optionText,
+      { color: selectedSort === option.toLowerCase() ? "#fff" : optionTextColor }, 
+    ]}
+  >
+    {option}
+  </Text>
+</TouchableOpacity>
             ))}
           </ScrollView>
 
           {/* Sort Order Section */}
-          <Text style={styles.sectionTitle}>Order</Text>
+          <Text style={[
+      styles.sectionTitle,
+      { color: cardNameColor },
+    ]}>Order</Text>
           <View style={styles.optionsContainer}>
-            <TouchableOpacity
-              style={[styles.optionButton, isAscending && styles.selectedOption]}
-              onPress={() => setIsAscending(true)}
-            >
-              <Text style={[styles.optionText, isAscending && styles.selectedOptionText]}>Ascending</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.optionButton, !isAscending && styles.selectedOption]}
-              onPress={() => setIsAscending(false)}
-            >
-              <Text style={[styles.optionText, !isAscending && styles.selectedOptionText]}>Descending</Text>
-            </TouchableOpacity>
+          <View style={styles.optionsContainer}>
+  <TouchableOpacity
+    style={[
+      styles.optionButton,
+      {
+        backgroundColor: isAscending
+          ? selectedOptionBackgroundColor
+          : optionBackgroundColor,
+      },
+    ]}
+    onPress={() => setIsAscending(true)}
+  >
+    <Text
+      style={[
+        styles.optionText,
+        { color: isAscending ? "#fff" : optionTextColor },
+      ]}
+    >
+      Ascending
+    </Text>
+  </TouchableOpacity>
+  <TouchableOpacity
+    style={[
+      styles.optionButton,
+      {
+        backgroundColor: !isAscending
+          ? selectedOptionBackgroundColor
+          : optionBackgroundColor,
+      },
+    ]}
+    onPress={() => setIsAscending(false)}
+  >
+    <Text
+      style={[
+        styles.optionText,
+        { color: !isAscending ? "#fff" : optionTextColor },
+      ]}
+    >
+      Descending
+    </Text>
+  </TouchableOpacity>
+</View>
+
           </View>
 
           {/* Category Filters Section */}
-          <Text style={styles.sectionTitle}>Categories</Text>
-          <View style={styles.categoryContainer}>
-            {filters.map((filter) => (
-              <TouchableOpacity
-                key={filter.label}
-                style={[
-                  styles.categoryButton,
-                  selectedFilters.includes(filter.label) && styles.selectedCategory,
-                ]}
-                onPress={() => handleFilterPress(filter.label)}
-              >
-                <Icon
-                  name={filter.icon}
-                  size={20}
-                  color={selectedFilters.includes(filter.label) ? "#fff" : "#333"}
-                />
-                <Text
-                  style={[
-                    styles.categoryText,
-                    selectedFilters.includes(filter.label) && styles.selectedCategoryText,
-                  ]}
-                >
-                  {filter.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+          <Text style={[
+      styles.sectionTitle,
+      { color: cardNameColor },
+    ]}>Categories</Text>
+<View style={styles.categoryContainer}>
+  {filters.map((filter) => (
+    <TouchableOpacity
+      key={filter.label}
+      style={[
+        styles.categoryButton,
+        {
+          backgroundColor: selectedFilters.includes(filter.label)
+            ? selectedOptionBackgroundColor
+            : optionBackgroundColor,
+        },
+      ]}
+      onPress={() => handleFilterPress(filter.label)}
+    >
+      <Icon
+        name={filter.icon}
+        size={20}
+        color={
+          selectedFilters.includes(filter.label) ? "#fff" : optionTextColor
+        } // 动态图标颜色
+      />
+      <Text
+        style={[
+          styles.categoryText,
+          {
+            color: selectedFilters.includes(filter.label)
+              ? "#fff"
+              : optionTextColor, // 动态文本颜色
+          },
+        ]}
+      >
+        {filter.label}
+      </Text>
+    </TouchableOpacity>
+  ))}
+</View>
+
 
           {/* Footer Buttons */}
           <View style={styles.footerButtons}>
