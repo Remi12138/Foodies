@@ -1,4 +1,4 @@
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { useState } from "react";
 import * as Clipboard from "expo-clipboard";
@@ -31,7 +31,7 @@ function UserCidInfo({ userCid }: UserCidInfoProps) {
           style={styles.copyButton}
           onPress={copyCidToClipboard}
         >
-          <ThemedText style={styles.copyButtonText}>Copy</ThemedText>
+          <Text style={styles.copyButtonText}>Copy</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
   },
   userCidText: {
     fontFamily: "SpaceMonoI",
-    color: "#666",
     fontSize: 16,
     lineHeight: 24,
   },
