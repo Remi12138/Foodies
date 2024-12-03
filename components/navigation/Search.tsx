@@ -10,14 +10,16 @@ import {
   FlatList,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { Restaurant,useRestaurantStore } from "@/zustand/restaurant";
-import { useLocation } from "@/zustand/location"; 
-import * as Location from 'expo-location';
+import { Restaurant, useRestaurantStore } from "@/zustand/restaurant";
+import { useLocation } from "@/zustand/location";
+import * as Location from "expo-location";
 import { transformToRestaurant } from "@/zustand/restaurant";
 import { useThemeColor } from "@/hooks/useThemeColor";
 const addRestaurant = useRestaurantStore.getState().addRestaurant;
 const fetchCoordinatesFromAddress = async (address: string) => {
-  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+    address
+  )}`;
 
   try {
     const response = await fetch(url);
@@ -25,8 +27,11 @@ const fetchCoordinatesFromAddress = async (address: string) => {
     if (data.length > 0) {
       const location = data[0];
       console.log("Latitude:", location.lat, "Longitude:", location.lon);
-      return { latitude: parseFloat(location.lat), longitude: parseFloat(location.lon) };
-    } 
+      return {
+        latitude: parseFloat(location.lat),
+        longitude: parseFloat(location.lon),
+      };
+    }
   } catch (error) {
     console.error("Error fetching coordinates:", error);
   }
@@ -38,27 +43,43 @@ interface SearchProps {
   onFilter: (filteredData: Restaurant[]) => void;
 }
 
-const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilter }) => {
+const Search: React.FC<SearchProps> = ({
+  openLocatorDialog,
+  restaurants,
+  onFilter,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState("Default Location");
-  const [isModalVisible, setIsModalVisible] = useState(false); 
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [recentLocations, setRecentLocations] = useState<string[]>([
     "Los Angeles, CA",
     "Durham, NC",
     "Chapel Hill, NC",
     "Raleigh, NC",
     "San Francisco, CA",
-  ]); 
-  const { userLocation, setLocation: setUserLocation } = useLocation(); 
-  const cardBackgroundColor = useThemeColor({ light: "#fff", dark: "#000" }, "background");
+  ]);
+  const { userLocation, setLocation: setUserLocation } = useLocation();
+  const cardBackgroundColor = useThemeColor(
+    { light: "#fff", dark: "#000" },
+    "background"
+  );
   const cardTextColor = useThemeColor({ light: "#000", dark: "#fff" }, "text");
-  const borderColor = useThemeColor({ light: "gray", dark: "#666" }, "background");
-  const modalBackgroundColor = useThemeColor({ light: "white", dark: "#333" }, "background");
-  const modalOverlayColor = useThemeColor({ light: "rgba(0, 0, 0, 0.5)", dark: "rgba(255, 255, 255, 0.1)" }, "background");
-     
+  const borderColor = useThemeColor(
+    { light: "gray", dark: "#666" },
+    "background"
+  );
+  const modalBackgroundColor = useThemeColor(
+    { light: "white", dark: "#333" },
+    "background"
+  );
+  const modalOverlayColor = useThemeColor(
+    { light: "rgba(0, 0, 0, 0.5)", dark: "rgba(255, 255, 255, 0.1)" },
+    "background"
+  );
+
   const handleSearch = async (term: string) => {
     setSearchTerm(term);
-  
+
     const regex = new RegExp(term, "i");
     let filteredData = restaurants.filter(
       (restaurant) =>
@@ -66,8 +87,13 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
         restaurant.location.displayAddress.join(", ").match(regex) ||
         restaurant.categories.some((cat) => cat.title.match(regex))
     );
-  
-    const postRequestData = async (term:string,url: string, latitude: number, longitude: number) => {
+
+    const postRequestData = async (
+      term: string,
+      url: string,
+      latitude: number,
+      longitude: number
+    ) => {
       // Construct URLSearchParams
       const params = new URLSearchParams({
         term: term, // Fixed search term
@@ -76,7 +102,7 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
         radius: "10000", // Search radius in meters
         limit: "10", // Limit results to 10
       });
-  
+
       // Construct full URL
       const fullUrl = `${url}?${params.toString()}`;
       const apiKey =
@@ -90,7 +116,7 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
         },
         timeout: 20 * 1000, // Set timeout for 20 seconds
       };
-  
+
       try {
         // Perform the fetch request
         const response = await fetch(fullUrl, opts);
@@ -100,18 +126,22 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
           console.log("Response Message:", responseJson.message);
           console.log("Restaurant Data:", responseJson.businesses); // Yelp returns 'businesses'
           // Process the API response into a format compatible with `filteredData`
-          const apiFilteredData = responseJson.businesses.map(transformToRestaurant);
-  
+          const apiFilteredData = responseJson.businesses.map(
+            transformToRestaurant
+          );
+
           // Add the API data to the top of the existing filteredData
           const updatedData = [...apiFilteredData];
           onFilter(updatedData); // Call onFilter with the updated data
-  
+
           // Update Zustand store with the new restaurants
           apiFilteredData.forEach((restaurant: Restaurant) => {
             addRestaurant(restaurant); // Add one by one
           });
-  
-          console.log("Added restaurants to zustand store and updated UI with API data");
+
+          console.log(
+            "Added restaurants to zustand store and updated UI with API data"
+          );
         } else {
           // Log detailed error response
           const errorResponse = await response.text();
@@ -122,20 +152,23 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
         console.error("Error occurred:", error);
       }
     };
-  
+
     // Example Usage
     const apiUrl = "https://api.yelp.com/v3/businesses/search"; // Replace with correct API endpoint
-  
+
     if (filteredData.length === 0 && term.trim() !== "") {
       // If no local match, fetch from API
-      await postRequestData(term,apiUrl, userLocation.latitude, userLocation.longitude);
+      await postRequestData(
+        term,
+        apiUrl,
+        userLocation.latitude,
+        userLocation.longitude
+      );
     } else {
       // If local match exists, show it directly
       onFilter(filteredData);
     }
   };
-  
-
 
   const handleLocationSubmit = async () => {
     try {
@@ -149,16 +182,16 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
         setUserLocation({
           latitude: coordinates.latitude,
           longitude: coordinates.longitude,
-        }); 
+        });
         console.log("User location updated:", coordinates);
 
         if (!recentLocations.includes(location)) {
           setRecentLocations([location, ...recentLocations].slice(0, 5)); // Update recent locations list
         }
 
-        setIsModalVisible(false); 
-        Keyboard.dismiss(); 
-      } 
+        setIsModalVisible(false);
+        Keyboard.dismiss();
+      }
     } catch (error) {
       console.error("Error occurred while fetching location:", error);
     }
@@ -173,40 +206,32 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
     try {
       // Request permission to access location
       const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access location was denied');
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
         return;
       }
-  
+
       // Fetch the current position
       const location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
-  
+
       // Update the user's location in the Zustand store
       setUserLocation({ latitude, longitude });
-  
-      console.log('System location used:', { latitude, longitude });
-  
+
+      console.log("System location used:", { latitude, longitude });
+
       // Close the modal
       setIsModalVisible(false);
     } catch (error) {
-      console.error('Failed to fetch system location:', error);
+      console.error("Failed to fetch system location:", error);
     }
   };
-  
-  
 
   return (
-    <View style={[
-      styles.container,
-      { backgroundColor: cardBackgroundColor },
-    ]}>
-      <View style={[
-      styles.searchContainer,
-      { borderColor: borderColor },
-    ]}>
+    <View style={[styles.container, { backgroundColor: cardBackgroundColor }]}>
+      <View style={[styles.searchContainer, { borderColor: borderColor }]}>
         <TextInput
-          style={styles.searchInput}
+          style={[styles.searchInput, { color: cardTextColor }]}
           placeholder="Search restaurants..."
           placeholderTextColor={cardTextColor}
           value={searchTerm}
@@ -226,24 +251,21 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
         animationType="slide"
         onRequestClose={() => setIsModalVisible(false)}
       >
-        <View style={[
-      styles.modalOverlay,
-      { backgroundColor: modalOverlayColor },
-    ]}>
-          <View style={[
-      styles.modalContent,
-      { backgroundColor: modalBackgroundColor },
-    ]}>
-            <Text style={[
-      styles.modalTitle,
-      { color: cardTextColor },
-    ]}>Set Location</Text>
+        <View
+          style={[styles.modalOverlay, { backgroundColor: modalOverlayColor }]}
+        >
+          <View
+            style={[
+              styles.modalContent,
+              { backgroundColor: modalBackgroundColor },
+            ]}
+          >
+            <Text style={[styles.modalTitle, { color: cardTextColor }]}>
+              Set Location
+            </Text>
 
             <TextInput
-              style={[
-                styles.locationInput,
-                { color: cardTextColor },
-              ]}
+              style={[styles.locationInput, { color: cardTextColor }]}
               placeholder="Enter location..."
               value={location}
               onChangeText={setLocation}
@@ -255,16 +277,16 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
               style={styles.systemLocationContainer}
             >
               <FontAwesome name="location-arrow" size={20} color="#F4511E" />
-              <Text style={[
-      styles.systemLocationText,
-      { color: cardTextColor },
-    ]}>Use System Location</Text>
+              <Text
+                style={[styles.systemLocationText, { color: cardTextColor }]}
+              >
+                Use System Location
+              </Text>
             </TouchableOpacity>
 
-            <Text style={[
-      styles.recentTitle,
-      { color: cardTextColor },
-    ]}>Recent Locations</Text>
+            <Text style={[styles.recentTitle, { color: cardTextColor }]}>
+              Recent Locations
+            </Text>
             <FlatList
               data={recentLocations}
               keyExtractor={(item) => item}
@@ -274,10 +296,9 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
                   style={styles.recentItem}
                 >
                   <FontAwesome name="map-marker" size={20} color="#F4511E" />
-                  <Text style={[
-      styles.recentText,
-      { color: cardTextColor },
-    ]}>{item}</Text>
+                  <Text style={[styles.recentText, { color: cardTextColor }]}>
+                    {item}
+                  </Text>
                 </TouchableOpacity>
               )}
             />
@@ -304,7 +325,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   searchContainer: {
-    position: "relative", 
+    position: "relative",
     flexDirection: "row",
     alignItems: "center",
     //borderColor: "gray",
@@ -322,20 +343,19 @@ const styles = StyleSheet.create({
   },
   iconInsideSearch: {
     position: "absolute",
-    right: 60, 
-    top: "50%", 
-    transform: [{ translateY: -10 }], 
-  
+    right: 60,
+    top: "50%",
+    transform: [{ translateY: -10 }],
   },
   modalOverlay: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-   // backgroundColor: "rgba(0, 0, 0, 0.5)",
+    // backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
     width: 300,
-   // backgroundColor: "white",
+    // backgroundColor: "white",
     padding: 20,
     borderRadius: 8,
   },
