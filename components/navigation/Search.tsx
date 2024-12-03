@@ -106,7 +106,7 @@ const Search: React.FC<SearchProps> = ({
       // Construct full URL
       const fullUrl = `${url}?${params.toString()}`;
       const apiKey =
-        "-fn0ifdZSmgiv2Q90tLr4j6kt0I6mlVQEFvF-xrdqEpUmzyg_UkDPn0L1TkkLX0QZSdP2sw-4teU3BeP-0YoG21ro7bA4B4i4C8aNOt9KBPci1GFJCqkCr4_Nk5GZ3Yx";
+        "CUUvapDn09C6JRN5vVNitPKCGfuzqxib0sKY3i5_7gbADUr5tgPpHJSaqJ11h4aCPuQIEtBhgtn7d7OYkEjqOd1iNRLzTmZfoZj1p0UoVgEoM6DBvMNpCIivLXNOZ3Yx";
       // Request options
       const opts = {
         method: "GET",
