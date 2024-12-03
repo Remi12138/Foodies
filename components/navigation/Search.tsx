@@ -49,7 +49,7 @@ const Search: React.FC<SearchProps> = ({
   onFilter,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [location, setLocation] = useState("Default Location");
+  const [location, setLocation] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [recentLocations, setRecentLocations] = useState<string[]>([
     "Los Angeles, CA",
