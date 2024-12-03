@@ -54,22 +54,22 @@ function PostCreate() {
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <PostImagePicker />
           <TextInput
-            style={styles.titleInput}
+            style={[styles.titleInput, { color: textColor }]}
             placeholder="Add a title"
             placeholderTextColor={textColor}
             value={draft.title}
             onChangeText={handleTitleChange}
           />
           <TextInput
-            style={styles.contentInput}
-            placeholder="Add text"
+            style={[styles.contentInput, { color: textColor }]}
+            placeholder="Add content"
             placeholderTextColor={textColor}
             value={draft.content}
             onChangeText={handleContentChange}
             multiline
           />
           <TextInput
-            style={styles.rttInput}
+            style={[styles.rttInput, { color: textColor }]}
             placeholder="EvJqRISUz3IqSfIW0lygDg"
             placeholderTextColor={textColor}
             value={draft.rtt_yelp_id}
@@ -94,24 +94,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     borderBottomWidth: 1,
-    borderColor: "#ccc",
     marginBottom: 15,
     paddingVertical: 10,
   },
   contentInput: {
     fontSize: 16,
     borderWidth: 1,
-    borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
-    height: 120,
+    height: 200,
     textAlignVertical: "top",
   },
   rttInput: {
     fontSize: 16,
     borderBottomWidth: 1,
-    borderColor: "#ccc",
     marginBottom: 15,
     paddingVertical: 10,
   },
