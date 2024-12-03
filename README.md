@@ -33,7 +33,6 @@ to every meal. Let’s make every bite unforgettable! 🍕🍔🍩
    * Restaurant Explore [Yelp Fusion](https://fusion.yelp.com)
    * Food Analysis [Foodvisor](https://www.foodvisor.io/en/vision/) [will end during January 2025]
    * AI Advice [OpenAI](https://platform.openai.com/docs/overview)
-   * IP Geolocation [IPInfo.io](https://ipinfo.io)
 
 ## Third-party libraries
 1. **UI Components & Styling**
@@ -138,7 +137,6 @@ _Error Handling_
 - Restaurant Explore [Yelp Fusion](https://fusion.yelp.com)
 - Food Analysis [Foodvisor](https://www.foodvisor.io/en/vision/)
 - AI Advice [OpenAI](https://platform.openai.com/docs/overview)
-- IP Geolocation [IPInfo.io](https://ipinfo.io)
 
 ## Firebase
 
@@ -200,3 +198,10 @@ The issue is reported on the Expo GitHub Issues page.
 Many people have the same problem after updating Expo to version 52.0.
 
 [Open Issue #20233](https://github.com/expo/expo/issues/20233)
+
+## Dark Mode Screenshots
+<img src="/screenshots/dark000.png" alt="d0" height="350">
+<img src="/screenshots/dark001.png" alt="d1" height="350">
+<img src="/screenshots/dark002.png" alt="d2" height="350">
+<img src="/screenshots/dark004.png" alt="d4" height="350">
+<img src="/screenshots/dark003.png" alt="d3" height="350">
