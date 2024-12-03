@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
+  useColorScheme,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -12,6 +13,7 @@ import { useState } from "react";
 import { useUserStore } from "@/zustand/user";
 import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { uploadAvatar } from "@/utils/users/avatar";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 interface AvatarPickerModalProps {
   isVisible: boolean;
@@ -69,6 +71,9 @@ export default function AvatarPickerModal({
     onClose();
   }
 
+  const backgroundColor = useThemeColor({}, "background");
+  const textColor = useThemeColor({}, "text");
+
   return (
     <View>
       <Modal
@@ -78,7 +83,15 @@ export default function AvatarPickerModal({
         onRequestClose={onClose}
       >
         <View style={styles.modalContainer}>
-          <View style={styles.avatarPickerContainer}>
+          <View
+            style={[
+              styles.avatarPickerContainer,
+              {
+                backgroundColor: backgroundColor,
+                borderColor: textColor,
+              },
+            ]}
+          >
             <Image
               source={
                 selectedAvatar !== ""
@@ -122,13 +135,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   avatarPickerContainer: {
     width: 320,
     padding: 20,
-    backgroundColor: "white",
     borderRadius: 10,
+    borderWidth: 1,
     alignItems: "center",
   },
   modalAvatar: {
