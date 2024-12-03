@@ -231,7 +231,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
         size={20}
         color={
           selectedFilters.includes(filter.label) ? "#fff" : optionTextColor
-        } // 动态图标颜色
+        } 
       />
       <Text
         style={[
@@ -239,7 +239,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ restaurants, onFilter }) => {
           {
             color: selectedFilters.includes(filter.label)
               ? "#fff"
-              : optionTextColor, // 动态文本颜色
+              : optionTextColor, 
           },
         ]}
       >
