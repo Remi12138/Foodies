@@ -125,8 +125,6 @@ const Search: React.FC<SearchProps> = ({ openLocatorDialog, restaurants, onFilte
   
     // Example Usage
     const apiUrl = "https://api.yelp.com/v3/businesses/search"; // Replace with correct API endpoint
-    // const latitude = 36.019; // Replace with actual latitude
-    // const longitude = -78.94836; // Replace with actual longitude
   
     if (filteredData.length === 0 && term.trim() !== "") {
       // If no local match, fetch from API

@@ -1,24 +1,69 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, ScrollView, Linking, TouchableOpacity } from "react-native";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useRestaurantStore } from "@/zustand/restaurant";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { transformToRestaurant, Restaurant } from "@/zustand/restaurant";
+
+const fetchRestaurantById = async (id: string): Promise<Restaurant | null> => {
+  const url = `https://api.yelp.com/v3/businesses/${id}`;
+  const apiKey =
+    "-fn0ifdZSmgiv2Q90tLr4j6kt0I6mlVQEFvF-xrdqEpUmzyg_UkDPn0L1TkkLX0QZSdP2sw-4teU3BeP-0YoG21ro7bA4B4i4C8aNOt9KBPci1GFJCqkCr4_Nk5GZ3Yx";
+
+  const opts = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    timeout: 20 * 1000,
+  };
+
+  try {
+    const response = await fetch(url, opts);
+    if (response.ok) {
+      const restaurantData = await response.json();
+      const transformedRestaurant = transformToRestaurant(restaurantData);
+      useRestaurantStore.getState().addRestaurant(transformedRestaurant); // Add to Zustand store
+      return transformedRestaurant;
+    } else {
+      console.error(`HTTP Error: ${response.status}`);
+      console.error("Error Details:", await response.text());
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching restaurant by id:", error);
+    return null;
+  }
+};
 
 const RestaurantInfo = () => {
   const { key } = useLocalSearchParams();
-  const restaurant = useRestaurantStore((state) =>
-    state.restaurants.find((r) => r.id === key)
-  );
+  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
 
   const cardBackgroundColor = useThemeColor({ light: "#fff", dark: "#333" }, "background");
   const textColor = useThemeColor({ light: "#000", dark: "#fff" }, "text");
-  const mutedTextColor = useThemeColor({ light: "gray", dark: "#bbb" }, "mutedText");
+  const mutedTextColor = useThemeColor({ light: "gray", dark: "#bbb" }, "text");
+
+  useEffect(() => {
+    const fetchRestaurant = async () => {
+      const foundRestaurant = useRestaurantStore.getState().restaurants.find((r) => r.id === key);
+      if (!foundRestaurant) {
+        console.log(`Restaurant with ID ${key} not found locally. Fetching from API...`);
+        const fetchedRestaurant = await fetchRestaurantById(key as string);
+        setRestaurant(fetchedRestaurant);
+      } else {
+        setRestaurant(foundRestaurant);
+      }
+    };
+    fetchRestaurant();
+  }, [key]);
 
   if (!restaurant) {
     return (
-      <View style={styles.container}>
-        <Text style={[styles.errorText, { color: textColor }]}>Restaurant not found</Text>
+      <View style={[styles.container, { backgroundColor: cardBackgroundColor }]}>
+        <Text style={[styles.errorText, { color: textColor }]}>Loading restaurant details...</Text>
       </View>
     );
   }
@@ -28,20 +73,14 @@ const RestaurantInfo = () => {
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: cardBackgroundColor }]}>
-      {/* Image */}
+      {/* Restaurant Image */}
       <Image source={{ uri: restaurant.imageUrl }} style={styles.image} />
-      
-      {/* Restaurant Name */}
       <Text style={[styles.name, { color: textColor }]}>{restaurant.name}</Text>
-      
-      {/* Categories */}
       <Text style={[styles.categories, { color: mutedTextColor }]}>
         {restaurant.categories.map((cat) => cat.title).join(", ")}
       </Text>
-      
-      {/* Price */}
       <Text style={[styles.price, { color: mutedTextColor }]}>Price: {restaurant.price}</Text>
-      
+
       {/* Rating and Reviews */}
       <View style={styles.infoContainer}>
         <Text style={[styles.rating, { color: textColor }]}>Rating: {restaurant.rating} ★</Text>
@@ -49,21 +88,21 @@ const RestaurantInfo = () => {
           {restaurant.reviewCount} Reviews
         </Text>
       </View>
-      
-      {/* Address Section */}
+
+      {/* Address */}
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: textColor }]}>Address</Text>
         <Text style={{ color: mutedTextColor }}>
           {restaurant.location.displayAddress.join(", ")}
         </Text>
       </View>
-      
-      {/* Phone Section */}
+
+      {/* Phone */}
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: textColor }]}>Phone</Text>
         <Text style={{ color: mutedTextColor }}>{restaurant.displayPhone}</Text>
       </View>
-      
+
       {/* Business Hours */}
       <View style={styles.section}>
         <View style={styles.businessHourHeader}>
@@ -86,7 +125,7 @@ const RestaurantInfo = () => {
           {restaurant.businessHours[0]?.is_open_now ? "Open" : "Closed"}
         </Text>
       </View>
-      
+
       {/* Yelp Button */}
       <TouchableOpacity
         style={styles.yelpButton}
