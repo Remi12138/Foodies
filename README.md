@@ -111,12 +111,14 @@ A blog sharing place.
 
 4. Post draft auto saving: unpublished draft of post will be saved to async-storage if user stop typing for a while automatically, giving user anthoer chance to get them back!
 
-<img src="/screenshots/021.png" alt="21" height="350">
-<img src="/screenshots/022.png" alt="22" height="350">
-<img src="/screenshots/023.png" alt="23" height="350">
-<img src="/screenshots/024.png" alt="24" height="350">
-<img src="/screenshots/025.png" alt="25" height="350">
-<img src="/screenshots/026.png" alt="26" height="350">
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+   <img src="/screenshots/021.png" alt="21" height="350">
+   <img src="/screenshots/022.png" alt="22" height="350">
+   <img src="/screenshots/023.png" alt="23" height="350">
+   <img src="/screenshots/024.png" alt="24" height="350">
+   <img src="/screenshots/025.png" alt="25" height="350">
+   <img src="/screenshots/026.png" alt="26" height="350">
+</div>
 
 ### Explore
 
@@ -181,24 +183,28 @@ The list ensures seamless restaurant discovery and allows users to manage their 
 - Receipt List Management: All uploaded receipts are displayed in a list format,
   allowing users to edit the title, amount, and reminder time or delete entries as needed.
 
-<img src="/screenshots/000.png" alt="0" height="350">
-<img src="/screenshots/001.png" alt="1" height="350">
-<img src="/screenshots/002.png" alt="2" height="350">
-<img src="/screenshots/003.png" alt="3" height="350">
-<img src="/screenshots/004.png" alt="4" height="350">
-<img src="/screenshots/005.png" alt="5" height="350">
-<img src="/screenshots/006.png" alt="6" height="350">
-<img src="/screenshots/007.png" alt="7" height="350">
-<img src="/screenshots/008.png" alt="8" height="350">
-<img src="/screenshots/009.png" alt="9" height="350">
-<img src="/screenshots/010.png" alt="10" height="350">
-<img src="/screenshots/011.png" alt="11" height="350">
-<img src="/screenshots/012.png" alt="12" height="350">
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+   <img src="/screenshots/000.png" alt="0" height="350">
+   <img src="/screenshots/001.png" alt="1" height="350">
+   <img src="/screenshots/002.png" alt="2" height="350">
+   <img src="/screenshots/003.png" alt="3" height="350">
+   <img src="/screenshots/004.png" alt="4" height="350">
+   <img src="/screenshots/005.png" alt="5" height="350">
+   <img src="/screenshots/006.png" alt="6" height="350">
+   <img src="/screenshots/007.png" alt="7" height="350">
+   <img src="/screenshots/008.png" alt="8" height="350">
+   <img src="/screenshots/009.png" alt="9" height="350">
+   <img src="/screenshots/010.png" alt="10" height="350">
+   <img src="/screenshots/011.png" alt="11" height="350">
+   <img src="/screenshots/012.png" alt="12" height="350">
+</div>
 
 _Error Handling_
 
-<img src="/screenshots/013.png" alt="13" height="350">
-<img src="/screenshots/014.png" alt="14" height="350">
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+   <img src="/screenshots/013.png" alt="13" height="350">
+   <img src="/screenshots/014.png" alt="14" height="350">
+</div>
 
 ### Profile
 
@@ -206,8 +212,10 @@ _Error Handling_
 2. User settings: update name, change password, and account deletion
 3. USer sign out
 
-<img src="/screenshots/027.png" alt="27" height="350">
-<img src="/screenshots/028.png" alt="28" height="350">
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+   <img src="/screenshots/027.png" alt="27" height="350">
+   <img src="/screenshots/028.png" alt="28" height="350">
+</div>
 
 ## API
 
@@ -279,8 +287,10 @@ Many people have the same problem after updating Expo to version 52.0.
 
 ## Dark Mode Screenshots
 
-<img src="/screenshots/dark000.png" alt="d0" height="350">
-<img src="/screenshots/dark001.png" alt="d1" height="350">
-<img src="/screenshots/dark002.png" alt="d2" height="350">
-<img src="/screenshots/dark004.png" alt="d4" height="350">
-<img src="/screenshots/dark003.png" alt="d3" height="350">
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+   <img src="/screenshots/dark000.png" alt="d0" height="350">
+   <img src="/screenshots/dark001.png" alt="d1" height="350">
+   <img src="/screenshots/dark002.png" alt="d2" height="350">
+   <img src="/screenshots/dark004.png" alt="d4" height="350">
+   <img src="/screenshots/dark003.png" alt="d3" height="350">
+</div>
