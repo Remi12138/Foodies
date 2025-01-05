@@ -17,7 +17,7 @@ const firebaseConfig = {
   storageBucket: "tapteam-foodies.firebasestorage.app",
   messagingSenderId: "xxx",
   appId: "xxx",
-  measurementId: "xxx",
+  measurementId: "xxxxx",
 };
 
 // Initialize Firebase
